@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Terminal, Cpu, Wrench, GitBranch, Zap, ArrowRight } from "lucide-react";
+import { Terminal, Cpu, Wrench, GitBranch, Zap, ArrowRight, Flame,Camera,Bot } from "lucide-react";
 import {
   motion,
   useAnimate,
@@ -11,9 +11,9 @@ import {
 import { Button3D } from "@/components/ui/button-3d";
 const floatingIcons = [
   { Icon: Terminal, label: "ROS",      className: "top-[24%] left-[11%]",  rotate: "-4deg" },
-  { Icon: Cpu,      label: "Hardware", className: "top-[20%] right-[12%]", rotate: "3deg"  },
+  { Icon: Camera,      label: "Hardware", className: "top-[20%] right-[12%]", rotate: "3deg"  },
   { Icon: Wrench,   label: "Repair",   className: "top-[60%] left-[7%]",   rotate: "-2deg" },
-  { Icon: GitBranch,label: "Build",    className: "top-[58%] right-[8%]",  rotate: "5deg"  },
+  { Icon: Bot,label: "Build",    className: "top-[58%] right-[8%]",  rotate: "5deg"  },
 ];
 
 const SUBTITLE = "A place for people who think differently about learning.";
@@ -94,7 +94,7 @@ export default function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
           >
-            TheOddOne
+            TheOddOnes
             {/* Dot pops in with spring after headline settles */}
             <motion.span
               className="text-[#c4622d]"
@@ -137,9 +137,9 @@ export default function Hero() {
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
             <Button3D>
     Join the waitlist
-    <span data-arrow>
-      <ArrowRight size={15} strokeWidth={2} />
-    </span>
+    {/* <span data-arrow>
+      <Flame size={15} strokeWidth={2} />
+    </span> */}
   </Button3D>
           </motion.div>
         </motion.div>

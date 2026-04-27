@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { ArrowRightIcon, Flame, Menu, X } from "lucide-react";
 import { Button3D } from "./ui/button-3d";
 
 const navLinks = ["Platform", "Community", "Blogs"];
@@ -70,18 +70,9 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="font-sans text-xl font-bold text-[#f0ebe5] shrink-0 select-none flex items-center gap-2"
+            className="font-space text-xl font-bold text-[#f0ebe5] shrink-0 select-none flex items-center gap-2"
           >
-            <span
-              className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
-              style={{
-                background: "linear-gradient(135deg,#c4622d,#8b3a1a)",
-                boxShadow: "0 0 12px rgba(196,98,45,0.5)",
-              }}
-              aria-hidden="true"
-            >
-              <span className="w-[7px] h-[7px] rounded-full bg-white/85 block" />
-            </span>
+         
             TheOddOnes
           </Link>
 
@@ -101,12 +92,12 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3 shrink-0">
-            <Button3D>Join waitlist</Button3D>
+            <Button3D> Get me in <ArrowRightIcon size={15} strokeWidth={2} /> </Button3D>
           </div>
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/[0.06] text-[#f0ebe5] transition-colors shrink-0"
+            className="md:hidden w-9 h-9 flex items-center cursor-pointer justify-center rounded-full hover:bg-white/[0.06] text-[#f0ebe5] transition-colors shrink-0"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -137,9 +128,9 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <Button3D className="w-full">Join the waitlist</Button3D>
-        </div>
+        </div> */}
       </div>
     </>
   );

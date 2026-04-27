@@ -9,60 +9,54 @@ interface Button3DProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button3D = forwardRef<HTMLButtonElement, Button3DProps>(
   ({ className, variant = "primary", children, ...props }, ref) => {
+    const isPrimary = variant === "primary";
+
     return (
       <button
         ref={ref}
-        className={cn("btn-3d-root group", className)}
-        style={{ position: "relative", display: "inline-flex", cursor: "pointer", border: "none", background: "none", padding: 0, outline: "none" }}
+        className={cn("group relative inline-flex cursor-pointer border-none bg-transparent p-0 outline-none", className)}
         {...props}
       >
-        {/* Bottom face — the depth shadow */}
+        {/* Bottom face */}
         <span
           aria-hidden
-          className="btn-3d-shadow"
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "9999px",
-            background: variant === "primary" ? "#6b2810" : "rgba(196,98,45,0.35)",
-            transform: "translateY(5px)",
-            transition: "transform 0.12s cubic-bezier(0.34,1.2,0.64,1)",
-            zIndex: 0,
-            pointerEvents: "none",
-          }}
+          className={cn(
+            "pointer-events-none absolute inset-0 rounded-full translate-y-[5px]",
+            "group-hover:translate-y-[6px] group-active:translate-y-[5px]",
+            "transition-transform duration-[120ms]",
+            isPrimary ? "bg-[#6b2810]" : "bg-[rgba(196,98,45,0.35)]"
+          )}
+          style={{ transitionTimingFunction: "cubic-bezier(0.34,1.2,0.64,1)" }}
         />
+
         {/* Top face */}
         <span
-          className="btn-3d-face"
-          style={{
-            position: "relative",
-            zIndex: 1,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "10px 30px",
-            borderRadius: "9999px",
-            fontFamily: "var(--font-space, sans-serif)",
-            fontSize: "15px",
-            fontWeight: 700,
-            letterSpacing: "0.02em",
-            color: "#fdf0e8",
-            background:
-              variant === "primary"
-                ? "linear-gradient(160deg,#e8713a 0%,#c4622d 45%,#a84e22 100%)"
-                : "transparent",
-            border:
-              variant === "primary"
-                ? "1px solid rgba(255,255,255,0.15)"
-                : "1px solid rgba(196,98,45,0.6)",
-            boxShadow:
-              "0 1px 0 rgba(255,255,255,0.22) inset, 0 -1px 0 rgba(0,0,0,0.25) inset",
-            transform: "translateY(0px)",
-            transition:
-              "transform 0.12s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.12s ease, background 0.12s ease",
-            userSelect: "none",
-            pointerEvents: "none",
-          }}
+          className={cn(
+            "pointer-events-none relative z-10 w-full",
+            "inline-flex items-center justify-center gap-2 rounded-full",
+            "font-space font-bold tracking-[0.02em] text-[#fdf0e8] select-none",
+            // responsive size
+            "text-[13px] px-5 py-2 sm:text-[14px] sm:px-6 sm:py-2.5 md:text-[15px] md:px-7 md:py-3",
+            // translate states
+            "translate-y-0 group-active:translate-y-[5px]",
+            "transition-[transform,box-shadow,background] duration-[120ms]",
+            // variant
+            isPrimary
+              ? [
+                  "border border-white/[0.15]",
+                  "bg-gradient-to-br from-[#e8713a] via-[#c4622d] to-[#a84e22]",
+                  "group-hover:from-[#f07840] group-hover:via-[#d06830] group-hover:to-[#b85525]",
+                  "group-active:from-[#a84e22] group-active:to-[#943d18]",
+                ].join(" ")
+              : [
+                  "border border-[rgba(196,98,45,0.6)] bg-transparent",
+                  "group-hover:bg-[rgba(196,98,45,0.08)] group-hover:border-[rgba(196,98,45,0.9)]",
+                ].join(" "),
+            // inset sheen
+            "shadow-[0_1px_0_rgba(255,255,255,0.22)_inset,0_-1px_0_rgba(0,0,0,0.25)_inset]",
+            "group-active:shadow-[0_1px_0_rgba(255,255,255,0.1)_inset,0_-1px_0_rgba(0,0,0,0.35)_inset]",
+          )}
+          style={{ transitionTimingFunction: "cubic-bezier(0.34,1.2,0.64,1)" }}
         >
           {children}
         </span>

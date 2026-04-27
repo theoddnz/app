@@ -166,7 +166,7 @@ export default function Manifesto() {
 
 
         {/* Lines — clip-up on scroll */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 ">
           <RevealLine dim delay={0}>
             Systems was designed to produce{" "}
             <span className="text-[#c4622d]">workers.</span>
@@ -218,7 +218,7 @@ export default function Manifesto() {
             className="font-light italic text-[rgba(255,255,255,0.5)] leading-relaxed"
             style={{ fontSize: "clamp(1rem, 1.8vw, 1.25rem)" }}
           >
-            "The best engineers we know never finished a single tutorial.
+            "The best people we know never finished a single tutorial.
             They just kept breaking things until something worked."
           </p>
           <p className="text-[10px] tracking-[0.22em] uppercase text-[rgba(255,255,255,0.18)] mt-3">
