@@ -20,7 +20,7 @@ const SUBTITLE = "A place for people who think differently about learning.";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen bg-background flex flex-col items-center justify-center overflow-hidden pt-0">
+    <section className="relative min-h-screen bg-[#0a0806] flex flex-col items-center justify-center overflow-hidden pt-0">
 
       {/* ── Floating icons – appear last, bob forever ── */}
       {floatingIcons.map(({ Icon, label, className, rotate }, i) => (
