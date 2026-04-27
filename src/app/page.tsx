@@ -12,7 +12,7 @@ export default function Home() {
     <main className="overflow-x-hidden">
       <Navbar />
       <Hero />
-      {/* <Manifesto /> */}
+      <Manifesto />
       {/* <Features /> */}
       {/* <HowItWorks /> */}
       {/* <Testimonials /> */}

@@ -31,7 +31,7 @@ export default function Footer() {
             />
           </div>
 
-          <div className="flex flex-col items-start md:items-end gap-4 md:pb-2 shrink-0">
+          <div className="flex flex-col items-center sm:items-start md:items-end gap-4 md:pb-2 shrink-0">
       
             <Button3D
            

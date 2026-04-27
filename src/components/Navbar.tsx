@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { Button3D } from "./ui/button-3d";
 
@@ -10,30 +9,37 @@ const navLinks = ["Platform", "Community", "Blogs"];
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    // set initial state on mount
     setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // on mobile: always full width, never pill
+  const isPill = scrolled && !isMobile;
 
   return (
     <>
       <nav
         style={{
           position: "fixed",
-          top: scrolled ? "14px" : "0px",
+          top: isPill ? "14px" : "0px",
           left: "50%",
           transform: "translateX(-50%)",
-          // unscrolled: full width but NO visual container
-          // scrolled: shrink to content width for pill
-          width: scrolled ? "fit-content" : "100%",
-          maxWidth: scrolled ? "none" : "100vw",
+          width: isPill ? "fit-content" : "100%",
+          maxWidth: isPill ? "none" : "100vw",
           zIndex: 50,
-          transition:
-            "top 0.45s cubic-bezier(0.16, 1, 0.3, 1), width 0.45s cubic-bezier(0.16, 1, 0.3, 1)",
+          transition: "top 0.45s cubic-bezier(0.16, 1, 0.3, 1), width 0.45s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >
         <div
@@ -41,22 +47,24 @@ export default function Navbar() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: scrolled ? "24px" : "32px",
-            padding: scrolled ? "10px 20px" : "20px 32px",
-            maxWidth: scrolled ? "none" : "80rem",
-            margin: scrolled ? "0" : "0 auto",
-            whiteSpace: scrolled ? "nowrap" : "normal",
-            borderRadius: scrolled ? "9999px" : "0px",
-            // glass styles only when scrolled — zero bleed when at top
+            gap: isPill ? "24px" : "32px",
+            padding: isMobile
+              ? "14px 20px"                          // mobile: always same padding
+              : isPill ? "10px 20px" : "20px 32px",  // desktop: pill vs top
+            maxWidth: isPill ? "none" : "80rem",
+            margin: isPill ? "0" : "0 auto",
+            whiteSpace: isPill ? "nowrap" : "normal",
+            borderRadius: isPill ? "9999px" : "0px",
             background: scrolled ? "rgba(255,255,255,0.04)" : "transparent",
             backdropFilter: scrolled ? "blur(24px) saturate(180%)" : "none",
             WebkitBackdropFilter: scrolled ? "blur(24px) saturate(180%)" : "none",
-            border: scrolled ? "1px solid rgba(255,255,255,0.08)" : "1px solid transparent",
+            border: scrolled
+              ? "1px solid rgba(255,255,255,0.08)"
+              : "1px solid transparent",
             boxShadow: scrolled
               ? "0 0 0 1px rgba(255,255,255,0.03) inset, 0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3), 0 0 40px rgba(180,90,40,0.06)"
               : "none",
-            transition:
-              "all 0.45s cubic-bezier(0.16, 1, 0.3, 1)",
+            transition: "all 0.45s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
           {/* Logo */}
@@ -65,7 +73,7 @@ export default function Navbar() {
             className="font-sans text-xl font-bold text-[#f0ebe5] shrink-0 select-none flex items-center gap-2"
           >
             <span
-              className="w-5 h-5 rounded-full flex items-center justify-center"
+              className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
               style={{
                 background: "linear-gradient(135deg,#c4622d,#8b3a1a)",
                 boxShadow: "0 0 12px rgba(196,98,45,0.5)",
@@ -91,18 +99,14 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Right side */}
+          {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3 shrink-0">
-                <Button3D>
-             
-            
-              Join waitlist
-            </Button3D>
+            <Button3D>Join waitlist</Button3D>
           </div>
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/[0.06] text-[#f0ebe5] transition-colors"
+            className="md:hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/[0.06] text-[#f0ebe5] transition-colors shrink-0"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -125,21 +129,17 @@ export default function Navbar() {
               key={item}
               href={`#${item.toLowerCase()}`}
               onClick={() => setMobileOpen(false)}
-              className="font-sans text-3xl font-bold text-[rgba(240,235,229,0.2)] hover:text-[#f0ebe5] transition-colors duration-200 py-2"
+              className="font-space text-3xl font-bold text-[rgba(240,235,229,0.2)] hover:text-[#f0ebe5] transition-colors duration-200 py-2"
               style={{ transitionDelay: `${i * 40}ms` }}
             >
               {item}
             </Link>
           ))}
         </div>
-    
-          < Button3D className="w-full">
-             
-       
-          
-            Join the waitlist
-          </Button3D>
 
+        <div className="w-full">
+          <Button3D className="w-full">Join the waitlist</Button3D>
+        </div>
       </div>
     </>
   );
