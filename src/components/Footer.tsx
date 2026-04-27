@@ -1,88 +1,143 @@
 import Link from "next/link";
+import { Armchair,  MessageCircle, } from "lucide-react";
 import { Button3D } from "./ui/button-3d";
-import { Armchair } from "lucide-react";
 
-const links = {
+const linkGroups = {
   Platform:  ["Features", "Roadmap", "Changelog", "Open Source"],
   Community: ["Discord", "GitHub", "Twitter / X", "YouTube"],
   Blogs:     ["Tutorials", "Build Logs", "ROS Deep Dives", "Hardware"],
 };
 
+const socials = [
+  { icon: MessageCircle,         label: "GitHub",   href: "#" },
+  { icon: MessageCircle,        label: "Twitter",  href: "#" },
+  { icon: MessageCircle,        label: "YouTube",  href: "#" },
+  { icon: MessageCircle,  label: "Discord",  href: "#" },
+];
+
 export default function Footer() {
   return (
-    <footer className="bg-[#0a0806] px-6 md:px-10 pt-20 pb-9 ">
-      <div className="max-w-6xl mx-auto pt-10 border-t border-neutral-800">
+    <footer className="relative bg-[#0a0806] px-6 md:px-10 pt-24 pb-10 overflow-hidden">
+      {/* Ambient orange glow, top-left */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full opacity-[0.18]"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(196,98,45,0.35), transparent 70%)",
+          filter: "blur(40px)",
+        }}
+      />
 
-        {/* ── TOP — wordmark + CTA ── */}
-        <div className="flex flex-col md:flex-row md:items-center justify-center gap-10 pb-12 ">
-
-          <div className="relative select-none">
-            <h2
-              className="font-space font-extrabold text-[#f0ebe5] leading-none tracking-[-0.04em]"
-              style={{ fontSize: "clamp(3.5rem, 11vw, 10rem)" }}
+      <div className="relative max-w-6xl mx-auto">
+        {/* ── TOP — CTA band ── */}
+        {/* <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 pb-16 border-b border-white/[0.06]">
+          <div className="max-w-xl">
+            <p className="text-[11px] tracking-[0.28em] uppercase text-[rgba(196,98,45,0.7)] font-medium mb-4">
+              Still reading?
+            </p>
+            <h3
+              className="font-space font-extrabold text-[#f0ebe5] leading-[1.05] tracking-tight"
+              style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)" }}
             >
-              TheOddOnes
-            </h2>
-            <div
-              className="absolute bottom-[-10px] left-0 w-[300px] h-[80px] pointer-events-none"
-              style={{
-                background: "radial-gradient(ellipse, rgba(196,98,45,0.12) 0%, transparent 70%)",
-                filter: "blur(16px)",
-              }}
-            />
+              Then your seat's already <span className="text-[#c4622d]">warm.</span>
+            </h3>
           </div>
 
-          <div className="flex flex-col items-center sm:items-start md:items-end gap-4 md:pb-2 shrink-0">
-      
-            {/* <Button3D
-           
-            >
-             Reserve my seat <Armchair size={14} strokeWidth={2} />
-            </Button3D> */}
-          </div>
-        </div>
+          <Button3D className="max-w-max !rounded-xl [&_.btn-3d-face]:!rounded-xl [&_.btn-3d-shadow]:!rounded-xl">
+            Reserve my seat <Armchair size={15} strokeWidth={2} />
+          </Button3D>
+        </div> */}
 
-        {/* ── MIDDLE — 3-col links ── */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-10 py-10">
-          {Object.entries(links).map(([col, items]) => (
+        {/* ── MIDDLE — links ── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 py-16">
+          {/* Brand column */}
+          <div className="col-span-2 md:col-span-1 flex flex-col gap-4">
+            <Link
+              href="/"
+              className="font-space font-extrabold text-[#f0ebe5] text-[22px] tracking-[-0.02em] leading-none group inline-flex items-center"
+            >
+              The<span className="text-[#c4622d] transition-colors duration-300 group-hover:text-[#e07a3f]">Odd</span>Ones
+            </Link>
+            <p className="text-md font-light text-white/35 leading-relaxed max-w-[240px]">
+              Built by the odd ones, for the ones
+            </p>
+
+            {/* Status pill */}
+            {/* <div className="inline-flex items-center gap-2 mt-2 w-max rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1.5">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c4622d] opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#c4622d]" />
+              </span>
+              <span className="text-[11px] tracking-[0.14em] uppercase text-white/50 font-medium">
+                Building in public
+              </span>
+            </div> */}
+          </div>
+
+          {/* Link groups */}
+          {Object.entries(linkGroups).map(([col, items]) => (
             <div key={col}>
-              <p className="text-[12px] tracking-[0.14em] uppercase font-medium text-[rgba(196,98,45,0.7)] mb-3.5">
+              <p className="text-[11px] font-space tracking-[0.18em] uppercase font-medium text-[rgba(196,98,45,0.75)] mb-5">
                 {col}
               </p>
-              <div className="flex flex-col gap-2.5">
+              <ul className="flex flex-col gap-3">
                 {items.map((item) => (
-                  <Link
-                    key={item}
-                    href="#"
-                    className="text-[13.5px] font-normal text-[rgba(240,235,229,0.35)] hover:text-[rgba(240,235,229,0.85)] transition-colors duration-200 leading-none"
-                  >
-                    {item}
-                  </Link>
+                  <li key={item}>
+                    <Link
+                      href="#"
+                      className="group relative font-space inline-flex text-[13.5px] font-normal text-white/40 hover:text-[#f0ebe5] transition-colors duration-200"
+                    >
+                      <span className="relative">
+                        {item}
+                        <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-[#c4622d] transition-all duration-300 group-hover:w-full" />
+                      </span>
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           ))}
         </div>
 
-        {/* ── BOTTOM ROW ── */}
-        <div className="flex flex-col items-center sm:flex-row sm:items-center justify-between gap-4 pt-7">
+        {/* ── GIANT WORDMARK ── */}
+        <div className="relative select-none py-6">
+          <h2
+            className="font-space font-extrabold text-transparent leading-none tracking-[-0.05em] whitespace-nowrap"
+            style={{
+              fontSize: "clamp(3.5rem, 15vw, 12rem)",
+              WebkitTextStroke: "1px rgba(240,235,229,0.08)",
+            }}
+          >
+            TheOddOnes
+          </h2>
+        </div>
 
-          <div className="flex items-center gap-2">
-         
-         
-            <span className="font-space font-bold text-[13px] text-[rgba(240,235,229,0.3)] tracking-tight">
-              TheOddOnes
-            </span>
+        {/* ── BOTTOM ROW ── */}
+        <div className="flex flex-col-reverse md:flex-row md:items-center justify-between gap-6 pt-8 border-t border-white/[0.06]">
+          <p className="text-[12px] font-light text-white/30 tracking-[0.04em]">
+            © 2026 TheOddOnes · All rights reserved
+          </p>
+
+          <div className="flex flex-wrap items-center gap-5 text-[12px] text-white/35">
+            <Link href="#" className="hover:text-white/70 transition-colors">Privacy</Link>
+            <Link href="#" className="hover:text-white/70 transition-colors">Terms</Link>
+            <Link href="#" className="hover:text-white/70 transition-colors">Contact</Link>
           </div>
 
-          <span className="text-sm sm:text-md text-neutral-300 tracking-[0.04em]">
-            © 2026  All rights reserved
-          </span>
-
-          <span className="text-sm font-light italic text-neutral-600 tracking-[0.02em]">
-           "Built by the odd ones, for odd ones."
-          </span>
-
+          {/* Socials */}
+          {/* <div className="flex items-center gap-1.5">
+            {socials.map(({ icon: Icon, label, href }) => (
+              <Link
+                key={label}
+                href={href}
+                aria-label={label}
+                className="flex h-8 w-8 items-center justify-center rounded-md text-white/40 hover:text-[#f0ebe5] hover:bg-white/[0.04] transition-all duration-200"
+              >
+                <Icon size={15} strokeWidth={1.8} />
+              </Link>
+            ))}
+          </div> */}
         </div>
       </div>
     </footer>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -24,6 +25,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-white text-black`}>
         {children}
+
+        <Toaster
+          theme="dark"
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "#140f0b",
+              border: "1px solid rgba(196,98,45,0.2)",
+              color: "#f0ebe5",
+            },
+          }}
+          />
       </body>
     </html>
   );
