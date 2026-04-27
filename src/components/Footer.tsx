@@ -86,7 +86,7 @@ export default function Footer() {
           </span>
 
           <span className="text-sm font-light italic text-neutral-600 tracking-[0.02em]">
-            Built by odd ones, for odd ones.
+            Built by odd ones, for odd ones..
           </span>
 
         </div>
