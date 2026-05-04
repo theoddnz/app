@@ -1,10 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRightIcon, Flame, Menu, X } from "lucide-react";
+import { ArrowRightIcon, Menu, X } from "lucide-react";
 import { Button3D } from "./ui/button-3d";
 
-const navLinks = ["Platform", "Community", "Blogs"];
+const navLinks = [
+  { label: "Paths", href: "/learn" },
+  { label: "Community", href: "/#community" },
+  { label: "Blogs", href: "/blogs" },
+];
+
+const NAV_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+const NAV_DURATION = "820ms";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -20,26 +27,24 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // on mobile: always full width, never pill
-  const isPill = scrolled && !isMobile;
+  const isPill = scrolled;
 
   return (
     <>
       <nav
         style={{
           position: "fixed",
-          top: isPill ? "14px" : "0px",
+          top: isPill ? (isMobile ? "10px" : "14px") : "0px",
           left: "50%",
           transform: "translateX(-50%)",
-          width: isPill ? "fit-content" : "100%",
-          maxWidth: isPill ? "none" : "100vw",
+          width: isPill ? (isMobile ? "calc(100% - 28px)" : "fit-content") : "100%",
+          maxWidth: isPill ? (isMobile ? "calc(100vw - 28px)" : "none") : "100vw",
           zIndex: 50,
-          transition: "top 0.45s cubic-bezier(0.16, 1, 0.3, 1), width 0.45s cubic-bezier(0.16, 1, 0.3, 1)",
+          transition: `top ${NAV_DURATION} ${NAV_EASE}, width ${NAV_DURATION} ${NAV_EASE}, max-width ${NAV_DURATION} ${NAV_EASE}`,
         }}
       >
         <div
@@ -49,28 +54,28 @@ export default function Navbar() {
             justifyContent: "space-between",
             gap: isPill ? "24px" : "32px",
             padding: isMobile
-              ? "14px 20px"                          // mobile: always same padding
-              : isPill ? "10px 20px" : "20px 32px",  // desktop: pill vs top
+              ? isPill ? "10px 12px" : "14px 20px"
+              : isPill ? "10px 20px" : "20px 32px",
             maxWidth: isPill ? "none" : "80rem",
             margin: isPill ? "0" : "0 auto",
             whiteSpace: isPill ? "nowrap" : "normal",
             borderRadius: isPill ? "9999px" : "0px",
-            background: scrolled ? "rgba(255,255,255,0.04)" : "transparent",
+            background: scrolled ? "color-mix(in oklch, var(--background) 82%, transparent)" : "transparent",
             backdropFilter: scrolled ? "blur(24px) saturate(180%)" : "none",
             WebkitBackdropFilter: scrolled ? "blur(24px) saturate(180%)" : "none",
             border: scrolled
-              ? "1px solid rgba(255,255,255,0.08)"
+              ? "1px solid color-mix(in oklch, var(--foreground) 10%, transparent)"
               : "1px solid transparent",
             boxShadow: scrolled
-              ? "0 0 0 1px rgba(255,255,255,0.03) inset, 0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3), 0 0 40px rgba(180,90,40,0.06)"
+              ? "0 0 0 1px color-mix(in oklch, var(--foreground) 4%, transparent) inset, 0 8px 32px rgba(0,0,0,0.18), 0 0 40px rgba(180,90,40,0.06)"
               : "none",
-            transition: "all 0.45s cubic-bezier(0.16, 1, 0.3, 1)",
+            transition: `gap ${NAV_DURATION} ${NAV_EASE}, padding ${NAV_DURATION} ${NAV_EASE}, max-width ${NAV_DURATION} ${NAV_EASE}, margin ${NAV_DURATION} ${NAV_EASE}, border-radius ${NAV_DURATION} ${NAV_EASE}, background-color ${NAV_DURATION} ${NAV_EASE}, border-color ${NAV_DURATION} ${NAV_EASE}, box-shadow ${NAV_DURATION} ${NAV_EASE}, backdrop-filter ${NAV_DURATION} ${NAV_EASE}`,
           }}
         >
           {/* Logo */}
           <Link
             href="/"
-            className="font-space text-xl font-bold text-[#f0ebe5] shrink-0 select-none flex items-center gap-2"
+            className="font-space text-xl font-bold text-foreground shrink-0 select-none flex items-center gap-2"
           >
          
             TheOddOnes
@@ -80,11 +85,11 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-0.5">
             {navLinks.map((item) => (
               <Link
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="relative text-[13.5px] font-space font-medium text-[rgba(240,235,229,0.5)] hover:text-[rgba(240,235,229,0.95)] hover:bg-white/[0.06] cursor-pointer leading-8 transition-all duration-200 px-3.5 py-1.5 rounded-full group"
+                key={item.label}
+                href={item.href}
+                className="relative text-[13.5px] font-space font-medium text-foreground/55 hover:text-foreground hover:bg-foreground/[0.06] cursor-pointer leading-8 transition-all duration-200 px-3.5 py-1.5 rounded-full group"
               >
-                {item}
+                {item.label}
                 <span className="absolute bottom-[5px] left-1/2 -translate-x-1/2 w-0 group-hover:w-3 h-[1.5px] bg-[#c4622d] transition-all duration-300 rounded-full" />
               </Link>
             ))}
@@ -97,7 +102,7 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden w-9 h-9 flex items-center cursor-pointer justify-center rounded-full hover:bg-white/[0.06] text-[#f0ebe5] transition-colors shrink-0"
+            className="md:hidden w-9 h-9 flex items-center cursor-pointer justify-center rounded-full hover:bg-foreground/[0.06] text-foreground transition-colors shrink-0"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -108,7 +113,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`fixed inset-0 z-40 flex flex-col pt-24 px-8 pb-10 transition-all duration-300 md:hidden backdrop-blur-2xl bg-[#0a0806]/80 ${
+        className={`fixed inset-0 z-40 flex flex-col pt-24 px-8 pb-10 transition-all duration-700 ease-out md:hidden backdrop-blur-2xl bg-background/85 ${
           mobileOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -117,13 +122,13 @@ export default function Navbar() {
         <div className="flex flex-col gap-1 flex-1">
           {navLinks.map((item, i) => (
             <Link
-              key={item}
-              href={`#${item.toLowerCase()}`}
+              key={item.label}
+              href={item.href}
               onClick={() => setMobileOpen(false)}
-              className="font-space text-3xl font-bold text-[rgba(240,235,229,0.2)] hover:text-[#f0ebe5] transition-colors duration-200 py-2"
+              className="font-space text-3xl font-bold text-foreground/25 hover:text-foreground transition-colors duration-200 py-2"
               style={{ transitionDelay: `${i * 40}ms` }}
             >
-              {item}
+              {item.label}
             </Link>
           ))}
         </div>

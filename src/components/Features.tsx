@@ -48,26 +48,26 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="platform" className="py-28 px-6 bg-white">
+    <section id="platform" className="py-28 px-6 bg-background text-foreground">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20">
           <div>
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-6 h-px bg-black/20" />
-              <p className="font-inter text-[11px] text-black/35 tracking-[0.25em] uppercase">
+              <div className="w-6 h-px bg-foreground/20" />
+              <p className="font-inter text-[11px] text-foreground/40 tracking-[0.25em] uppercase">
                 What this is
               </p>
             </div>
             <h2
-              className="font-space leading-[1.0] tracking-tight text-black"
+              className="font-space leading-[1.0] tracking-tight text-foreground"
               style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}
             >
               Not a platform.<br />An environment.
             </h2>
           </div>
-          <p className="font-inter text-black/35 text-sm max-w-xs leading-relaxed md:text-right">
+          <p className="font-inter text-foreground/45 text-sm max-w-xs leading-relaxed md:text-right">
             Structured enough to push you. Loose enough that you
             can break the whole thing and still find your way.
           </p>
@@ -79,48 +79,48 @@ export default function Features() {
             <div
               key={i}
               className={`
-                group relative border border-black/8 rounded-2xl p-7
-                hover:border-black/15 hover:shadow-sm transition-all duration-300
-                ${size === "large" ? "md:col-span-2 bg-[#f5f3f0]" : "bg-white"}
+                group relative border border-foreground/10 rounded-2xl p-7
+                hover:border-foreground/20 hover:shadow-sm transition-all duration-300
+                ${size === "large" ? "md:col-span-2 bg-muted" : "bg-card"}
               `}
             >
               {/* Tag */}
-              <p className="font-inter text-[10px] tracking-[0.2em] text-black/20 uppercase mb-6">
+              <p className="font-inter text-[10px] tracking-[0.2em] text-foreground/30 uppercase mb-6">
                 {tag}
               </p>
 
               {/* Icon */}
-              <div className="w-9 h-9 rounded-xl border border-black/10 flex items-center justify-center mb-5 group-hover:bg-black group-hover:border-black transition-all duration-300">
+              <div className="w-9 h-9 rounded-xl border border-foreground/10 flex items-center justify-center mb-5 group-hover:bg-foreground group-hover:border-foreground transition-all duration-300">
                 <Icon
                   size={16}
                   strokeWidth={1.5}
-                  className="text-black/40 group-hover:text-white transition-colors duration-300"
+                  className="text-foreground/45 group-hover:text-background transition-colors duration-300"
                 />
               </div>
 
               {/* Title */}
-              <h3 className="font-space font-semibold text-base leading-snug mb-3 text-black">
+              <h3 className="font-space font-semibold text-base leading-snug mb-3 text-foreground">
                 {title}
               </h3>
 
               {/* Body */}
-              <p className="font-inter text-black/45 text-sm leading-relaxed">
+              <p className="font-inter text-foreground/50 text-sm leading-relaxed">
                 {body}
               </p>
 
               {/* Hover accent line */}
-              <div className="absolute bottom-0 left-7 right-7 h-px bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              <div className="absolute bottom-0 left-7 right-7 h-px bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </div>
           ))}
         </div>
 
         {/* Footer note */}
         <div className="mt-16 flex items-center gap-4">
-          <div className="flex-1 h-px bg-black/6" />
-          <p className="font-inter text-[11px] text-black/20 tracking-[0.2em] uppercase shrink-0">
+          <div className="flex-1 h-px bg-foreground/10" />
+          <p className="font-inter text-[11px] text-foreground/30 tracking-[0.2em] uppercase shrink-0">
             No certificates. No completion badges.
           </p>
-          <div className="flex-1 h-px bg-black/6" />
+          <div className="flex-1 h-px bg-foreground/10" />
         </div>
 
       </div>

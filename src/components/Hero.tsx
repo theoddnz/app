@@ -1,13 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Terminal, Cpu, Wrench, GitBranch, Zap, ArrowRight, Flame,Camera,Bot } from "lucide-react";
-import {
-  motion,
-  useAnimate,
-  stagger,
-  useInView,
-} from "framer-motion";
+import { Terminal, Wrench, Zap, Camera, Bot } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button3D } from "@/components/ui/button-3d";
 const floatingIcons = [
   { Icon: Terminal, label: "ROS",      className: "top-[24%] left-[11%]",  rotate: "-4deg" },
@@ -20,7 +13,7 @@ const SUBTITLE = "A place for people who think differently about learning.";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen bg-[#0a0806] flex flex-col items-center justify-center overflow-hidden pt-0">
+    <section className="relative min-h-screen bg-background flex flex-col items-center justify-center overflow-hidden pt-0 dark:bg-[#0a0806]">
 
       {/* ── Floating icons – appear last, bob forever ── */}
       {floatingIcons.map(({ Icon, label, className, rotate }, i) => (
@@ -45,7 +38,7 @@ export default function Hero() {
               ease: "easeInOut",
               delay: 1.4 + i * 0.12,
             }}
-            className="w-[60px] h-[60px] bg-white/[0.03] rounded-[18px] border border-white/[0.07] backdrop-blur-sm flex items-center justify-center"
+            className="w-[60px] h-[60px] bg-foreground/[0.03] rounded-[18px] border border-foreground/[0.07] backdrop-blur-sm flex items-center justify-center"
           >
             <Icon size={24} strokeWidth={1.5} className="text-secondary" />
           </motion.div>
@@ -78,7 +71,7 @@ export default function Hero() {
         {/* Headline — each line clips up from behind a mask */}
         <div className="overflow-hidden leading-none mb-1">
           <motion.h1
-            className="font-space text-[clamp(3.2rem,9vw,6rem)] font-extrabold tracking-tight text-white leading-none"
+            className="font-space text-[clamp(3.2rem,9vw,6rem)] font-extrabold tracking-tight text-foreground leading-none dark:text-white"
             initial={{ y: "110%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
@@ -89,7 +82,7 @@ export default function Hero() {
 
         <div className="overflow-hidden leading-none mb-6">
           <motion.h1
-            className="font-space text-[clamp(3.2rem,9vw,6rem)] font-extrabold tracking-tight text-white leading-none"
+            className="font-space text-[clamp(3.2rem,9vw,6rem)] font-extrabold tracking-tight text-foreground leading-none dark:text-white"
             initial={{ y: "110%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
@@ -112,7 +105,7 @@ export default function Hero() {
           {SUBTITLE.split(" ").map((word, i) => (
             <div key={i} className="overflow-hidden">
               <motion.span
-                className="inline-block text-[1.05rem] font-light text-white/60 leading-relaxed"
+                className="inline-block text-[1.05rem] font-light text-foreground/60 leading-relaxed"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{

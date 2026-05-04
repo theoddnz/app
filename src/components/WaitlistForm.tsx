@@ -33,7 +33,7 @@ function Field({
     <div className="group relative flex flex-col gap-2">
       <Label
         htmlFor={id}
-        className="text-[10.5px] tracking-[0.22em] uppercase text-white/35 font-medium transition-colors duration-200 group-focus-within:text-[rgba(196,98,45,0.9)]"
+        className="text-[10.5px] tracking-[0.22em] uppercase text-foreground/40 font-medium transition-colors duration-200 group-focus-within:text-[rgba(196,98,45,0.9)]"
       >
         {label}
       </Label>
@@ -42,16 +42,16 @@ function Field({
         <Icon
           size={15}
           strokeWidth={1.75}
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-white/25 transition-colors duration-200 group-focus-within:text-[#c4622d]"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/30 transition-colors duration-200 group-focus-within:text-[#c4622d]"
         />
         <Input
           id={id}
           {...props}
           className={cn(
             "h-[52px] w-full rounded-xl",
-            "border border-white/[0.06] bg-white/[0.015]",
-            "pl-11 pr-4 text-[14.5px] font-light text-[#f0ebe5]",
-            "placeholder:text-white/[0.2] placeholder:font-light",
+            "border border-foreground/[0.08] bg-foreground/[0.015]",
+            "pl-11 pr-4 text-[14.5px] font-light text-foreground",
+            "placeholder:text-foreground/[0.35] placeholder:font-light",
             "shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]",
             "outline-none transition-all duration-200",
             "focus-visible:ring-0 focus-visible:ring-offset-0",
@@ -107,7 +107,7 @@ export default function WaitlistForm() {
   }
 
   return (
-    <section id="waitlist" className="relative bg-[#0a0806] px-6 md:px-10 py-24 overflow-hidden">
+    <section id="waitlist" className="relative bg-background px-6 md:px-10 py-24 overflow-hidden text-foreground dark:bg-[#0a0806]">
       {/* Ambient glow */}
       <div
         aria-hidden
@@ -129,7 +129,7 @@ export default function WaitlistForm() {
           </div>
 
           <h2
-            className="font-space font-extrabold tracking-tight text-[#f0ebe5] leading-[1.05] mb-6"
+            className="font-space font-extrabold tracking-tight text-foreground leading-[1.05] mb-6"
             style={{ fontSize: "clamp(2rem, 4.6vw, 3.25rem)" }}
           >
             The ones who wait<br />
@@ -168,7 +168,7 @@ export default function WaitlistForm() {
               className="relative"
             >
               {/* Card */}
-              <div className="relative rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.025] to-white/[0.005] p-7 md:p-8 backdrop-blur-sm">
+              <div className="relative rounded-2xl border border-foreground/[0.08] bg-gradient-to-b from-foreground/[0.025] to-foreground/[0.005] p-7 md:p-8 backdrop-blur-sm">
                 {/* Corner accent */}
                 <div
                   aria-hidden
@@ -179,7 +179,7 @@ export default function WaitlistForm() {
                   <div className="h-7 w-7 rounded-lg bg-[rgba(196,98,45,0.1)] border border-[rgba(196,98,45,0.25)] flex items-center justify-center">
                     <Armchair size={13} className="text-[#c4622d]" strokeWidth={2} />
                   </div>
-                  <p className="text-[12px] tracking-[0.14em] uppercase text-white/60 font-medium">
+                  <p className="text-[12px] tracking-[0.14em] uppercase text-foreground/60 font-medium">
                     Reserve your seat
                   </p>
                 </div>
@@ -229,7 +229,7 @@ export default function WaitlistForm() {
               initial={{ opacity: 0, scale: 0.96, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, ease: EASE }}
-              className="relative rounded-2xl border border-[rgba(196,98,45,0.2)] bg-gradient-to-b from-[rgba(196,98,45,0.05)] to-white/[0.005] p-10 flex flex-col items-center text-center gap-5"
+              className="relative rounded-2xl border border-[rgba(196,98,45,0.2)] bg-gradient-to-b from-[rgba(196,98,45,0.05)] to-foreground/[0.005] p-10 flex flex-col items-center text-center gap-5"
             >
               <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
@@ -241,12 +241,12 @@ export default function WaitlistForm() {
               </motion.div>
 
               <div>
-                <p className="font-space font-extrabold text-[1.6rem] tracking-tight text-[#f0ebe5] mb-2">
+                <p className="font-space font-extrabold text-[1.6rem] tracking-tight text-foreground mb-2">
                   Seat reserved.
                 </p>
-                <p className="text-[13.5px] font-light text-white/45 leading-relaxed">
-                  You're one of us now.<br />
-                  We'll find you when it's time.
+                <p className="text-[13.5px] font-light text-foreground/50 leading-relaxed">
+                  You&apos;re one of us now.<br />
+                  We&apos;ll find you when it&apos;s time.
                 </p>
               </div>
             </motion.div>

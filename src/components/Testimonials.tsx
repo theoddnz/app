@@ -18,10 +18,10 @@ const quotes = [
 
 export default function Testimonials() {
   return (
-    <section id="community" className="py-28 px-6 bg-white">
+    <section id="community" className="py-28 px-6 bg-background text-foreground">
       <div className="max-w-6xl mx-auto">
         <div className="mb-16">
-          <p className="font-inter text-xs text-black/40 tracking-widest uppercase mb-3">
+          <p className="font-inter text-xs text-foreground/45 tracking-widest uppercase mb-3">
             From the community
           </p>
           <h2 className="font-space text-[clamp(2rem,5vw,3.5rem)] font-700 leading-tight tracking-tight">
@@ -31,17 +31,17 @@ export default function Testimonials() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {quotes.map(({ text, name, role }, i) => (
-            <div key={i} className="border border-black/8 rounded-2xl p-8">
-              <p className="font-inter text-base text-black leading-relaxed mb-8">
+            <div key={i} className="border border-foreground/10 rounded-2xl p-8 bg-card">
+              <p className="font-inter text-base text-foreground leading-relaxed mb-8">
                 &ldquo;{text}&rdquo;
               </p>
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-black/8 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-full bg-foreground/10 flex items-center justify-center">
                   <span className="font-space text-xs font-600">{name[0]}</span>
                 </div>
                 <div>
                   <p className="font-space text-sm font-600">{name}</p>
-                  <p className="font-inter text-xs text-black/45">{role}</p>
+                  <p className="font-inter text-xs text-foreground/50">{role}</p>
                 </div>
               </div>
             </div>

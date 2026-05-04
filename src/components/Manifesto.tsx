@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
 // ── helpers ──────────────────────────────────────────────
@@ -25,7 +25,9 @@ function RevealLine({
         className="font-space font-extrabold tracking-tight leading-[1.08]"
         style={{
           fontSize: "clamp(1.7rem, 4.2vw, 3.4rem)",
-          color: dim ? "rgba(255,255,255,0.2)" : "#f0ebe5",
+          color: dim
+            ? "color-mix(in oklch, var(--foreground) 22%, transparent)"
+            : "var(--foreground)",
           paddingLeft: indent ? "clamp(1.5rem, 7vw, 7rem)" : "0",
         }}
         initial={{ y: "105%", opacity: 0 }}
@@ -63,34 +65,6 @@ function FadeUp({
 }
 
 // ── Marquee ───────────────────────────────────────────────
-const MARQUEE_WORDS = ["BUILD.", "BREAK.", "OBSESS.", "REPEAT.", "SHIP.", "LEARN."];
-
-function Marquee() {
-  const doubled = [...MARQUEE_WORDS, ...MARQUEE_WORDS];
-  return (
-    <div className="border-t border-b border-white/[0.05] py-3.5 overflow-hidden mt-20">
-      <motion.div
-        className="flex gap-0 w-max"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-        whileHover={{ animationPlayState: "paused" } as any}
-      >
-        {[...doubled, ...doubled].map((word, i) => (
-          <span key={i} className="inline-flex items-center gap-6 px-6">
-            <span
-              className="font-space text-[13px] font-bold tracking-[0.3em] whitespace-nowrap"
-              style={{ color: i % 2 === 0 ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.1)" }}
-            >
-              {word}
-            </span>
-            <span className="w-1 h-1 rounded-full bg-[#c4622d] opacity-50 shrink-0" />
-          </span>
-        ))}
-      </motion.div>
-    </div>
-  );
-}
-
 // ── Trait card ────────────────────────────────────────────
 const traits = [
   { n: "01", title: "You build before you're ready", desc: "Shipping a broken thing is worth more than perfecting one that never ships." },
@@ -105,14 +79,14 @@ function TraitCard({ n, title, desc, delay }: { n: string; title: string; desc: 
   return (
     <motion.div
       ref={ref}
-      className="bg-[#0a0806] p-6 border-r border-b border-white/[0.05] last:border-r-0 hover:bg-[rgba(196,98,45,0.04)] transition-colors duration-300 cursor-default"
+      className="bg-background p-6 border-r border-b border-foreground/[0.08] last:border-r-0 hover:bg-[rgba(196,98,45,0.04)] transition-colors duration-300 cursor-default dark:bg-[#0a0806]"
       initial={{ opacity: 0, y: 22 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.65, delay, ease: EASE }}
     >
       <p className="font-space text-[11px] font-bold tracking-[0.1em] text-[rgba(196,98,45,0.5)] mb-2.5">{n}</p>
-      <p className="font-space text-[1.05rem] font-bold text-[rgba(255,255,255,0.85)] mb-2 leading-snug">{title}</p>
-      <p className="text-[12.5px] font-light text-[rgba(255,255,255,0.3)] ">{desc}</p>
+      <p className="font-space text-[1.05rem] font-bold text-foreground/85 mb-2 leading-snug">{title}</p>
+      <p className="text-[12.5px] font-light text-foreground/40 ">{desc}</p>
     </motion.div>
   );
 }
@@ -123,7 +97,7 @@ function BecomeHeading() {
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
 
   const lines = [
-    <>You don't fit the</>,
+    <>You don&apos;t fit the</>,
     <>mold. <span className="text-[#c4622d]">Good.</span></>,
     <>Neither did anyone</>,
     <>who <span className="text-[#c4622d]">changed things.</span></>,
@@ -134,7 +108,7 @@ function BecomeHeading() {
       {lines.map((line, i) => (
         <div key={i} className="overflow-hidden leading-none">
           <motion.span
-            className="font-space font-extrabold tracking-tight text-[#f0ebe5] block"
+            className="font-space font-extrabold tracking-tight text-foreground block"
             style={{ fontSize: "clamp(2.2rem, 6vw, 5rem)", lineHeight: 1.05 }}
             initial={{ y: "105%", opacity: 0 }}
             animate={inView ? { y: 0, opacity: 1 } : {}}
@@ -151,16 +125,19 @@ function BecomeHeading() {
 // ── Main export ───────────────────────────────────────────
 export default function Manifesto() {
   return (
-    <section className="bg-[#0a0806] overflow-hidden">
+    <section className="bg-background px-6 py-24 text-foreground dark:bg-[#0a0806] md:px-10 md:py-28">
 
       {/* ── Manifesto lines ── */}
-      <div className="max-w-4xl mx-auto px-6 pt-28 pb-16">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
 
       
 
-        <FadeUp className="mb-5">
+        <FadeUp className="lg:pt-2">
           <p className="text-[10px] tracking-[0.28em] uppercase text-[rgba(196,98,45,0.6)] font-medium">
             Why this exists
+          </p>
+          <p className="mt-5 max-w-sm text-sm font-light leading-7 text-foreground/55">
+            TheOddOnes is for builders who learn through contact with real systems, real tools, and real failure.
           </p>
         </FadeUp>
 
@@ -188,7 +165,7 @@ export default function Manifesto() {
           <div className="h-3" />
 
           <RevealLine indent delay={0.3}>
-            Here, they're the ones
+            Here, they&apos;re the ones
           </RevealLine>
           <RevealLine indent delay={0.36}>
             who <span className="text-[#c4622d]">get it.</span>
@@ -215,23 +192,23 @@ export default function Manifesto() {
         {/* Pull quote */}
         <FadeUp delay={0.05} className="mt-16 border-l-2 border-[rgba(196,98,45,0.3)] pl-7">
           <p
-            className="font-light italic text-[rgba(255,255,255,0.5)] leading-relaxed"
+            className="font-light italic text-foreground/55 leading-relaxed"
             style={{ fontSize: "clamp(1rem, 1.8vw, 1.25rem)" }}
           >
-            "The best people we know never finished a single tutorial.
-            They just kept breaking things until something worked."
+            &ldquo;The best people we know never finished a single tutorial.
+            They just kept breaking things until something worked.&rdquo;
           </p>
-          <p className="text-[10px] tracking-[0.22em] uppercase text-[rgba(255,255,255,0.18)] mt-3">
+          <p className="text-[10px] tracking-[0.22em] uppercase text-foreground/30 mt-3">
             — The people who built this
           </p>
         </FadeUp>
       </div>
 
       {/* ── Marquee ── */}
-      <Marquee />
+      
 
       {/* ── Become TheOddOne ── */}
-      <div className="max-w-4xl mx-auto px-6 pt-24 pb-24">
+      <div className="mx-auto max-w-6xl pt-24">
         <FadeUp className="mb-5">
           <p className="text-[10px] tracking-[0.28em] uppercase text-[rgba(196,98,45,0.6)] font-medium">
             Become TheOddOne
@@ -241,7 +218,7 @@ export default function Manifesto() {
         <BecomeHeading />
 
         {/* Traits grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 border-t border-l border-white/[0.05] mt-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 border-t border-l border-foreground/[0.08] mt-12">
           {traits.map((t, i) => (
             <TraitCard key={t.n} {...t} delay={i * 0.07} />
           ))}
