@@ -1,8 +1,20 @@
 import Link from "next/link";
-import { ArrowUpRight, Mail } from "lucide-react";
+import {
+  ArrowUpRight,
+  Mail,
+  Rss,
+  ChevronRight,
+  Clock,
+  Pencil,
+  TrendingUp,
+  Hash,
+  Home,
+} from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { posts, tagColors } from "@/lib/posts";
+
+const FILTERS = ["All", "ROS2", "Drones", "Hardware", "Philosophy"];
 
 export default function BlogPage() {
   const featured = posts.find((p) => p.featured)!;
@@ -12,98 +24,179 @@ export default function BlogPage() {
     <main className="min-h-screen bg-background text-foreground">
       <Navbar />
 
-      <section className="px-6 pb-16 pt-36 border-b border-black/6 dark:border-white/[0.06]">
-        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-8 md:flex-row md:items-end">
-          <div>
-            <div className="mb-6 flex items-center gap-3">
-              <div className="h-px w-6 bg-black/20 dark:bg-white/20" />
-              <p className="font-inter text-[11px] uppercase tracking-[0.25em] text-black/35 dark:text-white/35">
-                Field notes
-              </p>
-            </div>
-            <h1
-              className="font-space font-bold leading-[0.95] tracking-tight text-foreground"
-              style={{ fontSize: "clamp(3rem, 8vw, 6rem)" }}
+      {/* ── HERO ── */}
+      <section className="relative px-6 pb-0 pt-32 overflow-hidden">
+        {/* subtle dot-grid */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, currentColor 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+
+        <div className="mx-auto max-w-6xl">
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-8 flex items-center gap-2 font-inter text-xs font-semibold text-foreground/40"
+          >
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
             >
-              Things we
-              <br />
-              learned
-              <br />
-              the hard way.
-            </h1>
-          </div>
-          <div className="md:max-w-sm">
-            <p className="mb-6 font-inter text-sm leading-relaxed text-foreground/55">
-              Medium-style reading, OddOnes energy: build logs, essays, and
-              practical notes from the messy middle of learning.
+              <Home size={14} strokeWidth={2} />
+              Home
+            </Link>
+            <ChevronRight size={12} strokeWidth={2} className="opacity-40" />
+            <span className="text-foreground/70">Field notes</span>
+          </nav>
+
+          {/* eyebrow */}
+          <div className="mb-8 flex items-center gap-3">
+            <div className="h-px w-8 bg-foreground/20" />
+            <p className="font-inter text-[10px] uppercase tracking-[0.3em] text-foreground/35">
+              Field notes
             </p>
-            <div className="flex flex-wrap gap-2">
-              {["All", "ROS2", "Drones", "Hardware", "Philosophy"].map((f) => (
-                <button
-                  key={f}
-                  className={`rounded-full border px-3 py-1.5 font-inter text-xs transition-colors ${
-                    f === "All"
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-foreground/10 bg-background text-foreground/50 hover:border-foreground/30 hover:text-foreground"
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
+          </div>
+
+          {/* headline + meta split */}
+          <div className="grid gap-12 pb-16 lg:grid-cols-[1fr_380px] lg:items-end">
+            {/* big headline */}
+            <h1
+              className="font-space font-bold leading-[0.9] tracking-tight"
+              style={{ fontSize: "clamp(3rem, 8vw, 6.2rem)" }}
+            >
+              Things we learned
+              <br />
+              <span className="text-foreground/25">the hard way.</span>
+            </h1>
+
+            {/* right col — description + filters */}
+            <div className="flex flex-col gap-7">
+              <p className="font-inter text-sm leading-relaxed text-foreground/50">
+                Medium-style reading, OddOnes energy. Build logs, essays, and
+                practical notes from the messy middle of learning.
+              </p>
+
+              {/* stat row */}
+              <div className="flex flex-wrap items-center gap-6">
+                {[
+                  { icon: Pencil, label: `${posts.length} posts` },
+                  { icon: TrendingUp, label: "Weekly drops" },
+                  { icon: Rss, label: "Free forever" },
+                ].map(({ icon: Icon, label }) => (
+                  <div key={label} className="flex items-center gap-2 text-foreground/35">
+                    <Icon size={13} strokeWidth={1.8} />
+                    <span className="font-inter text-xs">{label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* filter pills */}
+              <div className="flex flex-wrap gap-2">
+                {FILTERS.map((f) => (
+                  <button
+                    key={f}
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-inter text-[11px] transition-colors ${
+                      f === "All"
+                        ? "border-foreground bg-foreground text-background"
+                        : "border-foreground/10 bg-transparent text-foreground/45 hover:border-foreground/30 hover:text-foreground"
+                    }`}
+                  >
+                    {f !== "All" && <Hash size={10} strokeWidth={2} />}
+                    {f}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
+
+        <div className="border-t border-black/7 dark:border-white/[0.07]" />
       </section>
 
-      <section className="px-6 py-16 border-b border-black/6 dark:border-white/[0.06]">
+      {/* ── FEATURED ── */}
+      <section className="px-6 py-16">
         <div className="mx-auto max-w-6xl">
+          {/* label */}
+          <div className="mb-8 flex items-center justify-between">
+            <p className="font-inter text-[10px] uppercase tracking-[0.28em] text-foreground/30">
+              Featured
+            </p>
+            <Link
+              href={`/blogs/${featured.slug}`}
+              className="flex items-center gap-1 font-inter text-xs text-foreground/35 transition-colors hover:text-foreground"
+            >
+              Read now <ChevronRight size={13} strokeWidth={1.8} />
+            </Link>
+          </div>
+
           <Link href={`/blogs/${featured.slug}`} className="group block">
-            <div className="grid overflow-hidden rounded-2xl border border-black/8 transition-colors duration-300 hover:border-black/20 dark:border-white/[0.08] dark:hover:border-white/20 md:grid-cols-2">
-              <div className="relative flex min-h-[320px] flex-col justify-between overflow-hidden bg-[#0a0a0a] p-12">
+            <div className="grid overflow-hidden rounded-2xl border border-black/8 transition-all duration-300 hover:border-black/18 dark:border-white/[0.08] dark:hover:border-white/18 lg:grid-cols-[0.9fr_1.1fr]">
+
+              {/* left — visual panel */}
+              <div className="relative flex min-h-[340px] flex-col justify-between overflow-hidden bg-[#0b0b0b] p-10 md:p-12">
+                {/* grid lines */}
                 <div
-                  className="absolute inset-0 opacity-10"
+                  aria-hidden
+                  className="absolute inset-0 opacity-[0.09]"
                   style={{
                     backgroundImage:
-                      "linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)",
-                    backgroundSize: "40px 40px",
+                      "linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)",
+                    backgroundSize: "36px 36px",
                   }}
                 />
+                {/* tag */}
                 <span
-                  className={`relative self-start rounded-full px-2.5 py-1 font-inter text-[10px] uppercase tracking-[0.2em] ${tagColors[featured.tag]}`}
+                  className={`relative self-start rounded-full px-3 py-1.5 font-inter text-[10px] uppercase tracking-[0.22em] ${tagColors[featured.tag]}`}
                 >
                   {featured.tag}
                 </span>
+
+                {/* ghost number */}
                 <p
-                  className="relative select-none font-space font-bold leading-none text-white/10"
-                  style={{ fontSize: "clamp(5rem, 12vw, 9rem)" }}
+                  aria-hidden
+                  className="relative select-none font-space font-bold leading-none text-white/[0.07]"
+                  style={{ fontSize: "clamp(6rem, 14vw, 11rem)" }}
                 >
                   01
                 </p>
               </div>
 
-              <div className="flex flex-col justify-between bg-[#f5f3f0] p-10 dark:bg-white/[0.04]">
+              {/* right — content panel */}
+              <div className="flex flex-col justify-between bg-[#f6f4f1] p-10 dark:bg-white/[0.035] md:p-12">
                 <div>
-                  <p className="mb-5 font-inter text-[11px] uppercase tracking-[0.2em] text-foreground/35">
-                    {featured.date} / {featured.readTime} read
-                  </p>
+                  <div className="mb-6 flex items-center gap-3 font-inter text-[10px] uppercase tracking-[0.2em] text-foreground/30">
+                    <span>{featured.date}</span>
+                    <span className="h-px w-4 bg-foreground/20" />
+                    <span className="flex items-center gap-1.5">
+                      <Clock size={11} strokeWidth={1.8} />
+                      {featured.readTime} read
+                    </span>
+                  </div>
+
                   <h2
-                    className="mb-5 font-space font-bold leading-tight text-foreground transition-opacity group-hover:opacity-70"
-                    style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)" }}
+                    className="font-space font-bold leading-[1.05] text-foreground transition-opacity group-hover:opacity-65"
+                    style={{ fontSize: "clamp(1.5rem, 2.8vw, 2.15rem)" }}
                   >
                     {featured.title}
                   </h2>
-                  <p className="font-inter text-sm leading-relaxed text-foreground/55">
+
+                  <p className="mt-5 font-inter text-sm leading-relaxed text-foreground/52">
                     {featured.excerpt}
                   </p>
                 </div>
-                <div className="mt-8 flex items-center gap-2">
-                  <span className="font-inter text-sm text-foreground/45 transition-colors group-hover:text-foreground">
+
+                <div className="mt-10 flex items-center gap-3">
+                  <span className="font-inter text-sm text-foreground/40 transition-colors group-hover:text-foreground">
                     Read it
                   </span>
                   <ArrowUpRight
                     size={16}
                     strokeWidth={1.8}
-                    className="text-foreground/30 transition-colors group-hover:text-foreground"
+                    className="text-foreground/25 transition-all group-hover:text-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   />
                 </div>
               </div>
@@ -112,41 +205,62 @@ export default function BlogPage() {
         </div>
       </section>
 
-      <section className="px-6 py-16">
+      {/* ── POST GRID ── */}
+      <section className="px-6 pb-20">
         <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl bg-black/6 dark:bg-white/[0.08] md:grid-cols-2 lg:grid-cols-3">
+          {/* label */}
+          <p className="mb-8 font-inter text-[10px] uppercase tracking-[0.28em] text-foreground/30">
+            All posts
+          </p>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {rest.map((post, i) => (
               <Link
                 key={post.slug}
                 href={`/blogs/${post.slug}`}
-                className="group flex min-h-[280px] flex-col justify-between bg-background p-8 transition-colors duration-200 hover:bg-[#f5f3f0] dark:hover:bg-white/[0.04]"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-black/8 bg-background p-7 transition-all duration-200 hover:border-black/18 dark:border-white/[0.07] dark:hover:border-white/18 min-h-[280px]"
               >
+                {/* ghost index */}
+                <span
+                  aria-hidden
+                  className="absolute right-7 top-7 font-space text-5xl font-bold text-foreground/[0.05] select-none"
+                >
+                  {String(i + 2).padStart(2, "0")}
+                </span>
+
+                {/* top */}
                 <div>
-                  <div className="mb-6 flex items-center justify-between">
+                  <div className="mb-5 flex items-center gap-3">
                     <span
                       className={`rounded-full px-2.5 py-1 font-inter text-[10px] uppercase tracking-[0.2em] ${tagColors[post.tag]}`}
                     >
                       {post.tag}
                     </span>
-                    <span className="font-space text-3xl font-bold text-foreground/10">
-                      0{i + 2}
-                    </span>
                   </div>
-                  <h3 className="mb-3 font-space text-base font-semibold leading-snug text-foreground transition-opacity group-hover:opacity-60">
+
+                  <h3 className="font-space text-[1.05rem] font-semibold leading-snug text-foreground transition-opacity group-hover:opacity-60">
                     {post.title}
                   </h3>
-                  <p className="line-clamp-3 font-inter text-xs leading-relaxed text-foreground/45">
+
+                  <p className="mt-3 line-clamp-3 font-inter text-xs leading-relaxed text-foreground/42">
                     {post.excerpt}
                   </p>
                 </div>
-                <div className="mt-6 flex items-center justify-between border-t border-black/6 pt-5 dark:border-white/[0.06]">
-                  <p className="font-inter text-[10px] uppercase tracking-[0.15em] text-foreground/35">
-                    {post.date} / {post.readTime}
-                  </p>
+
+                {/* bottom meta */}
+                <div className="mt-7 flex items-center justify-between border-t border-black/6 pt-5 dark:border-white/[0.06]">
+                  <div className="flex items-center gap-3 font-inter text-[10px] uppercase tracking-[0.15em] text-foreground/30">
+                    <span>{post.date}</span>
+                    <span className="h-px w-3 bg-foreground/20" />
+                    <span className="flex items-center gap-1">
+                      <Clock size={10} strokeWidth={1.8} />
+                      {post.readTime}
+                    </span>
+                  </div>
                   <ArrowUpRight
-                    size={16}
+                    size={15}
                     strokeWidth={1.8}
-                    className="text-foreground/25 transition-colors group-hover:text-foreground"
+                    className="text-foreground/20 transition-all group-hover:text-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   />
                 </div>
               </Link>
@@ -155,42 +269,59 @@ export default function BlogPage() {
         </div>
       </section>
 
+      {/* ── NEWSLETTER ── */}
       <section className="px-6 pb-24">
         <div className="mx-auto max-w-6xl">
-          <div className="relative flex flex-col items-center justify-between gap-8 overflow-hidden rounded-2xl bg-[#0a0a0a] p-12 md:flex-row">
+          <div className="relative overflow-hidden rounded-2xl bg-[#0b0b0b] text-white">
+            {/* dot-grid */}
             <div
-              className="absolute inset-0 opacity-5"
+              aria-hidden
+              className="absolute inset-0 opacity-[0.06]"
               style={{
                 backgroundImage:
-                  "radial-gradient(circle at 20% 50%, white 1px, transparent 1px)",
-                backgroundSize: "32px 32px",
+                  "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)",
+                backgroundSize: "28px 28px",
               }}
             />
-            <div className="relative">
-              <p className="mb-3 font-inter text-[11px] uppercase tracking-[0.25em] text-white/25">
-                Stay in the loop
-              </p>
-              <h3
-                className="font-space font-bold leading-tight text-white"
-                style={{ fontSize: "clamp(1.5rem, 3vw, 2.2rem)" }}
-              >
-                New notes drop
-                <br />
-                when something breaks.
-              </h3>
-            </div>
-            <div className="relative flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-              <input
-                type="email"
-                placeholder="your@email.com"
-                className="w-full rounded-full border border-white/10 bg-white/8 px-5 py-3 font-inter text-sm text-white placeholder:text-white/20 transition-colors focus:border-white/30 focus:outline-none sm:w-64"
-              />
-              <button className="rounded-full bg-white px-6 py-3 font-inter text-sm text-black transition-colors hover:bg-white/90">
-                <span className="inline-flex items-center gap-2">
+
+            <div className="relative flex flex-col gap-10 p-10 md:flex-row md:items-center md:justify-between md:p-12">
+              {/* text */}
+              <div>
+                <p className="mb-3 font-inter text-[10px] uppercase tracking-[0.28em] text-white/25">
+                  Stay in the loop
+                </p>
+                <h3
+                  className="font-space font-bold leading-tight text-white"
+                  style={{ fontSize: "clamp(1.6rem, 3vw, 2.4rem)" }}
+                >
+                  New notes drop
+                  <br />
+                  when something breaks.
+                </h3>
+                <p className="mt-4 max-w-sm font-inter text-sm leading-relaxed text-white/38">
+                  No fluff. Just the stuff we wish someone had written when we
+                  were figuring it out.
+                </p>
+              </div>
+
+              {/* form */}
+              <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
+                <div className="relative">
+                  <Mail
+                    size={14}
+                    strokeWidth={1.8}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white/25"
+                  />
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    className="w-full rounded-full border border-white/10 bg-white/7 py-3 pl-10 pr-5 font-inter text-sm text-white placeholder:text-white/20 transition-colors focus:border-white/28 focus:outline-none sm:w-64"
+                  />
+                </div>
+                <button className="rounded-full bg-white px-7 py-3 font-inter text-sm font-medium text-black transition-colors hover:bg-white/88">
                   Get notified
-                  <Mail size={14} strokeWidth={1.8} />
-                </span>
-              </button>
+                </button>
+              </div>
             </div>
           </div>
         </div>

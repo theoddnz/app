@@ -17,6 +17,10 @@ const hrefs: Record<string, string> = {
   "Build Logs": "/blogs",
   "ROS Deep Dives": "/blogs",
   Hardware: "/blogs",
+  Discord: "/community",
+  GitHub: "/community",
+  "Twitter / X": "/community",
+  YouTube: "/community",
 };
 
 const labSignals = [
@@ -40,7 +44,7 @@ export default function Footer() {
       />
 
       <div className="relative mx-auto max-w-6xl">
-        <div className="mb-14 overflow-hidden rounded-2xl border border-black/[0.08] bg-background/65 shadow-[0_1px_0_rgba(255,255,255,0.65)_inset] dark:border-white/[0.08] dark:bg-white/[0.03]">
+        {/* <div className="mb-14 overflow-hidden rounded-2xl border border-black/[0.08] bg-background/65 shadow-[0_1px_0_rgba(255,255,255,0.65)_inset] dark:border-white/[0.08] dark:bg-white/[0.03]">
           <div className="grid grid-cols-2 md:grid-cols-4">
             {labSignals.map(({ label, icon: Icon }) => (
               <div
@@ -63,7 +67,7 @@ export default function Footer() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="grid grid-cols-2 gap-10 py-10 md:grid-cols-4 md:gap-12">
           <div className="col-span-2 flex flex-col gap-5 md:col-span-1">

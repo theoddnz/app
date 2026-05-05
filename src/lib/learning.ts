@@ -1,3 +1,9 @@
+export type CurriculumModule = {
+  moduleName: string;
+  topic: string;
+  keyConcepts: string[];
+};
+
 export type LearningPath = {
   slug: string;
   name: string;
@@ -7,7 +13,7 @@ export type LearningPath = {
   pace: string;
   signal: string;
   thumbnailNote: string;
-  curriculum: string[];
+  curriculum: (string | CurriculumModule)[];
   articles: {
     title: string;
     excerpt: string;
@@ -73,17 +79,104 @@ export const learningPaths: LearningPath[] = [
     name: "Robotics",
     label: "Hardware",
     description:
-      "A hands-on path for people who learn by wiring, breaking, debugging, and making the robot move for reasons they can explain.",
+      "Learn ROS 2 from setup to simulation, custom interfaces, hardware integration, and system debugging. Build the mental model for nodes, topics, services, actions, launch files, Gazebo, RViz2, sensors, and real robot control.",
     outcome: "Build a working robot loop: sense, decide, actuate, log, and debug the failure trail.",
-    pace: "6 build sprints",
-    signal: "Circuit dust, code traces, and proof that it moved.",
+    pace: "9 ROS 2 modules",
+    signal: "Nodes, topics, simulation traces, and proof that it moved.",
     thumbnailNote: "Thumbnail slot reserved",
     curriculum: [
-      "Robot anatomy: sensors, actuators, controllers, and power",
-      "Microcontroller basics and safe bench habits",
-      "ROS2 mental models, nodes, topics, and launch files",
-      "Motor control, sensor fusion, and calibration",
-      "Debugging dead robots with logs, meters, and patience",
+      {
+        moduleName: "Introduction to ROS 2",
+        topic: "Overview",
+        keyConcepts: [
+          "What is ROS (Robot Operating System)?",
+          "Difference between ROS 1 and ROS 2",
+          "Middleware: DDS (Data Distribution Service)",
+          "ROS 2 ecosystem and modularity",
+        ],
+      },
+      {
+        moduleName: "Installing ROS 2",
+        topic: "ROS 2 Environment Setup",
+        keyConcepts: [
+          "Installing a virtual machine on Windows",
+          "Installing ROS 2 on Ubuntu 22.04",
+          "Installing and setting up VS Code",
+          "Environment setup with source, rosdep, and ros2 CLI",
+        ],
+      },
+      {
+        moduleName: "ROS 2 Core Concepts",
+        topic: "CLI Tools",
+        keyConcepts: [
+          "Nodes, topics, services, and actions",
+          "Parameters and their scope",
+          "ROS 2 CLI tools: ros2 topic, ros2 node, and related commands",
+          "ROS 2 packages and workspace layout",
+        ],
+      },
+      {
+        moduleName: "Writing ROS 2 Nodes",
+        topic: "Node Development",
+        keyConcepts: [
+          "Publisher and subscriber APIs",
+          "Service and client APIs",
+          "Parameter usage and node configuration",
+        ],
+      },
+      {
+        moduleName: "Create Your Own Message Types",
+        topic: "Working with Custom Interfaces",
+        keyConcepts: [
+          "Messages, services, and actions",
+          ".msg, .srv, and .action file structures",
+          "Interface generation and build process",
+          "Using custom interfaces in code",
+        ],
+      },
+      {
+        moduleName: "Launch and Manage Nodes",
+        topic: "Automation and Lifecycle Management",
+        keyConcepts: [
+          "ROS 2 launch system with Python launch files",
+          "Writing launch arguments and node mappings",
+          "Lifecycle node states and transitions",
+        ],
+      },
+      {
+        moduleName: "Simulation with RViz2 and Gazebo",
+        topic: "Simulation, visualization, robot models, sensors, and control",
+        keyConcepts: [
+          "Introduction to simulation in robotics",
+          "Gazebo simulation: what Gazebo is, classic vs Ignition, installation, running a simple robot, and ROS 2 integration through ros_gz_bridge",
+          "URDF and Xacro robot models: understanding URDF, building a robot model, using Xacro, and visualizing the model in Gazebo",
+          "Getting started with RViz2: purpose of visualization, adding displays such as LaserScan, TF, Image, and RobotModel, and interpreting data",
+          "Simulating sensors: LiDAR, camera, IMU, and encoders",
+          "Publishing sensor data to ROS 2 topics and using sensor data for perception and navigation",
+          "Robot movement and control: velocity commands with cmd_vel, Twist messages, teleop nodes, differential drive control, and obstacle avoidance",
+          "Synchronizing Gazebo and RViz2 by viewing real-time simulation data in RViz2",
+        ],
+      },
+      {
+        moduleName: "Integrating Hardware",
+        topic: "Hardware Interfaces",
+        keyConcepts: [
+          "Serial communication with Arduino",
+          "Interfacing with real sensors and actuators",
+          "Connecting physical devices to ROS 2",
+          "Publishing and subscribing real sensor data",
+          "Visualizing sensor data in RViz2",
+        ],
+      },
+      {
+        moduleName: "System Monitoring and Maintenance",
+        topic: "Debugging and Logging",
+        keyConcepts: [
+          "CLI tools: ros2 topic echo, ros2 node info, and related commands",
+          "Logging levels and formatting",
+          "Using ros2 bag for data recording and playback",
+        ],
+      },
     ],
     articles: [
       {

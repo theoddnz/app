@@ -12,6 +12,12 @@ const floatingIcons = [
 const SUBTITLE = "A place for people who think differently about learning.";
 
 export default function Hero() {
+  const goToWaitlist = () => {
+    document
+      .getElementById("waitlist")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <section className="relative min-h-screen bg-background flex flex-col items-center justify-center overflow-hidden pt-0 dark:bg-[#0a0806]">
 
@@ -128,12 +134,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 1.35, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-            <Button3D>
-    Join the waitlist
-    {/* <span data-arrow>
-      <Flame size={15} strokeWidth={2} />
-    </span> */}
-  </Button3D>
+            <Button3D onClick={goToWaitlist}>Join the waitlist</Button3D>
           </motion.div>
         </motion.div>
       </div>

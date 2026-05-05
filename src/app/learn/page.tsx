@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { ArrowUpRight, Bot, Clock3, Code2, TestTube2 } from "lucide-react";
+import {
+  ArrowUpRight,
+  Bot,
+  ChevronRight,
+  Clock3,
+  Code2,
+  Home,
+  TestTube2,
+} from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { learningPaths } from "@/lib/learning";
@@ -17,6 +25,21 @@ export default function LearnPage() {
 
       <section className="px-6 pb-14 pt-36 border-b border-black/6 dark:border-white/[0.06]">
         <div className="mx-auto max-w-6xl">
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-8 flex items-center gap-2 font-inter text-xs font-semibold text-foreground/40"
+          >
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
+            >
+              <Home size={14} strokeWidth={2} />
+              Home
+            </Link>
+            <ChevronRight size={12} strokeWidth={2} className="opacity-40" />
+            <span className="text-foreground/70">Learning paths</span>
+          </nav>
+
           <div className="mb-6 flex items-center gap-3">
             <div className="h-px w-6 bg-black/20 dark:bg-white/20" />
             <p className="font-inter text-[11px] uppercase tracking-[0.25em] text-black/35 dark:text-white/35">

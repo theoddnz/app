@@ -13,6 +13,10 @@ import {
   Play,
   TestTube2,
   VideoOff,
+  ChevronRight,
+  Dot,
+  Sparkles,
+  Timer,
 } from "lucide-react";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -29,6 +33,12 @@ const pathIcons = {
   "manual-testing": TestTube2,
 };
 
+function getCurriculumTitle(
+  item: (typeof learningPaths)[number]["curriculum"][number]
+) {
+  return typeof item === "string" ? item : item.moduleName;
+}
+
 export function generateStaticParams() {
   return learningPaths.map((path) => ({ slug: path.slug }));
 }
@@ -36,13 +46,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const path = getLearningPath(slug);
-
-  if (!path) {
-    return {
-      title: "Learning path not found | TheOddOnes",
-    };
-  }
-
+  if (!path) return { title: "Learning path not found | TheOddOnes" };
   return {
     title: `${path.name} | TheOddOnes`,
     description: path.description,
@@ -52,10 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LearningDetailPage({ params }: Props) {
   const { slug } = await params;
   const path = getLearningPath(slug);
-
-  if (!path) {
-    notFound();
-  }
+  if (!path) notFound();
 
   const Icon = pathIcons[path.slug as keyof typeof pathIcons] ?? Layers3;
 
@@ -63,128 +64,219 @@ export default async function LearningDetailPage({ params }: Props) {
     <main className="min-h-screen bg-background text-foreground">
       <Navbar />
 
-      <section className="px-6 pb-10 pt-32">
-        <div className="mx-auto max-w-6xl">
-          <Link
-            href="/learn"
-            className="mb-8 inline-flex items-center gap-2 font-inter text-sm text-foreground/45 transition-colors hover:text-foreground"
-          >
-            <ArrowLeft size={16} strokeWidth={1.8} />
-            All paths
-          </Link>
+      {/* ── HERO ── */}
+      <section className="relative px-6 pb-0 pt-32 overflow-hidden">
+        {/* faint grid texture */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
 
-          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="mx-auto max-w-6xl">
+          {/* breadcrumb */}
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-10 flex items-center gap-2 font-inter text-xs font-semibold text-foreground/40"
+          >
+            <Link
+              href="/learn"
+              className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
+            >
+              <ArrowLeft size={14} strokeWidth={2} />
+              All paths
+            </Link>
+            <ChevronRight size={12} strokeWidth={2} className="opacity-40" />
+            <span className="text-foreground/70">{path.name}</span>
+          </nav>
+
+          {/* two-col hero */}
+          <div className="grid gap-16 lg:grid-cols-[1fr_420px] lg:items-end pb-16">
+            {/* left — text */}
             <div>
-              <div className="mb-6 flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center gap-2 rounded-full bg-foreground px-3 py-1.5 font-inter text-[10px] uppercase tracking-[0.18em] text-background">
-                  <Icon size={13} strokeWidth={2} />
+              {/* pills */}
+              <div className="mb-8 flex flex-wrap items-center gap-2.5">
+                <span className="inline-flex items-center gap-2 rounded-full bg-foreground px-3.5 py-1.5 font-inter text-[10px] uppercase tracking-[0.2em] text-background">
+                  <Icon size={12} strokeWidth={2.2} />
                   {path.label}
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-foreground/10 px-3 py-1.5 font-inter text-[10px] uppercase tracking-[0.18em] text-foreground/45">
-                  <Clock3 size={13} strokeWidth={1.8} />
+                <span className="inline-flex items-center gap-2 rounded-full border border-foreground/12 px-3.5 py-1.5 font-inter text-[10px] uppercase tracking-[0.2em] text-foreground/40">
+                  <Clock3 size={12} strokeWidth={1.8} />
                   {path.pace}
                 </span>
               </div>
 
+              {/* headline */}
               <h1
-                className="font-space font-bold leading-[0.95] tracking-tight"
-                style={{ fontSize: "clamp(3.4rem, 8vw, 6.8rem)" }}
+                className="font-space font-bold leading-[0.9] tracking-tight"
+                style={{ fontSize: "clamp(3.2rem, 7.5vw, 6.4rem)" }}
               >
                 {path.name}
               </h1>
-              <p className="mt-7 max-w-2xl font-inter text-lg leading-relaxed text-foreground/60">
+
+              {/* description */}
+              <p className="mt-8 max-w-xl font-inter text-base leading-relaxed text-foreground/55 md:text-[1.05rem]">
                 {path.description}
               </p>
+
+              {/* quick stats strip */}
+              <div className="mt-10 flex flex-wrap items-center gap-6">
+                {[
+                  { icon: Layers3, label: path.signal },
+                  { icon: FlaskConical, label: path.outcome },
+                  {
+                    icon: path.videos.available ? Play : VideoOff,
+                    label: path.videos.available ? "Videos available" : "Videos coming soon",
+                  },
+                ].map(({ icon: StatIcon, label }) => (
+                  <div key={label} className="flex items-center gap-2 text-foreground/50">
+                    <StatIcon size={14} strokeWidth={1.8} />
+                    <span className="font-inter text-sm">{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] p-7 text-white">
+            {/* right — thumbnail card */}
+            <div className="relative overflow-hidden rounded-2xl bg-[#0c0c0c] p-8 text-white aspect-[4/3] flex flex-col justify-between">
+              {/* dot-grid bg */}
               <div
-                className="absolute inset-0 opacity-10"
+                aria-hidden
+                className="absolute inset-0 opacity-[0.07]"
                 style={{
-                  backgroundImage:
-                    "linear-gradient(rgba(255,255,255,0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.16) 1px, transparent 1px)",
-                  backgroundSize: "34px 34px",
+                  backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px)",
+                  backgroundSize: "22px 22px",
                 }}
               />
-              <div className="relative flex min-h-[340px] flex-col justify-between">
-                <div className="flex items-center justify-between">
-                  <p className="font-inter text-[10px] uppercase tracking-[0.25em] text-white/35">
-                    Thumbnail slot
-                  </p>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-white/72">
-                    <Icon size={21} strokeWidth={1.8} />
-                  </div>
+              {/* top row */}
+              <div className="relative flex items-start justify-between">
+                <span className="font-inter text-[10px] uppercase tracking-[0.28em] text-white/25">
+                  Thumbnail · Soon
+                </span>
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/8 text-white/50">
+                  <Icon size={18} strokeWidth={1.7} />
                 </div>
-
-                <div className="rounded-xl border border-dashed border-white/16 bg-white/[0.03] p-6">
-                  <p className="font-space text-3xl font-bold text-white/22">
-                    {path.name}
-                  </p>
-                  <p className="mt-3 max-w-sm font-inter text-sm leading-relaxed text-white/42">
-                    Empty now, ready for the real thumbnail later.
+              </div>
+              {/* center placeholder */}
+              <div className="relative flex-1 flex items-center justify-center">
+                <div className="rounded-2xl border border-dashed border-white/12 bg-white/[0.025] px-8 py-6 text-center w-full">
+                  <p className="font-space text-2xl font-bold text-white/18">{path.name}</p>
+                  <p className="mt-2 font-inter text-xs text-white/28 leading-relaxed">
+                    Real thumbnail drops when videos go live.
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* bottom border */}
+        <div className="border-t border-black/8 dark:border-white/[0.07]" />
       </section>
 
-      <section className="px-6 py-8">
-        <div className="mx-auto grid max-w-6xl gap-px overflow-hidden rounded-2xl bg-black/6 dark:bg-white/[0.08] md:grid-cols-3">
-          {[
-            { label: "Outcome", value: path.outcome, icon: FlaskConical },
-            { label: "Signal", value: path.signal, icon: Layers3 },
-            {
-              label: "Videos",
-              value: path.videos.available ? "Available soon" : "Not live yet",
-              icon: path.videos.available ? Play : VideoOff,
-            },
-          ].map((item) => (
-            <div key={item.label} className="bg-background p-7">
-              <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f3f0] text-foreground/70 dark:bg-white/8">
-                <item.icon size={18} strokeWidth={1.8} />
+      {/* ── STATS ROW ── */}
+      <section className="px-6 py-0">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 divide-y divide-black/8 dark:divide-white/[0.07] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            {[
+              { label: "Outcome", value: path.outcome, icon: FlaskConical },
+              { label: "Signal", value: path.signal, icon: Layers3 },
+              {
+                label: "Videos",
+                value: path.videos.available ? "Available soon" : "Not live yet",
+                icon: path.videos.available ? Play : VideoOff,
+              },
+            ].map((item) => (
+              <div key={item.label} className="flex items-start gap-5 px-0 py-10 sm:px-10 first:pl-0 last:pr-0">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-foreground/6 text-foreground/50 dark:bg-white/6">
+                  <item.icon size={18} strokeWidth={1.8} />
+                </div>
+                <div>
+                  <p className="font-inter text-[10px] uppercase tracking-[0.22em] text-foreground/30">
+                    {item.label}
+                  </p>
+                  <p className="mt-2 font-space text-lg font-semibold leading-snug">
+                    {item.value}
+                  </p>
+                </div>
               </div>
-              <p className="font-inter text-[11px] uppercase tracking-[0.22em] text-foreground/35">
-                {item.label}
-              </p>
-              <p className="mt-3 font-space text-lg font-semibold leading-snug">
-                {item.value}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+        <div className="border-t border-black/8 dark:border-white/[0.07] mx-auto max-w-6xl" />
       </section>
 
-      <section className="px-6 py-14">
-        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.72fr_1.28fr]">
-          <div>
-            <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background">
-              <BookOpen size={19} strokeWidth={1.9} />
+      {/* ── CURRICULUM ── */}
+      <section className="px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          {/* section header */}
+          <div className="mb-14 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-3 font-inter text-[10px] uppercase tracking-[0.28em] text-foreground/30">
+                Curriculum
+              </p>
+              <h2 className="font-space text-4xl font-bold leading-tight sm:text-5xl">
+                What you&apos;ll
+                <br />
+                actually learn.
+              </h2>
             </div>
-            <p className="mb-4 font-inter text-[11px] uppercase tracking-[0.24em] text-foreground/35">
-              Curriculum
-            </p>
-            <h2 className="font-space text-4xl font-bold leading-tight">
-              One clean path.
-              <br />
-              Five real moves.
-            </h2>
+            <div className="flex items-center gap-2 rounded-full border border-foreground/10 px-4 py-2 w-fit">
+              <BookOpen size={13} strokeWidth={1.8} className="text-foreground/40" />
+              <span className="font-inter text-[11px] uppercase tracking-[0.18em] text-foreground/40">
+                {path.curriculum.length} Modules
+              </span>
+            </div>
           </div>
 
-          <div className="divide-y divide-black/8 border-y border-black/8 dark:divide-white/[0.08] dark:border-white/[0.08]">
+          {/* module list */}
+          <div className="space-y-0 divide-y divide-black/7 dark:divide-white/[0.06] border-y border-black/7 dark:border-white/[0.06]">
             {path.curriculum.map((item, index) => (
-              <div key={item} className="grid gap-4 py-6 sm:grid-cols-[7rem_1fr]">
-                <p className="font-inter text-[11px] uppercase tracking-[0.18em] text-foreground/30">
-                  Module {index + 1}
-                </p>
-                <div className="flex gap-4">
-                  <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-background">
-                    <Check size={14} strokeWidth={2} />
-                  </span>
-                  <p className="font-space text-xl font-semibold leading-snug">
-                    {item}
+              <div
+                key={getCurriculumTitle(item)}
+                className="group grid gap-6 py-8 sm:grid-cols-[5rem_1fr] sm:gap-10 transition-colors hover:bg-foreground/[0.025]"
+              >
+                {/* module number */}
+                <div className="flex items-start gap-3 sm:flex-col sm:gap-0">
+                  <p className="font-inter text-[10px] uppercase tracking-[0.22em] text-foreground/25 pt-1 sm:pt-0">
+                    {String(index + 1).padStart(2, "0")}
                   </p>
+                </div>
+
+                {/* content */}
+                <div className="flex gap-5">
+                  <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-foreground text-background">
+                    <Check size={12} strokeWidth={2.5} />
+                  </span>
+
+                  {typeof item === "string" ? (
+                    <p className="font-space text-xl font-semibold leading-snug pt-0.5">
+                      {item}
+                    </p>
+                  ) : (
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <h3 className="font-space text-xl font-semibold leading-snug">
+                          {item.moduleName}
+                        </h3>
+                        <span className="shrink-0 rounded-full border border-foreground/10 px-2.5 py-1 font-inter text-[9px] uppercase tracking-[0.2em] text-foreground/35">
+                          {item.topic}
+                        </span>
+                      </div>
+                      <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+                        {item.keyConcepts.map((concept) => (
+                          <li key={concept} className="flex items-start gap-2.5 font-inter text-sm leading-relaxed text-foreground/55">
+                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-foreground/30" />
+                            {concept}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -192,81 +284,136 @@ export default async function LearningDetailPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="px-6 pb-14">
-        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.72fr_1.28fr]">
-          <div>
-            <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#f5f3f0] text-foreground/70 dark:bg-white/8">
-              <FileText size={19} strokeWidth={1.9} />
+      {/* ── ARTICLES ── */}
+      <section className="px-6 py-20 bg-foreground/[0.02] dark:bg-white/[0.015]">
+        <div className="mx-auto max-w-6xl">
+          {/* section header */}
+          <div className="mb-14 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-3 font-inter text-[10px] uppercase tracking-[0.28em] text-foreground/30">
+                Articles
+              </p>
+              <h2 className="font-space text-4xl font-bold leading-tight sm:text-5xl">
+                Short like X.
+                <br />
+                Deep like Medium.
+              </h2>
             </div>
-            <p className="mb-4 font-inter text-[11px] uppercase tracking-[0.24em] text-foreground/35">
-              Articles
-            </p>
-            <h2 className="font-space text-4xl font-bold leading-tight">
-              Short like X.
-              <br />
-              Deep like Medium.
-            </h2>
+            <div className="flex items-center gap-2 rounded-full border border-foreground/10 px-4 py-2 w-fit">
+              <FileText size={13} strokeWidth={1.8} className="text-foreground/40" />
+              <span className="font-inter text-[11px] uppercase tracking-[0.18em] text-foreground/40">
+                {path.articles.length} Articles
+              </span>
+            </div>
           </div>
 
-          <div className="grid gap-px overflow-hidden rounded-2xl bg-black/6 dark:bg-white/[0.08] md:grid-cols-2">
+          {/* article grid */}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {path.articles.map((article) => (
               <article
                 key={article.title}
-                className="group min-h-[260px] bg-background p-7 transition-colors hover:bg-[#f5f3f0] dark:hover:bg-white/[0.04]"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-black/8 bg-background p-7 transition-all duration-200 hover:border-foreground/20 hover:shadow-sm dark:border-white/[0.07] dark:hover:border-white/20"
               >
-                <div className="mb-5 flex flex-wrap items-center gap-3">
-                  <span className="rounded-full bg-[#f0eeeb] px-2.5 py-1 font-inter text-[10px] uppercase tracking-[0.18em] text-black dark:bg-white/10 dark:text-white/70">
+                {/* type + read time */}
+                <div className="mb-6 flex items-center gap-3">
+                  <span className="rounded-full bg-foreground/7 px-3 py-1 font-inter text-[10px] uppercase tracking-[0.18em] text-foreground/60 dark:bg-white/10">
                     {article.type}
                   </span>
-                  <span className="font-inter text-[11px] uppercase tracking-[0.18em] text-foreground/30">
+                  <span className="flex items-center gap-1.5 font-inter text-[11px] text-foreground/30">
+                    <Timer size={11} strokeWidth={1.8} />
                     {article.readTime}
                   </span>
                 </div>
-                <h3 className="font-space text-2xl font-semibold leading-tight transition-opacity group-hover:opacity-65">
+
+                {/* title */}
+                <h3 className="font-space text-xl font-semibold leading-snug transition-opacity group-hover:opacity-75">
                   {article.title}
                 </h3>
-                <p className="mt-4 font-inter text-sm leading-relaxed text-foreground/55">
+
+                {/* excerpt */}
+                <p className="mt-4 flex-1 font-inter text-sm leading-relaxed text-foreground/50">
                   {article.excerpt}
                 </p>
+
+                {/* arrow hint */}
+                <div className="mt-7 flex items-center gap-1.5 font-inter text-xs text-foreground/30 transition-colors group-hover:text-foreground/60">
+                  <span>Read article</span>
+                  <ChevronRight size={13} strokeWidth={1.8} />
+                </div>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="px-6 pb-24">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-2xl bg-[#0a0a0a] p-8 text-white md:p-10">
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-start">
-            <div>
-              <p className="font-inter text-[11px] uppercase tracking-[0.24em] text-white/30">
-                Video bench
-              </p>
-              <h2 className="mt-3 font-space text-3xl font-bold leading-tight">
-                {path.videos.available
-                  ? "Build-along videos are mapped."
-                  : "Videos are not live yet."}
-              </h2>
-              <p className="mt-4 max-w-xl font-inter text-sm leading-relaxed text-white/48">
-                {path.videos.note}
-              </p>
-            </div>
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/8 text-white/70">
-              {path.videos.available ? <Play size={20} /> : <VideoOff size={20} />}
-            </div>
-          </div>
-
-          {path.videos.items.length > 0 && (
-            <div className="mt-8 grid gap-px overflow-hidden rounded-xl bg-white/10 md:grid-cols-2">
-              {path.videos.items.map((video) => (
-                <div key={video.title} className="bg-[#0a0a0a] p-5">
-                  <p className="font-space text-lg font-semibold">{video.title}</p>
-                  <p className="mt-3 font-inter text-[11px] uppercase tracking-[0.18em] text-white/32">
-                    {video.length} / {video.status}
+      {/* ── VIDEOS ── */}
+      <section className="px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="overflow-hidden rounded-2xl bg-[#0c0c0c] text-white">
+            {/* top bar */}
+            <div className="flex flex-col gap-8 border-b border-white/[0.07] p-8 md:flex-row md:items-center md:justify-between md:p-10">
+              <div className="flex-1">
+                <div className="mb-4 flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/8 text-white/50">
+                    {path.videos.available ? (
+                      <Play size={16} strokeWidth={1.8} />
+                    ) : (
+                      <VideoOff size={16} strokeWidth={1.8} />
+                    )}
+                  </div>
+                  <p className="font-inter text-[10px] uppercase tracking-[0.26em] text-white/28">
+                    Video bench
                   </p>
                 </div>
-              ))}
+                <h2 className="font-space text-3xl font-bold leading-tight md:text-4xl">
+                  {path.videos.available
+                    ? "Build-along videos are mapped."
+                    : "Videos aren't live yet."}
+                </h2>
+                <p className="mt-4 max-w-lg font-inter text-sm leading-relaxed text-white/42">
+                  {path.videos.note}
+                </p>
+              </div>
+
+              {/* status badge */}
+              <div className={`flex items-center gap-2.5 rounded-full px-5 py-2.5 w-fit shrink-0 border ${path.videos.available ? "border-white/15 bg-white/8" : "border-white/8 bg-white/4"}`}>
+                <span className={`h-2 w-2 rounded-full ${path.videos.available ? "bg-green-400" : "bg-white/25"}`} />
+                <span className="font-inter text-xs tracking-wide text-white/55">
+                  {path.videos.available ? "Live" : "Pending"}
+                </span>
+              </div>
             </div>
-          )}
+
+            {/* video list */}
+            {path.videos.items.length > 0 ? (
+              <div className="grid gap-px bg-white/[0.06] md:grid-cols-2">
+                {path.videos.items.map((video, i) => (
+                  <div key={video.title} className="flex items-start gap-5 bg-[#0c0c0c] p-7 transition-colors hover:bg-white/[0.03]">
+                    <span className="mt-0.5 font-inter text-[11px] text-white/22 tabular-nums">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <p className="font-space text-base font-semibold text-white/80">{video.title}</p>
+                      <div className="mt-2.5 flex items-center gap-3 font-inter text-[10px] uppercase tracking-[0.18em] text-white/28">
+                        <span>{video.length}</span>
+                        <Dot size={12} className="opacity-30" />
+                        <span>{video.status}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-4 px-8 py-16 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/5 text-white/30">
+                  <Sparkles size={22} strokeWidth={1.5} />
+                </div>
+                <p className="font-inter text-sm text-white/30">
+                  Videos will appear here once they go live.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

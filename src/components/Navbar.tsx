@@ -6,7 +6,7 @@ import { Button3D } from "./ui/button-3d";
 
 const navLinks = [
   { label: "Paths", href: "/learn" },
-  { label: "Community", href: "/#community" },
+  { label: "Community", href: "/community" },
   { label: "Blogs", href: "/blogs" },
 ];
 
@@ -17,6 +17,18 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const goToWaitlist = () => {
+    const waitlist = document.getElementById("waitlist");
+
+    if (waitlist) {
+      waitlist.scrollIntoView({ behavior: "smooth", block: "start" });
+      setMobileOpen(false);
+      return;
+    }
+
+    window.location.href = "/#waitlist";
+  };
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -97,7 +109,9 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3 shrink-0">
-            <Button3D> Get me in <ArrowRightIcon size={15} strokeWidth={2} /> </Button3D>
+            <Button3D onClick={goToWaitlist}>
+              Get me in <ArrowRightIcon size={15} strokeWidth={2} />
+            </Button3D>
           </div>
 
           {/* Mobile hamburger */}
@@ -134,7 +148,7 @@ export default function Navbar() {
         </div>
 
         {/* <div className="w-full">
-          <Button3D className="w-full">Join the waitlist</Button3D>
+          <Button3D onClick={goToWaitlist} className="w-full">Join the waitlist</Button3D>
         </div> */}
       </div>
     </>

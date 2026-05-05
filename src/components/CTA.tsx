@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function CTA() {
   return (
@@ -16,10 +17,11 @@ export default function CTA() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
   
           <Button
+            asChild
             size="lg"
             className="w-full sm:w-auto rounded-full bg-background text-foreground hover:bg-background/90  font-inter text-sm"
           >
-            Join the waitlist 
+            <Link href="/#waitlist">Join the waitlist</Link>
           </Button>
         </div>
    
