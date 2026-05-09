@@ -137,7 +137,7 @@ export default function Manifesto() {
                 Why this exists
               </p>
               <p className="mt-5 font-inter text-sm leading-[1.9] text-foreground/50">
-                TheOddOnes is for builders who learn through contact with real
+                The<span className="text-secondary">Odd</span>Ones is for builders who learn through contact with real
                 systems, real tools, and real failure.
               </p>
             </div>

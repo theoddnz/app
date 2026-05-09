@@ -61,8 +61,8 @@ export default async function LearningDetailPage({ params }: Props) {
   const Icon = pathIcons[path.slug as keyof typeof pathIcons] ?? Layers3;
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <Navbar />
+    <main className="min-h-screen bg-background text-foreground font-space">
+
 
       {/* ── HERO ── */}
       <section className="relative px-6 pb-0 pt-32 overflow-hidden">
@@ -221,7 +221,6 @@ export default async function LearningDetailPage({ params }: Props) {
               </p>
               <h2 className="font-space text-4xl font-bold leading-tight sm:text-5xl">
                 What you&apos;ll
-                <br />
                 actually learn.
               </h2>
             </div>
@@ -242,7 +241,7 @@ export default async function LearningDetailPage({ params }: Props) {
               >
                 {/* module number */}
                 <div className="flex items-start gap-3 sm:flex-col sm:gap-0">
-                  <p className="font-inter text-[10px] uppercase tracking-[0.22em] text-foreground/25 pt-1 sm:pt-0">
+                  <p className="font-inter text-md md:text-xl uppercase tracking-[0.22em] text-foreground/25 pt-1 sm:pt-0">
                     {String(index + 1).padStart(2, "0")}
                   </p>
                 </div>
@@ -284,12 +283,84 @@ export default async function LearningDetailPage({ params }: Props) {
         </div>
       </section>
 
+      {/* ── VIDEOS ── */}
+      <section className="px-6 py-20 bg-background">
+        <div className="mx-auto max-w-6xl">
+          {/* section header */}
+          <div className="mb-14 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-3 font-inter text-[10px] uppercase tracking-[0.28em] text-foreground/30">
+                Videos
+              </p>
+              <h2 className="font-space text-4xl font-bold leading-tight sm:text-5xl">
+                Watch & build.
+              </h2>
+            </div>
+            <div className="flex items-center gap-2 rounded-full border border-foreground/10 px-4 py-2 w-fit">
+              <Play size={13} strokeWidth={1.8} className="text-foreground/40" />
+              <span className="font-inter text-[11px] uppercase tracking-[0.18em] text-foreground/40">
+                {path.videos.items.length} Videos
+              </span>
+            </div>
+          </div>
+
+          {/* video grid */}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {path.videos.items.map((video, index) => (
+              <Link
+                key={video.title}
+                href={`/learn/${slug}/watch?v=${index}`}
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-black/8 bg-foreground/[0.02] p-7 transition-all duration-200 hover:border-foreground/20 hover:bg-foreground/[0.04] dark:border-white/[0.07] dark:hover:border-white/20 dark:bg-white/[0.015] dark:hover:bg-white/[0.03]"
+              >
+                {/* status + length */}
+                <div className="mb-6 flex items-center gap-3">
+                  <span className={`rounded-full px-3 py-1 font-inter text-[10px] uppercase tracking-[0.18em] ${
+                    video.status.toLowerCase().includes("available")
+                      ? "bg-secondary text-white"
+                      : "bg-foreground/7 text-foreground/60 dark:bg-white/10"
+                  }`}>
+                    {video.status}
+                  </span>
+                  <span className="flex items-center gap-1.5 font-inter text-[11px] text-foreground/30">
+                    <Clock3 size={11} strokeWidth={1.8} />
+                    {video.length}
+                  </span>
+                </div>
+
+                {/* title */}
+                <h3 className="font-space text-xl font-semibold leading-snug transition-opacity group-hover:opacity-75">
+                  {video.title}
+                </h3>
+
+                {/* fake thumbnail area */}
+                <div className="mt-6 aspect-video w-full rounded-xl bg-foreground/5 dark:bg-white/5 flex items-center justify-center border border-foreground/10 dark:border-white/10 group-hover:border-foreground/20 transition-colors">
+                   <Play size={24} className="text-foreground/20 group-hover:text-foreground/40 transition-colors" />
+                </div>
+
+                {/* action */}
+                <div className="mt-7 flex items-center justify-between font-inter text-xs text-foreground/30 transition-colors group-hover:text-foreground/60">
+                  <span>Watch video</span>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground/5 dark:bg-white/5 group-hover:bg-foreground/10 dark:group-hover:bg-white/10 transition-colors">
+                    <Play size={13} strokeWidth={2} className="ml-0.5" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          {path.videos.items.length === 0 && (
+             <div className="rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-12 text-center">
+                <p className="font-inter text-sm text-foreground/40">Videos are currently being drafted for this course.</p>
+             </div>
+          )}
+        </div>
+      </section>
+
       {/* ── ARTICLES ── */}
       <section className="px-6 py-20 bg-foreground/[0.02] dark:bg-white/[0.015]">
         <div className="mx-auto max-w-6xl">
           {/* section header */}
           <div className="mb-14 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
+            {/* <div>
               <p className="mb-3 font-inter text-[10px] uppercase tracking-[0.28em] text-foreground/30">
                 Articles
               </p>
@@ -298,7 +369,7 @@ export default async function LearningDetailPage({ params }: Props) {
                 <br />
                 Deep like Medium.
               </h2>
-            </div>
+            </div> */}
             <div className="flex items-center gap-2 rounded-full border border-foreground/10 px-4 py-2 w-fit">
               <FileText size={13} strokeWidth={1.8} className="text-foreground/40" />
               <span className="font-inter text-[11px] uppercase tracking-[0.18em] text-foreground/40">
@@ -346,78 +417,8 @@ export default async function LearningDetailPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ── VIDEOS ── */}
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="overflow-hidden rounded-2xl bg-[#0c0c0c] text-white">
-            {/* top bar */}
-            <div className="flex flex-col gap-8 border-b border-white/[0.07] p-8 md:flex-row md:items-center md:justify-between md:p-10">
-              <div className="flex-1">
-                <div className="mb-4 flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/8 text-white/50">
-                    {path.videos.available ? (
-                      <Play size={16} strokeWidth={1.8} />
-                    ) : (
-                      <VideoOff size={16} strokeWidth={1.8} />
-                    )}
-                  </div>
-                  <p className="font-inter text-[10px] uppercase tracking-[0.26em] text-white/28">
-                    Video bench
-                  </p>
-                </div>
-                <h2 className="font-space text-3xl font-bold leading-tight md:text-4xl">
-                  {path.videos.available
-                    ? "Build-along videos are mapped."
-                    : "Videos aren't live yet."}
-                </h2>
-                <p className="mt-4 max-w-lg font-inter text-sm leading-relaxed text-white/42">
-                  {path.videos.note}
-                </p>
-              </div>
 
-              {/* status badge */}
-              <div className={`flex items-center gap-2.5 rounded-full px-5 py-2.5 w-fit shrink-0 border ${path.videos.available ? "border-white/15 bg-white/8" : "border-white/8 bg-white/4"}`}>
-                <span className={`h-2 w-2 rounded-full ${path.videos.available ? "bg-green-400" : "bg-white/25"}`} />
-                <span className="font-inter text-xs tracking-wide text-white/55">
-                  {path.videos.available ? "Live" : "Pending"}
-                </span>
-              </div>
-            </div>
 
-            {/* video list */}
-            {path.videos.items.length > 0 ? (
-              <div className="grid gap-px bg-white/[0.06] md:grid-cols-2">
-                {path.videos.items.map((video, i) => (
-                  <div key={video.title} className="flex items-start gap-5 bg-[#0c0c0c] p-7 transition-colors hover:bg-white/[0.03]">
-                    <span className="mt-0.5 font-inter text-[11px] text-white/22 tabular-nums">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div>
-                      <p className="font-space text-base font-semibold text-white/80">{video.title}</p>
-                      <div className="mt-2.5 flex items-center gap-3 font-inter text-[10px] uppercase tracking-[0.18em] text-white/28">
-                        <span>{video.length}</span>
-                        <Dot size={12} className="opacity-30" />
-                        <span>{video.status}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center gap-4 px-8 py-16 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/5 text-white/30">
-                  <Sparkles size={22} strokeWidth={1.5} />
-                </div>
-                <p className="font-inter text-sm text-white/30">
-                  Videos will appear here once they go live.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <Footer />
     </main>
   );
 }

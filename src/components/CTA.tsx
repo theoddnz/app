@@ -22,7 +22,7 @@ export default function CTA() {
           </h3>
 
           <p className="mt-5 font-inter text-[14.5px] font-light leading-[1.9] text-foreground/55 font-space">
-            TheOddOnes isn&apos;t a course platform. It&apos;s a cultural movement for
+            The<span className="text-secondary">Odd</span>Ones isn&apos;t a course platform. It&apos;s a cultural movement for
             builders who learn by shipping together, in public, with standards.
             If you fund craft and curiosity, you&apos;ll like what we&apos;re building.
           </p>

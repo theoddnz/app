@@ -21,9 +21,8 @@ const pathIcons = {
 export default function LearnPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <Navbar />
 
-      <section className="px-6 pb-14 pt-36 border-b border-black/6 dark:border-white/[0.06]">
+      <section className="px-6 pb-14 pt-36 border-b border-black/6 dark:border-white/[0.06] font-space">
         <div className="mx-auto max-w-6xl">
           <nav
             aria-label="Breadcrumb"
@@ -40,27 +39,21 @@ export default function LearnPage() {
             <span className="text-foreground/70">Learning paths</span>
           </nav>
 
-          <div className="mb-6 flex items-center gap-3">
-            <div className="h-px w-6 bg-black/20 dark:bg-white/20" />
-            <p className="font-inter text-[11px] uppercase tracking-[0.25em] text-black/35 dark:text-white/35">
-              Learning paths
-            </p>
-          </div>
+       
 
           <div className="grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-end">
             <h1
-              className="font-space font-bold leading-[0.95] tracking-tight"
-              style={{ fontSize: "clamp(3rem, 8vw, 6rem)" }}
+              className="font-space md:text-md lg:text-4xl font-bold leading-[0.95] tracking-tight"
+    
             >
               Pick a path.
-              <br />
-              Learn by doing.
+
             </h1>
-            <p className="max-w-md font-inter text-sm leading-relaxed text-foreground/55 md:justify-self-end">
+            {/* <p className="max-w-md font-inter text-sm leading-relaxed text-foreground/55 md:justify-self-end">
               These are not courses in the usual sense. They are guided build paths:
               cards, field notes, articles, curriculum, and video slots around the
               way people actually learn.
-            </p>
+            </p> */}
           </div>
         </div>
       </section>
@@ -76,16 +69,16 @@ export default function LearnPage() {
                 href={`/learn/${path.slug}`}
                 className="group flex min-h-[520px] flex-col bg-background transition-colors duration-200 hover:bg-[#f5f3f0] dark:hover:bg-white/[0.04]"
               >
-                <div className="relative min-h-[210px] overflow-hidden bg-[#0a0a0a] p-6">
+                <div className="relative min-h-[300px] overflow-hidden bg-[#0a0a0a] p-6">
                   <div
                     className="absolute inset-0 opacity-10"
                     style={{
                       backgroundImage:
                         "linear-gradient(rgba(255,255,255,0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.16) 1px, transparent 1px)",
-                      backgroundSize: "34px 34px",
+                      backgroundSize: "40px 40px",
                     }}
                   />
-                  <div className="relative flex h-full min-h-[162px] flex-col justify-between">
+                  <div className="relative flex h-full min-h-[150px] flex-col justify-between">
                     <div className="flex items-center justify-between">
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 font-inter text-[10px] uppercase tracking-[0.18em] text-black">
                         <Icon size={12} strokeWidth={2} />
@@ -96,9 +89,9 @@ export default function LearnPage() {
                       </span>
                     </div>
                     <div>
-                      <p className="font-inter text-[10px] uppercase tracking-[0.22em] text-white/25">
+                      {/* <p className="font-inter text-[10px] uppercase tracking-[0.22em] text-white/25">
                         {path.thumbnailNote}
-                      </p>
+                      </p> */}
                       <div className="mt-3 flex h-20 items-center justify-center rounded-lg border border-dashed border-white/14 bg-white/[0.03] text-white/28">
                         <Icon size={30} strokeWidth={1.6} />
                       </div>
@@ -111,7 +104,7 @@ export default function LearnPage() {
                     <h2 className="font-space text-2xl font-bold leading-tight text-foreground transition-opacity group-hover:opacity-65">
                       {path.name}
                     </h2>
-                    <p className="mt-4 font-inter text-sm leading-relaxed text-foreground/55">
+                    <p className="mt-4 font-inter text-sm leading-relaxed text-foreground/55 font-space">
                       {path.description}
                     </p>
                   </div>
@@ -141,7 +134,6 @@ export default function LearnPage() {
         </div>
       </section>
 
-      <Footer />
     </main>
   );
 }

@@ -39,9 +39,7 @@ const perks = [
 
 export default function CommunityPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <Navbar />
-
+    <main className="min-h-screen bg-background text-foreground font-space">
       {/* ── HERO ── */}
       <section className="relative overflow-hidden px-6 pb-0 pt-32 md:px-10">
         {/* grid texture */}
@@ -127,7 +125,7 @@ export default function CommunityPage() {
             <div className="order-1 lg:order-2">
               {/* eyebrow */}
               <div className="mb-7 flex items-center gap-3">
-                <div className="h-px w-6 bg-foreground/18" />
+              
                 <p className="font-inter text-[10px] uppercase tracking-[0.3em] text-foreground/32">
                   Community
                 </p>
@@ -145,7 +143,7 @@ export default function CommunityPage() {
 
               {/* description */}
               <p className="mt-8 max-w-lg font-inter text-base leading-[1.85] text-foreground/52 md:text-[1.05rem]">
-                TheOddOnes community isn&apos;t open yet. We&apos;re setting up
+                The<span className="text-secondary">Odd</span>Ones community isn&apos;t open yet. We&apos;re setting up
                 a small, useful Discord for builders who want feedback, build
                 logs, and people who actually read the error message.
               </p>
@@ -199,7 +197,7 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      <Footer />
+ 
     </main>
   );
 }

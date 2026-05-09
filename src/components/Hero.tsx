@@ -49,7 +49,7 @@ export default function Hero() {
       ))}
 
       {/* ── Main content ── */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6">
+      <div className="relative z-10 flex flex-col items-center text-center px-6 mt-6">
 
         {/* Badge */}
         {/* <motion.div
@@ -90,7 +90,7 @@ export default function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
           >
-            TheOddOnes
+            The<span className="text-[#c4622d]">Odd</span>Ones
             {/* Dot pops in with spring after headline settles */}
             <motion.span
               className="text-[#c4622d]"
@@ -143,25 +143,35 @@ export default function Hero() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 1, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Spinning rings */}
-        <motion.div
-          className="absolute inset-0 rounded-full border border-[rgba(196,98,45,0.15)]"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="absolute inset-4 rounded-full border border-[rgba(196,98,45,0.1)]"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        />
+        {/* Smooth Circle Waves (Ripples) */}
+        {[0, 1, 2].map((i) => (
+          <motion.div
+            key={i}
+            className="absolute w-[90px] h-[90px] rounded-full border-[1.5px] border-[#c4622d]"
+            animate={{
+              scale: [1, 2.5],
+              opacity: [0.35, 0],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              delay: i * 1.33,
+              ease: "easeOut",
+            }}
+          />
+        ))}
+
         {/* Core */}
         <div
-          className="w-[90px] h-[90px] rounded-full flex items-center justify-center border border-[rgba(196,98,45,0.2)]"
-          style={{
-            background: "radial-gradient(ellipse at 40% 35%, rgba(196,98,45,0.25), rgba(100,40,10,0.15) 70%)",
-          }}
+          className="relative z-10 w-[90px] h-[90px] rounded-full flex items-center justify-center border border-[rgba(196,98,45,0.4)] shadow-[0_0_30px_rgba(196,98,45,0.25)] bg-background"
         >
-          <Zap size={36} strokeWidth={1.2} className="text-secondary" />
+          <div 
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: "radial-gradient(ellipse at 40% 35%, rgba(196,98,45,0.25), transparent 70%)",
+            }}
+          />
+          <Zap size={36} strokeWidth={1.2} className="text-secondary relative z-20" />
         </div>
       </motion.div>
 

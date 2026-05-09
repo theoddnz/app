@@ -77,10 +77,10 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="font-space text-xl font-bold text-foreground shrink-0 select-none flex items-center gap-2"
+            className="font-space text-xl font-bold text-foreground shrink-0 select-none flex items-center "
           >
          
-            TheOddOnes
+            The<span className="text-[#c4622d]">Odd</span>Ones
           </Link>
 
           {/* Desktop Links */}

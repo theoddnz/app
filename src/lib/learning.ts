@@ -71,6 +71,17 @@ export const learningPaths: LearningPath[] = [
       items: [
         { title: "Build a log parser in Go", length: "18 min", status: "Available soon" },
         { title: "Context cancellation without panic", length: "14 min", status: "Drafting" },
+        { title: "Build a log parser in Go", length: "18 min", status: "Available soon" },
+        { title: "Context cancellation without panic", length: "14 min", status: "Drafting" },
+        { title: "Build a log parser in Go", length: "18 min", status: "Available soon" },
+        { title: "Context cancellation without panic", length: "14 min", status: "Drafting" },
+        { title: "Build a log parser in Go", length: "18 min", status: "Available soon" },
+        { title: "Context cancellation without panic", length: "14 min", status: "Drafting" },
+        { title: "Build a log parser in Go", length: "18 min", status: "Available soon" },
+        { title: "Context cancellation without panic", length: "14 min", status: "Drafting" },
+        { title: "Build a log parser in Go", length: "18 min", status: "Available soon" },
+        { title: "Context cancellation without panic", length: "14 min", status: "Drafting" },
+        
       ],
     },
   },

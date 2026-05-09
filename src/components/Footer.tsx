@@ -106,10 +106,10 @@ export default function Footer() {
               href="/"
               className="font-space text-[16px] font-bold tracking-[-0.02em] text-black/70 hover:text-black dark:text-white/60 dark:hover:text-[#f0ebe5]"
             >
-              TheOddOnes
+              The<span className="text-secondary">Odd</span>Ones
             </Link>
             <p className="font-inter text-[12px] font-light tracking-[0.04em] text-black/35 dark:text-white/30">
-              © 2026 TheOddOnes
+              © 2026 The<span className="text-secondary">Odd</span>Ones
             </p>
           </div>
         </div>
