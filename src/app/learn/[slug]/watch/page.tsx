@@ -3,10 +3,44 @@ import { getLearningPath } from "@/lib/learning";
 import Link from "next/link";
 import { ArrowLeft, Play, Clock3, Info, Lock } from "lucide-react";
 
+import { Metadata } from "next";
+
 type Props = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ v?: string }>;
 };
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const { v } = await searchParams;
+  const path = getLearningPath(slug);
+
+  if (!path) return { title: "Video not found | TheOddOnes" };
+
+  const activeVideoIndex = v ? parseInt(v as string, 10) : 0;
+  const safeIndex =
+    isNaN(activeVideoIndex) || activeVideoIndex < 0 || activeVideoIndex >= path.videos.items.length
+      ? 0
+      : activeVideoIndex;
+
+  const activeVideo = path.videos.items[safeIndex];
+  const title = activeVideo ? `${activeVideo.title} — ${path.name}` : path.name;
+
+  return {
+    title,
+    description: `Watch ${title} on TheOddOnes. ${path.description}`,
+    openGraph: {
+      title,
+      description: `Watch ${title} on TheOddOnes. ${path.description}`,
+      type: "video.other",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: `Watch ${title} on TheOddOnes. ${path.description}`,
+    },
+  };
+}
 
 export default async function WatchPage({ params, searchParams }: Props) {
   const { slug } = await params;

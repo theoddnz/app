@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Learning Paths | TheOddOnes",
+  description: "Pick a path. Guided build paths around the way people actually learn.",
+};
 import {
   ArrowUpRight,
   Bot,

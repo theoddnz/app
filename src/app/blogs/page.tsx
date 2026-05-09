@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Field Notes | TheOddOnes",
+  description: "Things we learned the hard way. Build logs, essays, and practical notes from the messy middle of learning.",
+};
 import {
   ArrowUpRight,
   Mail,

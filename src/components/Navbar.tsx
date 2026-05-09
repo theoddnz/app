@@ -77,7 +77,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="font-space text-xl font-bold text-foreground shrink-0 select-none flex items-center "
+            className="font-space text-xl font-bold text-foreground shrink-0 select-none flex items-center"
           >
          
             The<span className="text-[#c4622d]">Odd</span>Ones

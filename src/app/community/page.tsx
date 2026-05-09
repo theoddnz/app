@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Community | TheOddOnes",
+  description: "Join the TheOddOnes community. A place for builders who actually read the error message.",
+};
 import {
   Bell,
   ChevronRight,

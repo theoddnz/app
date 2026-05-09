@@ -19,8 +19,25 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TheOddOne — A place for people who think differently about learning.",
+  metadataBase: new URL("https://theoddone.com"),
+  title: {
+    default: "TheOddOnes — A place for people who think differently about learning.",
+    template: "%s | TheOddOnes",
+  },
   description: "Build. Break. Repair. Repeat. The platform for contrarian learners.",
+  openGraph: {
+    title: "TheOddOnes",
+    description: "Build. Break. Repair. Repeat. The platform for contrarian learners.",
+    url: "/",
+    siteName: "TheOddOnes",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TheOddOnes",
+    description: "Build. Break. Repair. Repeat. The platform for contrarian learners.",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

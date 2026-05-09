@@ -48,8 +48,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = getLearningPath(slug);
   if (!path) return { title: "Learning path not found | TheOddOnes" };
   return {
-    title: `${path.name} | TheOddOnes`,
+    title: path.name,
     description: path.description,
+    openGraph: {
+      title: path.name,
+      description: path.description,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: path.name,
+      description: path.description,
+    },
   };
 }
 

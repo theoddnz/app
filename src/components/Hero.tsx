@@ -41,9 +41,16 @@ export default function Hero() {
               ease: "easeInOut",
               delay: 1.4 + i * 0.12,
             }}
-            className="w-[60px] h-[60px] bg-foreground/[0.03] rounded-[18px] border border-foreground/[0.07] backdrop-blur-sm flex items-center justify-center"
+            className="group relative w-[60px] h-[60px] bg-foreground/[0.03] rounded-[18px] border border-foreground/[0.07] backdrop-blur-sm flex items-center justify-center cursor-pointer hover:bg-foreground/[0.05] transition-colors"
           >
-            <Icon size={24} strokeWidth={1.5} className="text-secondary" />
+            <Icon size={24} strokeWidth={1.5} className="text-secondary transition-transform duration-200 group-hover:scale-110" />
+            
+            {/* Tooltip */}
+            <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-foreground text-background text-[11px] uppercase tracking-widest font-space font-semibold rounded-md opacity-0 scale-95 pointer-events-none transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 group-hover:-top-10 shadow-xl whitespace-nowrap z-50">
+               {label}
+               {/* Triangle arrow */}
+               <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[4px] border-transparent border-t-foreground" />
+            </div>
           </motion.div>
         </motion.div>
       ))}
