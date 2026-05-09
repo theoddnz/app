@@ -2,6 +2,7 @@
 import { Terminal, Wrench, Zap, Camera, Bot } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button3D } from "@/components/ui/button-3d";
+import { useRouter } from "next/navigation";
 const floatingIcons = [
   { Icon: Terminal, label: "ROS",      className: "top-[24%] left-[11%]",  rotate: "-4deg" },
   { Icon: Camera,      label: "Hardware", className: "top-[20%] right-[12%]", rotate: "3deg"  },
@@ -12,11 +13,7 @@ const floatingIcons = [
 const SUBTITLE = "A place for people who think differently about learning.";
 
 export default function Hero() {
-  const goToWaitlist = () => {
-    document
-      .getElementById("waitlist")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  const router = useRouter();
 
   return (
     <section className="relative min-h-screen bg-background flex flex-col items-center justify-center overflow-hidden pt-0 dark:bg-[#0a0806]">
@@ -134,7 +131,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 1.35, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-            <Button3D onClick={goToWaitlist}>Join the waitlist</Button3D>
+            <Button3D onClick={() => router.push("/login")}>Join now</Button3D>
           </motion.div>
         </motion.div>
       </div>

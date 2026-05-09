@@ -3,6 +3,8 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -25,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-background text-foreground`}>
+                <Navbar />
         <ThemeProvider>{children}</ThemeProvider>
 
         <Toaster
@@ -37,7 +40,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               color: "var(--popover-foreground)",
             },
           }}
-          />
+        />
+        <Footer />
       </body>
     </html>
   );

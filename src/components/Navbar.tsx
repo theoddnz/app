@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRightIcon, Menu, X } from "lucide-react";
 import { Button3D } from "./ui/button-3d";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
   { label: "Paths", href: "/learn" },
@@ -17,18 +18,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  const goToWaitlist = () => {
-    const waitlist = document.getElementById("waitlist");
-
-    if (waitlist) {
-      waitlist.scrollIntoView({ behavior: "smooth", block: "start" });
-      setMobileOpen(false);
-      return;
-    }
-
-    window.location.href = "/#waitlist";
-  };
+  const router = useRouter();
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -109,8 +99,8 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3 shrink-0">
-            <Button3D onClick={goToWaitlist}>
-              Get me in <ArrowRightIcon size={15} strokeWidth={2} />
+            <Button3D onClick={() => router.push("/login")}>
+              Join now <ArrowRightIcon size={15} strokeWidth={2} />
             </Button3D>
           </div>
 
@@ -147,9 +137,17 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* <div className="w-full">
-          <Button3D onClick={goToWaitlist} className="w-full">Join the waitlist</Button3D>
-        </div> */}
+        <div className="w-full pt-6">
+          <Button3D
+            className="w-full"
+            onClick={() => {
+              setMobileOpen(false);
+              router.push("/login");
+            }}
+          >
+            Join now <ArrowRightIcon size={15} strokeWidth={2} />
+          </Button3D>
+        </div>
       </div>
     </>
   );

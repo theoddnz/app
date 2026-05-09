@@ -1,17 +1,19 @@
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
-import Manifesto from "../components/Manifesto";
+import WhatWeProvoke from "../components/WhatWeProvoke";
+import CTA from "../components/CTA";
 import Footer from "../components/Footer";
-import WaitlistForm from "@/components/WaitlistForm";
+import WhatYouGet from "@/components/Whatyouget";
 
 export default function Home() {
   return (
     <main className="overflow-x-hidden">
-      <Navbar />
+
       <Hero />
-      <Manifesto />
-      <WaitlistForm />
-      <Footer />
+      <WhatWeProvoke />
+      <WhatYouGet/>
+      <CTA />
+
     </main>
   );
 }
