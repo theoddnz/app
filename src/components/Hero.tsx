@@ -12,6 +12,16 @@ const floatingIcons = [
 
 const SUBTITLE = "A place for people who think differently about learning.";
 
+const sparks = [
+  { x: 0, y: -70, delay: 0 },
+  { x: 58, y: -42, delay: 0.35 },
+  { x: 74, y: 12, delay: 0.7 },
+  { x: 34, y: 66, delay: 1.05 },
+  { x: -42, y: 58, delay: 1.4 },
+  { x: -76, y: 0, delay: 1.75 },
+  { x: -48, y: -52, delay: 2.1 },
+];
+
 export default function Hero() {
   const router = useRouter();
 
@@ -145,41 +155,105 @@ export default function Hero() {
 
       {/* ── Orb visual ── */}
       <motion.div
-        className="relative mt-14 w-[180px] h-[180px] flex items-center justify-center"
+        className="relative mt-14 flex h-[230px] w-[230px] items-center justify-center"
         initial={{ opacity: 0, scale: 0.7, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 1, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Smooth Circle Waves (Ripples) */}
-        {[0, 1, 2].map((i) => (
+        <motion.div
+          aria-hidden
+          className="absolute h-[210px] w-[210px] rounded-full"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          style={{
+            background:
+              "conic-gradient(from 90deg, transparent 0deg, rgba(196,98,45,0.52) 42deg, transparent 82deg, transparent 145deg, rgba(196,98,45,0.34) 184deg, transparent 235deg, rgba(196,98,45,0.46) 294deg, transparent 338deg)",
+            mask: "radial-gradient(circle, transparent 56%, black 57%, black 59%, transparent 60%)",
+            WebkitMask: "radial-gradient(circle, transparent 56%, black 57%, black 59%, transparent 60%)",
+          }}
+        />
+
+        <motion.div
+          aria-hidden
+          className="absolute h-[164px] w-[164px] rounded-full"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 11, repeat: Infinity, ease: "linear" }}
+          style={{
+            background:
+              "conic-gradient(from 20deg, rgba(196,98,45,0.4), transparent 50deg, transparent 132deg, rgba(196,98,45,0.48), transparent 210deg, transparent 280deg, rgba(196,98,45,0.32))",
+            mask: "radial-gradient(circle, transparent 61%, black 62%, black 65%, transparent 66%)",
+            WebkitMask: "radial-gradient(circle, transparent 61%, black 62%, black 65%, transparent 66%)",
+          }}
+        />
+
+        {[0, 1, 2, 3].map((i) => (
           <motion.div
             key={i}
-            className="absolute w-[90px] h-[90px] rounded-full border-[1.5px] border-[#c4622d]"
+            className="absolute h-[84px] w-[84px] rounded-full border border-[#c4622d]"
             animate={{
-              scale: [1, 2.5],
+              scale: [0.95, 2.35],
               opacity: [0.35, 0],
+              filter: ["blur(0px)", "blur(1.5px)"],
             }}
             transition={{
-              duration: 4,
+              duration: 3.6,
               repeat: Infinity,
-              delay: i * 1.33,
+              delay: i * 0.72,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          />
+        ))}
+
+        {sparks.map((spark, index) => (
+          <motion.span
+            key={index}
+            aria-hidden
+            className="absolute h-1.5 w-1.5 rounded-full bg-[#c4622d]"
+            style={{ x: spark.x, y: spark.y }}
+            animate={{
+              scale: [0.2, 1.4, 0.2],
+              opacity: [0, 0.9, 0],
+              x: [spark.x * 0.45, spark.x, spark.x * 1.08],
+              y: [spark.y * 0.45, spark.y, spark.y * 1.08],
+            }}
+            transition={{
+              duration: 2.8,
+              repeat: Infinity,
+              delay: spark.delay,
               ease: "easeOut",
             }}
           />
         ))}
 
-        {/* Core */}
-        <div
-          className="relative z-10 w-[90px] h-[90px] rounded-full flex items-center justify-center border border-[rgba(196,98,45,0.4)] shadow-[0_0_30px_rgba(196,98,45,0.25)] bg-background"
+        <motion.div
+          className="relative z-10 flex h-[94px] w-[94px] items-center justify-center rounded-full border border-[rgba(196,98,45,0.42)] bg-background shadow-[0_0_34px_rgba(196,98,45,0.28)]"
+          animate={{
+            scale: [1, 1.045, 1],
+            boxShadow: [
+              "0 0 28px rgba(196,98,45,0.22)",
+              "0 0 52px rgba(196,98,45,0.42)",
+              "0 0 28px rgba(196,98,45,0.22)",
+            ],
+          }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         >
           <div 
             className="absolute inset-0 rounded-full"
             style={{
-              background: "radial-gradient(ellipse at 40% 35%, rgba(196,98,45,0.25), transparent 70%)",
+              background: "radial-gradient(ellipse at 40% 35%, rgba(196,98,45,0.32), transparent 72%)",
             }}
           />
-          <Zap size={36} strokeWidth={1.2} className="text-secondary relative z-20" />
-        </div>
+          <motion.div
+            animate={{
+              rotate: [-3, 4, -3],
+              scale: [1, 1.12, 1],
+            }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            className="relative z-20"
+          >
+            <Zap size={38} strokeWidth={1.35} className="text-secondary drop-shadow-[0_0_12px_rgba(196,98,45,0.42)]" />
+          </motion.div>
+        </motion.div>
       </motion.div>
 
       {/* Bottom fade */}

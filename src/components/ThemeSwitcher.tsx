@@ -16,6 +16,8 @@ export function ThemeSwitcher() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // next-themes needs a client-only render pass before reading theme state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
