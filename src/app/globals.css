@@ -248,3 +248,34 @@
 [data-arrow] {
   display: inline-flex;
 }
+
+@keyframes company-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.company-marquee-track {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  width: max-content;
+  gap: 10px;
+  animation: company-marquee 24s linear infinite;
+}
+
+.company-marquee-group {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.company-marquee-track:hover {
+  animation-play-state: paused;
+}

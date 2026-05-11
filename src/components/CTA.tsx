@@ -9,19 +9,21 @@ export default function CTA() {
   return (
     <section
       id="contribute"
-      className="bg-background px-6 py-24 text-foreground dark:bg-[#0a0806] md:px-10 md:py-32"
+      className="bg-background px-6 py-20 text-foreground dark:bg-[#0a0806] md:px-10 md:py-28"
     >
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="font-inter text-[10px] font-medium font-space tracking-[0.32em] uppercase text-foreground/40">
+          <p className="font-space text-[11px] font-normal tracking-[0.08em] text-muted-foreground">
             For funders
           </p>
 
-          <h3 className="mt-6 font-space text-[clamp(1.9rem,3.8vw,3rem)] font-extrabold tracking-[-0.04em] leading-[1.12] text-foreground/90">
-            Back the future of learning communities.
+          <h3 className="mt-3 font-space text-3xl font-light tracking-[-0.025em] text-foreground md:text-[42px] md:leading-[1.1]">
+            Back the future of
+            <br />
+            <em className="font-light not-italic text-foreground/70">learning communities.</em>
           </h3>
 
-          <p className="mt-5 font-inter text-[14.5px] font-light leading-[1.9] text-foreground/55 font-space">
+          <p className="mx-auto mt-4 max-w-xl font-space text-[15px] font-light leading-relaxed text-muted-foreground">
             The<span className="text-secondary">Odd</span>Ones isn&apos;t a course platform. It&apos;s a cultural movement for
             builders who learn by shipping together, in public, with standards.
             If you fund craft and curiosity, you&apos;ll like what we&apos;re building.

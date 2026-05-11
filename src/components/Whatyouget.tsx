@@ -64,17 +64,17 @@ const items = [
 
 export default function WhatYouGet() {
   return (
-    <section className="bg-background px-6 py-24 md:px-10 md:py-32">
+    <section className="bg-background px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
 
         {/* header */}
-        <div className="mb-14 flex flex-col items-center text-center">
+        <div className="mb-12 text-center">
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="mb-3 font-space text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground"
+            className="font-space text-[11px] font-normal tracking-[0.08em] text-muted-foreground"
           >
             What you get
           </motion.p>
@@ -84,11 +84,11 @@ export default function WhatYouGet() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.05, ease: "easeInOut" }}
-            className="font-space text-4xl font-semibold leading-[1.1] tracking-[-0.03em] text-foreground md:text-6xl"
+            className="mt-3 font-space text-3xl font-light tracking-[-0.025em] text-foreground md:text-[42px] md:leading-[1.1]"
           >
             Everything the best
             <br />
-            System forgot to teach.
+            <em className="font-light not-italic text-foreground/70">System forgot to teach.</em>
           </motion.h2>
 
           <motion.p
@@ -96,7 +96,7 @@ export default function WhatYouGet() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.08, ease: "easeInOut" }}
-            className="mt-4 max-w-xl font-space text-[15px] leading-relaxed text-muted-foreground"
+            className="mx-auto mt-4 max-w-xl font-space text-[15px] leading-relaxed text-muted-foreground"
           >
             A living library of real work, real people, and real momentum.
           </motion.p>
