@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { ArrowLeft, ChevronRight } from "lucide-react";
@@ -5,12 +6,30 @@ import { notFound } from "next/navigation";
 
 import { getDb } from "@/db";
 import { blogPosts, learningPaths } from "@/db/schema";
+import { pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ pathSlug: string }>;
 };
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { pathSlug } = await params;
+  const path = await getDb().query.learningPaths.findFirst({
+    where: eq(learningPaths.slug, pathSlug),
+  });
+
+  if (!path) {
+    return { title: "Path not found | TheOddOnes" };
+  }
+
+  return pageMetadata({
+    title: `${path.name} Field Notes`,
+    description: path.description || `Field notes and build logs for ${path.name}.`,
+    path: `/blogs/path/${path.slug}`,
+  });
+}
 
 export default async function BlogsByPathPage({ params }: Props) {
   const { pathSlug } = await params;

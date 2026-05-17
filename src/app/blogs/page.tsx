@@ -5,13 +5,15 @@ import { ArrowUpRight, ChevronRight, FileText, Home } from "lucide-react";
 
 import { getDb } from "@/db";
 import { blogPosts, learningPaths } from "@/db/schema";
+import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Field Notes | TheOddOnes",
+export const metadata: Metadata = pageMetadata({
+  title: "Field Notes",
   description: "Path-specific notes, essays, and practical build logs from TheOddOnes.",
-};
+  path: "/blogs",
+});
 
 export default async function BlogPage() {
   const [blogs, paths] = await Promise.all([

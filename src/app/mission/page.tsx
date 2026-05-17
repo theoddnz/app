@@ -1,10 +1,11 @@
-import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Mission | TheOddOnes",
+export const metadata: Metadata = pageMetadata({
+  title: "Mission",
   description: "Our story. Why we're building a place for people who learn differently.",
-};
+  path: "/mission",
+});
 export default function MissionPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">

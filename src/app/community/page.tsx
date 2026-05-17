@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Community | TheOddOnes",
+export const metadata: Metadata = pageMetadata({
+  title: "Community",
   description: "Join the TheOddOnes community. A place for builders who actually read the error message.",
-};
+  path: "/community",
+});
 import {
   Bell,
   ChevronRight,
@@ -15,8 +17,6 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 function DiscordMark() {
   return (

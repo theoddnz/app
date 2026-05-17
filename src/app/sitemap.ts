@@ -1,38 +1,89 @@
-import { MetadataRoute } from 'next'
-import { posts } from '@/lib/posts'
-import { learningPaths } from '@/lib/learning'
- 
-export default function sitemap(): MetadataRoute.Sitemap {
-  // Update this to your actual production domain
-  const baseUrl = 'https://theoddone.com'
+import { MetadataRoute } from "next";
 
-  const staticRoutes = [
-    '',
-    '/mission',
-    '/community',
-    '/blogs',
-    '/learn',
-    '/login'
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1 : 0.8,
-  }))
+import { getDb } from "@/db";
+import { blogPosts, learningPaths as learningPathRows } from "@/db/schema";
+import { learningPaths } from "@/lib/learning";
+import { posts } from "@/lib/posts";
+import { absoluteUrl } from "@/lib/seo";
 
-  const blogRoutes = posts.map((post) => ({
-    url: `${baseUrl}/blogs/${post.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
-  }))
+const now = new Date();
+export const dynamic = "force-dynamic";
+const staticRouteEntries = [
+  { path: "/", priority: 1, changeFrequency: "weekly" },
+  { path: "/mission", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/community", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/blogs", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/learn", priority: 0.9, changeFrequency: "weekly" },
+] as const;
 
-  const learnRoutes = learningPaths.map((path) => ({
-    url: `${baseUrl}/learn/${path.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }))
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticRoutes: MetadataRoute.Sitemap = staticRouteEntries.map(({ path, priority, changeFrequency }) => ({
+    url: absoluteUrl(path),
+    lastModified: now,
+    changeFrequency,
+    priority,
+  }));
 
-  return [...staticRoutes, ...blogRoutes, ...learnRoutes]
+  let blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: absoluteUrl(`/blogs/${post.slug}`),
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: post.featured ? 0.85 : 0.7,
+  }));
+
+  let learnRoutes: MetadataRoute.Sitemap = learningPaths.map((path) => ({
+    url: absoluteUrl(`/learn/${path.slug}`),
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.85,
+  }));
+
+  let blogPathRoutes: MetadataRoute.Sitemap = learningPaths.map((path) => ({
+    url: absoluteUrl(`/blogs/path/${path.slug}`),
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.65,
+  }));
+
+  try {
+    const [dbPosts, dbPaths] = await Promise.all([
+      getDb().select().from(blogPosts),
+      getDb().select().from(learningPathRows),
+    ]);
+
+    if (dbPosts.length > 0) {
+      blogRoutes = dbPosts.map((post) => ({
+        url: absoluteUrl(`/blogs/${post.slug}`),
+        lastModified: post.updatedAt,
+        changeFrequency: "monthly",
+        priority: 0.75,
+        images: post.thumbnailUrl ? [absoluteUrl(post.thumbnailUrl)] : undefined,
+      }));
+    }
+
+    if (dbPaths.length > 0) {
+      learnRoutes = dbPaths
+        .filter((path) => path.isVisible)
+        .map((path) => ({
+          url: absoluteUrl(`/learn/${path.slug}`),
+          lastModified: path.updatedAt,
+          changeFrequency: "monthly",
+          priority: path.isLaunched ? 0.9 : 0.75,
+          images: path.thumbnailUrl ? [absoluteUrl(path.thumbnailUrl)] : undefined,
+        }));
+
+      blogPathRoutes = dbPaths
+        .filter((path) => path.isVisible)
+        .map((path) => ({
+          url: absoluteUrl(`/blogs/path/${path.slug}`),
+          lastModified: path.updatedAt,
+          changeFrequency: "monthly",
+          priority: 0.65,
+        }));
+    }
+  } catch {
+    // Keep sitemap generation available in local builds without database access.
+  }
+
+  return [...staticRoutes, ...learnRoutes, ...blogPathRoutes, ...blogRoutes];
 }

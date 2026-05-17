@@ -14,14 +14,11 @@ import {
   TestTube2,
   VideoOff,
   ChevronRight,
-  Dot,
-  Sparkles,
   Timer,
 } from "lucide-react";
 import { notFound } from "next/navigation";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { getLearningPath, learningPaths } from "@/lib/learning";
+import { pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -47,20 +44,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const path = getLearningPath(slug);
   if (!path) return { title: "Learning path not found | TheOddOnes" };
-  return {
+  return pageMetadata({
     title: path.name,
     description: path.description,
-    openGraph: {
-      title: path.name,
-      description: path.description,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: path.name,
-      description: path.description,
-    },
-  };
+    path: `/learn/${path.slug}`,
+  });
 }
 
 export default async function LearningDetailPage({ params }: Props) {
@@ -69,10 +57,25 @@ export default async function LearningDetailPage({ params }: Props) {
   if (!path) notFound();
 
   const Icon = pathIcons[path.slug as keyof typeof pathIcons] ?? Layers3;
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: path.name,
+    description: path.description,
+    provider: {
+      "@type": "Organization",
+      name: "TheOddOnes",
+    },
+    coursePrerequisites: "Curiosity, persistence, and a willingness to build.",
+    educationalCredentialAwarded: path.outcome,
+  };
 
   return (
     <main className="min-h-screen bg-background text-foreground font-space">
-
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
 
       {/* ── HERO ── */}
       <section className="relative px-6 pb-0 pt-32 overflow-hidden">

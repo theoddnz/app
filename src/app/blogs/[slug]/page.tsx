@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { MarkdownPreview } from "@/components/blog/MarkdownPreview";
 import { getDb } from "@/db";
 import { blogPosts, learningPaths } from "@/db/schema";
+import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -25,13 +26,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
+    ...pageMetadata({
+      title: blog.title,
+      description: blog.excerpt,
+      path: `/blogs/${blog.slug}`,
+      images: blog.thumbnailUrl ? [blog.thumbnailUrl] : undefined,
+      type: "article",
+    }),
     title: blog.title,
     description: blog.excerpt,
     openGraph: {
       title: blog.title,
       description: blog.excerpt,
+      url: absoluteUrl(`/blogs/${blog.slug}`),
       type: "article",
-      images: blog.thumbnailUrl ? [blog.thumbnailUrl] : undefined,
+      publishedTime: blog.createdAt.toISOString(),
+      modifiedTime: blog.updatedAt.toISOString(),
+      authors: ["TheOddOnes"],
+      images: blog.thumbnailUrl ? [absoluteUrl(blog.thumbnailUrl)] : undefined,
     },
   };
 }
@@ -54,9 +66,31 @@ export default async function BlogPostPage({ params }: Props) {
     .from(blogPosts)
     .where(ne(blogPosts.slug, blog.slug))
     .limit(3);
+  const articleStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: blog.title,
+    description: blog.excerpt,
+    image: blog.thumbnailUrl ? [absoluteUrl(blog.thumbnailUrl)] : undefined,
+    datePublished: blog.createdAt.toISOString(),
+    dateModified: blog.updatedAt.toISOString(),
+    author: {
+      "@type": "Organization",
+      name: "TheOddOnes",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "TheOddOnes",
+    },
+    mainEntityOfPage: absoluteUrl(`/blogs/${blog.slug}`),
+  };
 
   return (
     <main className="min-h-screen bg-background px-6 pt-32 text-foreground font-space">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
+      />
       <article className="mx-auto max-w-4xl">
         <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs font-semibold text-foreground/40">
           <Link href="/blogs" className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground">

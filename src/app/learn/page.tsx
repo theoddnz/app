@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Learning Paths | TheOddOnes",
+export const metadata: Metadata = pageMetadata({
+  title: "Learning Paths",
   description: "Pick a path. Guided build paths around the way people actually learn.",
-};
+  path: "/learn",
+});
 import {
   ArrowUpRight,
   Bot,
@@ -14,8 +16,6 @@ import {
   Home,
   TestTube2,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { learningPaths } from "@/lib/learning";
 
 const pathIcons = {

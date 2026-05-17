@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Play, Clock3, Info, Lock } from "lucide-react";
 
 import { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -24,22 +25,14 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       : activeVideoIndex;
 
   const activeVideo = path.videos.items[safeIndex];
-  const title = activeVideo ? `${activeVideo.title} — ${path.name}` : path.name;
+  const title = activeVideo ? `${activeVideo.title} - ${path.name}` : path.name;
+  const description = `Watch ${title} on TheOddOnes. ${path.description}`;
 
-  return {
+  return pageMetadata({
     title,
-    description: `Watch ${title} on TheOddOnes. ${path.description}`,
-    openGraph: {
-      title,
-      description: `Watch ${title} on TheOddOnes. ${path.description}`,
-      type: "video.other",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description: `Watch ${title} on TheOddOnes. ${path.description}`,
-    },
-  };
+    description,
+    path: `/learn/${slug}/watch?v=${safeIndex}`,
+  });
 }
 
 export default async function WatchPage({ params, searchParams }: Props) {

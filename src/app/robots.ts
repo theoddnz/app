@@ -1,15 +1,17 @@
-import { MetadataRoute } from 'next'
- 
-export default function robots(): MetadataRoute.Robots {
-  // Update this to your actual production domain
-  const baseUrl = 'https://theoddone.com'
+import { MetadataRoute } from "next";
 
+import { siteConfig } from "@/lib/seo";
+
+export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/dashboard'], // Usually don't want to index internal dashboards
-    },
-    sitemap: `${baseUrl}/sitemap.xml`,
-  }
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/dashboard/", "/login", "/users/login", "/users/signup"],
+      },
+    ],
+    sitemap: `${siteConfig.url}/sitemap.xml`,
+    host: siteConfig.url,
+  };
 }

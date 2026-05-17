@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import { siteConfig } from "@/lib/seo";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -19,34 +20,85 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://theoddone.com"),
+  metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
+  generator: "Next.js",
+  referrer: "origin-when-cross-origin",
+  keywords: [...siteConfig.keywords],
+  authors: [{ name: "TheOddOnes", url: siteConfig.url }],
+  creator: "TheOddOnes",
+  publisher: "TheOddOnes",
+  category: "education",
   title: {
-    default: "TheOddOnes — A place for people who think differently about learning.",
-    template: "%s | TheOddOnes",
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "Build. Break. Repair. Repeat. The platform for contrarian learners.",
+  description: siteConfig.description,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "TheOddOnes",
-    description: "Build. Break. Repair. Repeat. The platform for contrarian learners.",
+    title: siteConfig.title,
+    description: siteConfig.description,
     url: "/",
-    siteName: "TheOddOnes",
+    siteName: siteConfig.name,
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TheOddOnes",
-    description: "Build. Break. Repair. Repeat. The platform for contrarian learners.",
+    title: siteConfig.title,
+    description: siteConfig.description,
+    creator: "@theoddoneshub",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${siteConfig.url}/#organization`,
+        name: siteConfig.name,
+        url: siteConfig.url,
+        sameAs: [],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteConfig.url}/#website`,
+        url: siteConfig.url,
+        name: siteConfig.name,
+        description: siteConfig.description,
+        publisher: {
+          "@id": `${siteConfig.url}/#organization`,
+        },
+        inLanguage: "en-US",
+      },
+    ],
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-background text-foreground`}>
         <ThemeProvider>
           <Navbar />
           {children}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          />
 
           <Toaster
             theme="system"
