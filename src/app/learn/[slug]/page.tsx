@@ -8,8 +8,8 @@ import {
   Clock3,
   Code2,
   FileText,
-  FlaskConical,
   Layers3,
+  NotebookText,
   Play,
   TestTube2,
   VideoOff,
@@ -17,12 +17,16 @@ import {
   Timer,
 } from "lucide-react";
 import { notFound } from "next/navigation";
-import { getLearningPath, learningPaths } from "@/lib/learning";
+import { selectLearningPathAction } from "@/app/admin-actions";
+import { Button } from "@/components/ui/button";
+import { getLearningPath, type CurriculumModule } from "@/lib/learning";
 import { pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export const dynamic = "force-dynamic";
 
 const pathIcons = {
   "go-lang": Code2,
@@ -30,30 +34,26 @@ const pathIcons = {
   "manual-testing": TestTube2,
 };
 
-function getCurriculumTitle(
-  item: (typeof learningPaths)[number]["curriculum"][number]
-) {
-  return typeof item === "string" ? item : item.moduleName;
-}
-
-export function generateStaticParams() {
-  return learningPaths.map((path) => ({ slug: path.slug }));
+function getCurriculumTitle(item: CurriculumModule) {
+  return item.moduleName;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const path = getLearningPath(slug);
+  const path = await getLearningPath(slug);
   if (!path) return { title: "Learning path not found | TheOddOnes" };
   return pageMetadata({
     title: path.name,
     description: path.description,
     path: `/learn/${path.slug}`,
+    images: path.thumbnailUrl ? [path.thumbnailUrl] : undefined,
+    keywords: [path.name, `${path.name} learning path`, "TheOddOnes learning path", "build first learning"],
   });
 }
 
 export default async function LearningDetailPage({ params }: Props) {
   const { slug } = await params;
-  const path = getLearningPath(slug);
+  const path = await getLearningPath(slug);
   if (!path) notFound();
 
   const Icon = pathIcons[path.slug as keyof typeof pathIcons] ?? Layers3;
@@ -139,8 +139,8 @@ export default async function LearningDetailPage({ params }: Props) {
               {/* quick stats strip */}
               <div className="mt-10 flex flex-wrap items-center gap-6">
                 {[
-                  { icon: Layers3, label: path.signal },
-                  { icon: FlaskConical, label: path.outcome },
+                  { icon: Layers3, label: `${path.curriculum.length} lessons` },
+                  { icon: NotebookText, label: `${path.articles.length} articles` },
                   {
                     icon: path.videos.available ? Play : VideoOff,
                     label: path.videos.available ? "Videos available" : "Videos coming soon",
@@ -152,6 +152,14 @@ export default async function LearningDetailPage({ params }: Props) {
                   </div>
                 ))}
               </div>
+
+              <form action={selectLearningPathAction} className="mt-10">
+                <input type="hidden" name="pathId" value={path.id} />
+                <Button type="submit" className="h-11 px-6">
+                  Start this path
+                  <Play size={15} strokeWidth={2} />
+                </Button>
+              </form>
             </div>
 
             {/* right — thumbnail card */}
@@ -174,12 +182,19 @@ export default async function LearningDetailPage({ params }: Props) {
                   <Icon size={18} strokeWidth={1.7} />
                 </div>
               </div>
-              {/* center placeholder */}
+              {/* center preview */}
               <div className="relative flex-1 flex items-center justify-center">
+                {path.thumbnailUrl ? (
+                  <img
+                    src={path.thumbnailUrl}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover opacity-70"
+                  />
+                ) : null}
                 <div className="rounded-2xl border border-dashed border-white/12 bg-white/[0.025] px-8 py-6 text-center w-full">
                   <p className="font-space text-2xl font-bold text-white/18">{path.name}</p>
                   <p className="mt-2 font-inter text-xs text-white/28 leading-relaxed">
-                    Real thumbnail drops when videos go live.
+                    {path.thumbnailUrl ? "Path thumbnail" : "Thumbnail coming soon."}
                   </p>
                 </div>
               </div>
@@ -196,11 +211,11 @@ export default async function LearningDetailPage({ params }: Props) {
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 divide-y divide-black/8 dark:divide-white/[0.07] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {[
-              { label: "Outcome", value: path.outcome, icon: FlaskConical },
-              { label: "Signal", value: path.signal, icon: Layers3 },
+              { label: "Lessons", value: `${path.curriculum.length} modules`, icon: Layers3 },
+              { label: "Articles", value: `${path.articles.length} notes`, icon: NotebookText },
               {
                 label: "Videos",
-                value: path.videos.available ? "Available soon" : "Not live yet",
+                value: path.videos.available ? `${path.videos.items.length} available` : "Coming soon",
                 icon: path.videos.available ? Play : VideoOff,
               },
             ].map((item) => (
@@ -265,33 +280,32 @@ export default async function LearningDetailPage({ params }: Props) {
                     <Check size={12} strokeWidth={2.5} />
                   </span>
 
-                  {typeof item === "string" ? (
-                    <p className="font-space text-xl font-semibold leading-snug pt-0.5">
-                      {item}
-                    </p>
-                  ) : (
-                    <div className="flex-1">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <h3 className="font-space text-xl font-semibold leading-snug">
-                          {item.moduleName}
-                        </h3>
-                        <span className="shrink-0 rounded-full border border-foreground/10 px-2.5 py-1 font-inter text-[9px] uppercase tracking-[0.2em] text-foreground/35">
-                          {item.topic}
-                        </span>
-                      </div>
-                      <ul className="mt-5 grid gap-2 sm:grid-cols-2">
-                        {item.keyConcepts.map((concept) => (
-                          <li key={concept} className="flex items-start gap-2.5 font-inter text-sm leading-relaxed text-foreground/55">
-                            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-foreground/30" />
-                            {concept}
-                          </li>
-                        ))}
-                      </ul>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <h3 className="font-space text-xl font-semibold leading-snug">
+                        {item.moduleName}
+                      </h3>
+                      <span className="shrink-0 rounded-full border border-foreground/10 px-2.5 py-1 font-inter text-[9px] uppercase tracking-[0.2em] text-foreground/35">
+                        {item.topic}
+                      </span>
                     </div>
-                  )}
+                    <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+                      {item.keyConcepts.map((concept) => (
+                        <li key={concept} className="flex items-start gap-2.5 font-inter text-sm leading-relaxed text-foreground/55">
+                          <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-foreground/30" />
+                          {concept}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             ))}
+            {path.curriculum.length === 0 ? (
+              <div className="py-12 text-center font-inter text-sm text-foreground/40">
+                No lessons have been added to this path yet.
+              </div>
+            ) : null}
           </div>
         </div>
       </section>
@@ -321,7 +335,7 @@ export default async function LearningDetailPage({ params }: Props) {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {path.videos.items.map((video, index) => (
               <Link
-                key={video.title}
+                key={`${video.title}-${index}`}
                 href={`/learn/${slug}/watch?v=${index}`}
                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-black/8 bg-foreground/[0.02] p-7 transition-all duration-200 hover:border-foreground/20 hover:bg-foreground/[0.04] dark:border-white/[0.07] dark:hover:border-white/20 dark:bg-white/[0.015] dark:hover:bg-white/[0.03]"
               >
@@ -346,8 +360,12 @@ export default async function LearningDetailPage({ params }: Props) {
                 </h3>
 
                 {/* fake thumbnail area */}
-                <div className="mt-6 aspect-video w-full rounded-xl bg-foreground/5 dark:bg-white/5 flex items-center justify-center border border-foreground/10 dark:border-white/10 group-hover:border-foreground/20 transition-colors">
-                   <Play size={24} className="text-foreground/20 group-hover:text-foreground/40 transition-colors" />
+                <div className="mt-6 aspect-video w-full overflow-hidden rounded-xl bg-foreground/5 dark:bg-white/5 flex items-center justify-center border border-foreground/10 dark:border-white/10 group-hover:border-foreground/20 transition-colors">
+                  {video.thumbnailUrl ? (
+                    <img src={video.thumbnailUrl} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <Play size={24} className="text-foreground/20 group-hover:text-foreground/40 transition-colors" />
+                  )}
                 </div>
 
                 {/* action */}
@@ -360,11 +378,6 @@ export default async function LearningDetailPage({ params }: Props) {
               </Link>
             ))}
           </div>
-          {path.videos.items.length === 0 && (
-             <div className="rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-12 text-center">
-                <p className="font-inter text-sm text-foreground/40">Videos are currently being drafted for this course.</p>
-             </div>
-          )}
         </div>
       </section>
 

@@ -3,8 +3,10 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Mission",
-  description: "Our story. Why we're building a place for people who learn differently.",
+  description:
+    "TheOddOnes mission: build a focused learning community for people who think differently about learning.",
   path: "/mission",
+  keywords: ["TheOddOnes mission", "people who learn differently", "learning community mission"],
 });
 export default function MissionPage() {
   return (

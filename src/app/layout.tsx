@@ -69,10 +69,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
+        "@type": ["Organization", "EducationalOrganization"],
         "@id": `${siteConfig.url}/#organization`,
         name: siteConfig.name,
         url: siteConfig.url,
+        description: siteConfig.description,
         sameAs: [],
       },
       {
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         "@id": `${siteConfig.url}/#website`,
         url: siteConfig.url,
         name: siteConfig.name,
+        alternateName: siteConfig.tagline,
         description: siteConfig.description,
         publisher: {
           "@id": `${siteConfig.url}/#organization`,
@@ -91,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-background text-foreground`}>
+      <body className={`${spaceGrotesk.variable} ${inter.variable} bg-background text-foreground pt-[36px] antialiased`}>
         <ThemeProvider>
           <Navbar />
           {children}

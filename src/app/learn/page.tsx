@@ -4,8 +4,10 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Learning Paths",
-  description: "Pick a path. Guided build paths around the way people actually learn.",
+  description:
+    "Explore TheOddOnes learning paths: guided, build-first routes for people who learn by making things and sharing progress.",
   path: "/learn",
+  keywords: ["learning paths", "guided learning paths", "build first learning", "project based learning"],
 });
 import {
   ArrowUpRight,
@@ -16,7 +18,9 @@ import {
   Home,
   TestTube2,
 } from "lucide-react";
-import { learningPaths } from "@/lib/learning";
+import { getLearningPaths } from "@/lib/learning";
+
+export const dynamic = "force-dynamic";
 
 const pathIcons = {
   "go-lang": Code2,
@@ -24,7 +28,9 @@ const pathIcons = {
   "manual-testing": TestTube2,
 };
 
-export default function LearnPage() {
+export default async function LearnPage() {
+  const learningPaths = await getLearningPaths();
+
   return (
     <main className="min-h-screen bg-background text-foreground">
 
@@ -65,6 +71,14 @@ export default function LearnPage() {
       </section>
 
       <section className="px-6 py-16">
+        {learningPaths.length === 0 ? (
+          <div className="mx-auto max-w-6xl rounded-2xl border border-dashed border-black/10 px-8 py-16 text-center dark:border-white/10">
+            <h2 className="font-space text-3xl font-bold">We&apos;re cooking something insanely great.</h2>
+            <p className="mx-auto mt-4 max-w-md font-inter text-sm leading-6 text-foreground/45">
+              The paths are still under wraps. A few beautiful things need heat, patience, and one more thing.
+            </p>
+          </div>
+        ) : (
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-px overflow-hidden rounded-2xl bg-black/6 dark:bg-white/[0.08] md:grid-cols-3">
           {learningPaths.map((path, index) => {
             const Icon = pathIcons[path.slug as keyof typeof pathIcons] ?? Code2;
@@ -76,6 +90,13 @@ export default function LearnPage() {
                 className="group flex min-h-[520px] flex-col bg-background transition-colors duration-200 hover:bg-[#f5f3f0] dark:hover:bg-white/[0.04]"
               >
                 <div className="relative min-h-[300px] overflow-hidden bg-[#0a0a0a] p-6">
+                  {path.thumbnailUrl ? (
+                    <img
+                      src={path.thumbnailUrl}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-cover opacity-75 transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : null}
                   <div
                     className="absolute inset-0 opacity-10"
                     style={{
@@ -98,7 +119,7 @@ export default function LearnPage() {
                       {/* <p className="font-inter text-[10px] uppercase tracking-[0.22em] text-white/25">
                         {path.thumbnailNote}
                       </p> */}
-                      <div className="mt-3 flex h-20 items-center justify-center rounded-lg border border-dashed border-white/14 bg-white/[0.03] text-white/28">
+                      <div className="mt-3 flex h-20 items-center justify-center rounded-lg border border-dashed border-white/14 bg-black/20 text-white/70 backdrop-blur-sm">
                         <Icon size={30} strokeWidth={1.6} />
                       </div>
                     </div>
@@ -138,6 +159,7 @@ export default function LearnPage() {
             );
           })}
         </div>
+        )}
       </section>
 
     </main>

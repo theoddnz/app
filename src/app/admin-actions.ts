@@ -5,8 +5,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { getDb } from "@/db";
-import { blogPosts, learningPaths, lessons, users } from "@/db/schema";
-import { clearAppSession, createAppSession, requireAdminSession } from "@/lib/admin-auth";
+import { blogPosts, learningPaths, lessons, userPathSelections, users } from "@/db/schema";
+import { clearAppSession, createAppSession, getAppSession, requireAdminSession, requireStudentSession } from "@/lib/admin-auth";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import type { ActionState } from "@/types/admin";
 
@@ -86,11 +86,20 @@ export async function loginAction(state: ActionState = initialState, formData: F
   });
 
   if (!user || !user.passwordHash || !(await verifyPassword(password, user.passwordHash))) {
-    return { ok: false, message: "Invalid admin credentials." };
+    return { ok: false, message: "Invalid email or password." };
   }
 
   await createAppSession({ id: user.id, email: user.email, role: user.role === "admin" ? "admin" : "student" });
-  redirect(user.role === "admin" ? "/dashboard" : "/learn");
+
+  if (user.role === "admin") {
+    redirect("/dashboard");
+  }
+
+  const selection = await getDb().query.userPathSelections.findFirst({
+    where: eq(userPathSelections.userId, user.id),
+  });
+
+  redirect(selection ? "/my-learning" : "/learn");
 }
 
 export async function signupAction(state: ActionState = initialState, formData: FormData) {
@@ -130,6 +139,83 @@ export async function signupAction(state: ActionState = initialState, formData: 
 export async function logoutAction() {
   await clearAppSession();
   redirect("/users/login");
+}
+
+export async function updateProfileAction(state: ActionState = initialState, formData: FormData) {
+  void state;
+
+  const session = await getAppSession();
+
+  if (!session) {
+    redirect("/users/login");
+  }
+
+  const name = value(formData, "name");
+
+  if (!name || name.length < 2) {
+    return { ok: false, message: "Name must be at least 2 characters." };
+  }
+
+  await getDb()
+    .update(users)
+    .set({
+      name,
+      updatedAt: new Date(),
+    })
+    .where(eq(users.id, session.userId));
+
+  revalidatePath("/settings");
+  revalidatePath("/my-learning");
+  return { ok: true, message: "Profile updated." };
+}
+
+export async function selectLearningPathAction(formData: FormData) {
+  const session = await getAppSession();
+
+  if (!session) {
+    redirect("/users/signup");
+  }
+
+  if (session.role === "admin") {
+    redirect("/dashboard");
+  }
+
+  const pathId = value(formData, "pathId");
+
+  if (!pathId) {
+    redirect("/learn");
+  }
+
+  const path = await getDb().query.learningPaths.findFirst({
+    where: eq(learningPaths.id, pathId),
+  });
+
+  if (!path || !path.isVisible) {
+    redirect("/learn");
+  }
+
+  await getDb()
+    .insert(userPathSelections)
+    .values({
+      userId: session.userId,
+      pathId: path.id,
+    })
+    .onConflictDoUpdate({
+      target: userPathSelections.userId,
+      set: {
+        pathId: path.id,
+        updatedAt: new Date(),
+      },
+    });
+
+  revalidatePath("/my-learning");
+  revalidatePath(`/learn/${path.slug}`);
+  redirect("/my-learning");
+}
+
+export async function switchLearningPathAction(formData: FormData) {
+  await requireStudentSession();
+  await selectLearningPathAction(formData);
 }
 
 export async function createLearningPathAction(

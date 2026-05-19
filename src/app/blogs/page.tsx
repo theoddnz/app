@@ -11,8 +11,10 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata({
   title: "Field Notes",
-  description: "Path-specific notes, essays, and practical build logs from TheOddOnes.",
+  description:
+    "Field notes from TheOddOnes: practical essays, build logs, and learning reflections from a focused builder community.",
   path: "/blogs",
+  keywords: ["TheOddOnes field notes", "learning essays", "build logs", "builder community blog"],
 });
 
 export default async function BlogPage() {

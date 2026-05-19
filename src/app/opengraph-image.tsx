@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 import { siteConfig } from "@/lib/seo";
 
-export const alt = "TheOddOnes - build-first learning";
+export const alt = "TheOddOnes - learning community for people who think differently";
 export const size = {
   width: 1200,
   height: 630,
@@ -35,7 +35,7 @@ export default function Image() {
             textTransform: "uppercase",
           }}
         >
-          Build. Break. Repair. Repeat.
+          Build. Share. Learn. Repeat.
         </div>
         <div
           style={{
@@ -58,7 +58,7 @@ export default function Image() {
             textAlign: "center",
           }}
         >
-          Build-first learning for robotics, Go, testing, and systems thinkers.
+          {siteConfig.tagline}
         </div>
       </div>
     ),

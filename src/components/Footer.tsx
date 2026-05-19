@@ -7,30 +7,29 @@ export default function Footer() {
     links: Array<{ label: string; href: string }>;
   }> = [
     {
-      title: "Links",
+      title: "Explore",
       links: [
         { label: "Mission", href: "/mission" },
-        { label: "GitHub", href: "/community" },
-        { label: "X", href: "/community" },
-        { label: "Sign in", href: "/login" },
+        { label: "Learning paths", href: "/learn" },
+        { label: "Community", href: "/community" },
+        { label: "Field notes", href: "/blogs" },
       ],
     },
     {
-      title: " ",
+      title: "Account",
       links: [
-        { label: "Journey", href: "/#community" },
-        { label: "Terms", href: "#" },
-        { label: "Directory", href: "/community" },
-        { label: "Discord", href: "/community" },
+        { label: "Sign in", href: "/users/login" },
+        { label: "Sign up", href: "/users/signup" },
+        { label: "My learning", href: "/my-learning" },
+        { label: "Profile", href: "/settings" },
       ],
     },
     {
-      title: "  ",
+      title: "More",
       links: [
-        { label: "Mentors", href: "/#contribute" },
-        { label: "Fund", href: "/#contribute" },
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Contact", href: "#" },
+        { label: "Home", href: "/" },
+        { label: "Admin", href: "/dashboard" },
+        { label: "Login redirect", href: "/login" },
       ],
     },
   ];
@@ -80,7 +79,7 @@ export default function Footer() {
               <div className="mt-9 grid grid-cols-2 gap-x-10 gap-y-10 sm:grid-cols-3 sm:gap-x-12">
             {groups.map((g) => (
               <div key={g.title} className="space-y-3">
-                <p className="sr-only">{g.title.trim() || "Links column"}</p>
+                <p className="font-space text-[11px] uppercase tracking-[0.18em] text-black/35 dark:text-white/30">{g.title}</p>
                 <ul className="space-y-3">
                   {g.links.map((l) => (
                     <li key={l.label}>

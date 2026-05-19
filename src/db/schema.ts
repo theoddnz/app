@@ -3,6 +3,7 @@ import {
   integer,
   index,
   pgTable,
+  uniqueIndex,
   text,
   timestamp,
   uuid,
@@ -94,5 +95,25 @@ export const blogPosts = pgTable(
     index("blog_posts_slug_idx").on(table.slug),
     index("blog_posts_created_at_idx").on(table.createdAt),
     index("blog_posts_path_created_at_idx").on(table.pathId, table.createdAt),
+  ],
+);
+
+export const userPathSelections = pgTable(
+  "user_path_selections",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    pathId: uuid("path_id")
+      .notNull()
+      .references(() => learningPaths.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("user_path_selections_user_id_unique").on(table.userId),
+    index("user_path_selections_path_id_idx").on(table.pathId),
+    index("user_path_selections_created_at_idx").on(table.createdAt),
   ],
 );

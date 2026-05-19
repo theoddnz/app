@@ -28,6 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${path.name} Field Notes`,
     description: path.description || `Field notes and build logs for ${path.name}.`,
     path: `/blogs/path/${path.slug}`,
+    images: path.thumbnailUrl ? [path.thumbnailUrl] : undefined,
+    keywords: [path.name, `${path.name} field notes`, "TheOddOnes field notes", "learning path notes"],
   });
 }
 

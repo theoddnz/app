@@ -81,6 +81,20 @@ export async function requireAdminSession() {
   return session;
 }
 
+export async function requireStudentSession() {
+  const session = await getAppSession();
+
+  if (!session) {
+    redirect("/users/login");
+  }
+
+  if (session.role === "admin") {
+    redirect("/dashboard");
+  }
+
+  return session;
+}
+
 export async function clearAppSession() {
   (await cookies()).delete(SESSION_COOKIE);
 }

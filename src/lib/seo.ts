@@ -4,20 +4,26 @@ export const siteConfig = {
   name: "TheOddOnes",
   domain: "theodd1s.com",
   url: "https://theodd1s.com",
-  title: "TheOddOnes - Build-first learning for contrarian builders",
+  title: "TheOddOnes - Learning community for people who think differently",
+  tagline: "A place for people who think differently about learning.",
   description:
-    "TheOddOnes is a build-first learning platform for robotics, Go, testing, and systems learners who learn by building, breaking, repairing, and repeating.",
+    "TheOddOnes is a build-first learning community for people who think differently about learning. Pick a path, build real projects, share progress, and grow with focused builders.",
   keywords: [
     "TheOddOnes",
+    "TheOddOnes learning community",
+    "learning community",
+    "online learning community",
     "build-first learning",
-    "robotics learning",
-    "ROS 2 course",
-    "Go programming course",
-    "manual testing course",
+    "people who think differently about learning",
+    "project based learning community",
     "project based learning",
-    "systems learning",
-    "hardware learning",
-    "contrarian learners",
+    "learn by building",
+    "builder community",
+    "learning paths",
+    "practical learning",
+    "build in public",
+    "student dashboard",
+    "skill based learning",
   ],
 } as const;
 
@@ -36,6 +42,7 @@ export function pageMetadata({
   images,
   type = "website",
   noIndex = false,
+  keywords = [],
 }: {
   title: string;
   description?: string;
@@ -43,13 +50,23 @@ export function pageMetadata({
   images?: string[];
   type?: "website" | "article";
   noIndex?: boolean;
+  keywords?: string[];
 }): Metadata {
   const canonical = absoluteUrl(path);
-  const resolvedImages = images?.filter(Boolean).map((image) => absoluteUrl(image));
+  const resolvedImages = images?.filter(Boolean).map((image) => absoluteUrl(image)) ?? [
+    absoluteUrl("/opengraph-image"),
+  ];
+  const mergedKeywords = [...new Set([...siteConfig.keywords, ...keywords])];
 
   return {
     title,
     description,
+    applicationName: siteConfig.name,
+    authors: [{ name: siteConfig.name, url: siteConfig.url }],
+    creator: siteConfig.name,
+    publisher: siteConfig.name,
+    category: "education",
+    keywords: mergedKeywords,
     alternates: {
       canonical,
     },
@@ -67,6 +84,7 @@ export function pageMetadata({
       title,
       description,
       images: resolvedImages,
+      creator: "@theoddoneshub",
     },
     robots: noIndex
       ? {

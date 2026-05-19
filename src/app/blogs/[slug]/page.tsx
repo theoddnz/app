@@ -32,6 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       path: `/blogs/${blog.slug}`,
       images: blog.thumbnailUrl ? [blog.thumbnailUrl] : undefined,
       type: "article",
+      keywords: [blog.title, "TheOddOnes field notes", "learning community essay", "build log"],
     }),
     title: blog.title,
     description: blog.excerpt,

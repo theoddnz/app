@@ -20,6 +20,7 @@ import { Button3D } from "@/components/ui/button-3d";
 import type { AppSession } from "@/types/admin";
 
 const navLinks = [
+  { label: "Mission", href: "/mission" },
   { label: "Paths", href: "/learn" },
   { label: "Community", href: "/community" },
   { label: "Blogs", href: "/blogs" },
@@ -27,6 +28,7 @@ const navLinks = [
 
 const NAV_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 const NAV_DURATION = "820ms";
+const BANNER_HEIGHT = 36;
 
 export function NavbarClient({ session }: { session: AppSession | null }) {
   const [scrolled, setScrolled] = useState(false);
@@ -61,14 +63,19 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
     return () => document.removeEventListener("mousedown", closeOnOutsideClick);
   }, []);
 
-  const accountHref = session?.role === "admin" ? "/dashboard" : "/learn";
+  const accountHref = session?.role === "admin" ? "/dashboard" : "/my-learning";
 
   return (
     <>
+      <div className="fixed left-0 top-0 z-[60] flex h-9 w-full items-center justify-center bg-[#c4622d] px-4 text-center text-white">
+        <p className="truncate font-space text-[11px] font-semibold tracking-[0.12em] sm:text-xs">
+          One more thing is cooking. Stay tuned.
+        </p>
+      </div>
       <nav
         style={{
           position: "fixed",
-          top: "0px",
+          top: `${BANNER_HEIGHT}px`,
           left: "0px",
           width: "100%",
           maxWidth: "100vw",
@@ -88,7 +95,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
             gap: "32px",
             padding: isMobile ? "14px 20px" : "18px 32px",
             width: "100%",
-            maxWidth: "80rem",
+            maxWidth: "76rem",
             margin: "0 auto",
             position: "relative",
             whiteSpace: "normal",
@@ -182,6 +189,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
         className={`fixed inset-0 z-40 flex flex-col bg-background/85 px-8 pb-10 pt-24 backdrop-blur-2xl transition-all duration-700 ease-out md:hidden ${
           mobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
+        style={{ paddingTop: `${BANNER_HEIGHT + 72}px` }}
       >
         <div className="flex flex-1 flex-col gap-1">
           {navLinks.map((item, index) => (

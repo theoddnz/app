@@ -4,11 +4,18 @@ import CTA from "../components/CTA";
 import WhatYouGet from "@/components/Whatyouget";
 import Collaborators from "@/components/Collaborators";
 import AvailablePaths from "@/components/Availablepaths";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, siteConfig } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Build-first learning for people who think differently",
+  title: "TheOddOnes Learning Community",
+  description: siteConfig.description,
   path: "/",
+  keywords: [
+    "TheOddOnes",
+    "learning community for builders",
+    "build first learning platform",
+    "people who think differently about learning",
+  ],
 });
 
 export default function Home() {

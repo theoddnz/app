@@ -2,7 +2,6 @@ import { MetadataRoute } from "next";
 
 import { getDb } from "@/db";
 import { blogPosts, learningPaths as learningPathRows } from "@/db/schema";
-import { learningPaths } from "@/lib/learning";
 import { posts } from "@/lib/posts";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -31,19 +30,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: post.featured ? 0.85 : 0.7,
   }));
 
-  let learnRoutes: MetadataRoute.Sitemap = learningPaths.map((path) => ({
-    url: absoluteUrl(`/learn/${path.slug}`),
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.85,
-  }));
+  let learnRoutes: MetadataRoute.Sitemap = [];
 
-  let blogPathRoutes: MetadataRoute.Sitemap = learningPaths.map((path) => ({
-    url: absoluteUrl(`/blogs/path/${path.slug}`),
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.65,
-  }));
+  let blogPathRoutes: MetadataRoute.Sitemap = [];
 
   try {
     const [dbPosts, dbPaths] = await Promise.all([

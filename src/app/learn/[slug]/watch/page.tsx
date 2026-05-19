@@ -4,17 +4,25 @@ import Link from "next/link";
 import { ArrowLeft, Play, Clock3, Info, Lock } from "lucide-react";
 
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { pageMetadata } from "@/lib/seo";
+import { studentHasSelectedPath } from "@/lib/student-learning";
 
 type Props = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ v?: string }>;
 };
 
+export const dynamic = "force-dynamic";
+
+function isDirectVideoUrl(url: string) {
+  return /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url);
+}
+
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { slug } = await params;
   const { v } = await searchParams;
-  const path = getLearningPath(slug);
+  const path = await getLearningPath(slug);
 
   if (!path) return { title: "Video not found | TheOddOnes" };
 
@@ -32,15 +40,21 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     title,
     description,
     path: `/learn/${slug}/watch?v=${safeIndex}`,
+    images: activeVideo?.thumbnailUrl ? [activeVideo.thumbnailUrl] : undefined,
+    noIndex: true,
   });
 }
 
 export default async function WatchPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const { v } = await searchParams;
-  const path = getLearningPath(slug);
+  const path = await getLearningPath(slug);
 
   if (!path) notFound();
+
+  if (!(await studentHasSelectedPath(path.id))) {
+    redirect("/my-learning");
+  }
 
   const activeVideoIndex = v ? parseInt(v as string, 10) : 0;
   const safeIndex =
@@ -75,15 +89,34 @@ export default async function WatchPage({ params, searchParams }: Props) {
           <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_450px] items-start">
             {/* Left Column: Main Player */}
             <div className="flex flex-col gap-6">
-              {/* Player Placeholder */}
-              <div className="aspect-video w-full overflow-hidden rounded-2xl bg-[#0a0a0a] border border-black/8 dark:border-white/[0.07] relative group flex items-center justify-center shadow-lg">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
-                <div className="text-white text-center">
-                   <div className="flex h-20 w-20 mx-auto mb-4 items-center justify-center rounded-full bg-white/10 backdrop-blur-md group-hover:bg-white/20 hover:scale-105 transition-all cursor-pointer">
-                      <Play size={32} className="ml-1 text-white" />
-                   </div>
-                   <p className="font-inter text-xs uppercase tracking-widest text-white/40">Mock Player Preview</p>
-                </div>
+              {/* Player */}
+              <div className="aspect-video w-full overflow-hidden rounded-2xl bg-[#0a0a0a] border border-black/8 dark:border-white/[0.07] relative shadow-lg">
+                {activeVideo?.videoUrl && isDirectVideoUrl(activeVideo.videoUrl) ? (
+                  <video
+                    src={activeVideo.videoUrl}
+                    poster={activeVideo.thumbnailUrl || undefined}
+                    controls
+                    className="h-full w-full bg-black object-contain"
+                  />
+                ) : activeVideo?.videoUrl ? (
+                  <iframe
+                    src={activeVideo.videoUrl}
+                    title={activeVideo.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="h-full w-full"
+                  />
+                ) : (
+                  <div className="group flex h-full w-full items-center justify-center">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+                    <div className="text-center text-white">
+                      <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-md transition-all group-hover:scale-105 group-hover:bg-white/20">
+                        <Play size={32} className="ml-1 text-white" />
+                      </div>
+                      <p className="font-inter text-xs uppercase tracking-widest text-white/40">Video URL missing</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Video Info */}
@@ -108,10 +141,12 @@ export default async function WatchPage({ params, searchParams }: Props) {
                 {/* Description Box */}
                 <div className="mt-6 rounded-2xl border border-black/8 bg-foreground/[0.015] p-6 dark:border-white/[0.07] dark:bg-white/[0.01]">
                    <p className="font-inter text-base leading-relaxed text-foreground/70">
-                      {path.videos.note}
+                      {activeVideo.description || path.videos.note}
                    </p>
                    <p className="font-inter text-sm leading-relaxed text-foreground/40 mt-4">
-                      This is a mocked video page. Real videos will be embedded here in the future. You are currently viewing video {safeIndex + 1} of {path.videos.items.length} in the <strong className="font-medium text-foreground/60">{path.name}</strong> module.
+                      {activeVideo.isFallback
+                        ? "This fallback appears only when the database has no lesson videos for this path."
+                        : <>You are currently viewing video {safeIndex + 1} of {path.videos.items.length} in the <strong className="font-medium text-foreground/60">{path.name}</strong> module.</>}
                    </p>
                 </div>
               </div>
@@ -132,7 +167,7 @@ export default async function WatchPage({ params, searchParams }: Props) {
 
                      return (
                         <Link
-                           key={video.title}
+                           key={`${video.title}-${index}`}
                            href={`/learn/${slug}/watch?v=${index}`}
                            className={`group relative flex gap-3 p-4 transition-colors hover:bg-foreground/[0.04] dark:hover:bg-white/[0.04] ${isActive ? 'bg-foreground/[0.05] dark:bg-white/[0.05]' : ''}`}
                         >

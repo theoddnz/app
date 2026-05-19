@@ -1,13 +1,13 @@
 "use client";
-import { Terminal, Wrench, Zap, Camera, Bot } from "lucide-react";
+import { BookOpen, Camera, Terminal, Wrench, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button3D } from "@/components/ui/button-3d";
 import { useRouter } from "next/navigation";
 const floatingIcons = [
-  { Icon: Terminal, label: "ROS",      className: "top-[24%] left-[11%]",  rotate: "-4deg" },
-  { Icon: Camera,      label: "Hardware", className: "top-[20%] right-[12%]", rotate: "3deg"  },
-  { Icon: Wrench,   label: "Repair",   className: "top-[60%] left-[7%]",   rotate: "-2deg" },
-  { Icon: Bot,label: "Build",    className: "top-[58%] right-[8%]",  rotate: "5deg"  },
+  { Icon: Terminal, label: "Code", className: "top-[24%] left-[11%]", rotate: "-4deg" },
+  { Icon: Camera, label: "Share", className: "top-[20%] right-[12%]", rotate: "3deg" },
+  { Icon: Wrench, label: "Build", className: "top-[60%] left-[7%]", rotate: "-2deg" },
+  { Icon: BookOpen, label: "Learn", className: "top-[58%] right-[8%]", rotate: "5deg" },
 ];
 
 const SUBTITLE = "A place for people who think differently about learning.";
@@ -85,7 +85,7 @@ export default function Hero() {
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="w-[5px] h-[5px] rounded-full bg-[#c4622d] inline-block"
           />
-          Robotics · ROS · Real learning
+          Build · Share · Real learning
         </motion.div> */}
 
         {/* Headline — each line clips up from behind a mask */}
