@@ -1,5 +1,5 @@
 import { desc } from "drizzle-orm";
-import { Clock, LinkIcon, PauseCircle, PlayCircle, Trash2 } from "lucide-react";
+import { Clock, LinkIcon, PauseCircle, PlayCircle, Trash2 } from "@/components/ui/huge-icons";
 
 import {
   deleteLessonAction,

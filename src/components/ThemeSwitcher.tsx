@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Laptop, Moon, Sun } from "lucide-react";
+import { Laptop, Moon, Sun } from "@/components/ui/huge-icons";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 

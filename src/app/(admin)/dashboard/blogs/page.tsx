@@ -1,5 +1,5 @@
 import { desc } from "drizzle-orm";
-import { ExternalLink, Trash2 } from "lucide-react";
+import { ExternalLink, Trash2 } from "@/components/ui/huge-icons";
 import Link from "next/link";
 
 import { deleteBlogPostAction } from "@/app/admin-actions";

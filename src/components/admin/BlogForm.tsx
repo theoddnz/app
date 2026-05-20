@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useActionState } from "react";
-import { Bold, Eye, Heading2, ImageUp, Italic, LinkIcon, Loader2, Plus } from "lucide-react";
+import { Bold, Eye, Heading2, ImageUp, Italic, LinkIcon, Loader2, Plus } from "@/components/ui/huge-icons";
 
 import { createBlogPostAction } from "@/app/admin-actions";
 import { MarkdownPreview } from "@/components/blog/MarkdownPreview";

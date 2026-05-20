@@ -1,5 +1,5 @@
 import { desc } from "drizzle-orm";
-import { Eye, EyeOff, Rocket, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Rocket, Trash2 } from "@/components/ui/huge-icons";
 
 import {
   deleteLearningPathAction,

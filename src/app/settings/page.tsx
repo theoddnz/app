@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
-import { ArrowUpRight, BadgeCheck, BookOpen, CalendarDays, Mail, Shield, User } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, BookOpen, CalendarDays, Mail, Shield, User } from "@/components/ui/huge-icons";
 
 import { getDb } from "@/db";
 import { learningPaths, userPathSelections, users } from "@/db/schema";

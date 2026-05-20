@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { createClient } from "@supabase/supabase-js";
-import { Armchair, Check, Mail, User, Sparkles } from "lucide-react";
+import { Armchair, Check, Mail, User, Sparkles } from "@/components/ui/huge-icons";
 
 import { Button3D } from "@/components/ui/button-3d";
 import { Input } from "@/components/ui/input";

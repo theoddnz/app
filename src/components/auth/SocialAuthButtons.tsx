@@ -1,6 +1,6 @@
 "use client";
 
-import { Code, Search } from "lucide-react";
+import { Code, Search } from "@/components/ui/huge-icons";
 
 export function SocialAuthButtons() {
   const providers = [

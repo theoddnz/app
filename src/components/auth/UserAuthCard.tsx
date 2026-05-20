@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2 } from "@/components/ui/huge-icons";
 import { useActionState } from "react";
 
 import { loginAction, signupAction } from "@/app/admin-actions";

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -12,7 +13,7 @@ import {
   Settings,
   User,
   X,
-} from "lucide-react";
+} from "@/components/ui/huge-icons";
 import { usePathname } from "next/navigation";
 
 import { logoutAction } from "@/app/admin-actions";
@@ -25,10 +26,6 @@ const navLinks = [
   { label: "Community", href: "/community" },
   { label: "Blogs", href: "/blogs" },
 ];
-
-const NAV_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
-const NAV_DURATION = "820ms";
-const BANNER_HEIGHT = 36;
 
 export function NavbarClient({ session }: { session: AppSession | null }) {
   const [scrolled, setScrolled] = useState(false);
@@ -48,6 +45,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -67,24 +65,18 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
 
   return (
     <>
-      <div className="fixed left-0 top-0 z-[60] flex h-9 w-full items-center justify-center bg-[#c4622d] px-4 text-center text-white">
-        <p className="truncate font-space text-[11px] font-semibold tracking-[0.12em] sm:text-xs">
-          One more thing is cooking. Stay tuned.
-        </p>
-      </div>
       <nav
+        className="fixed inset-x-0 top-0 z-50 bg-transparent"
         style={{
-          position: "fixed",
-          top: `${BANNER_HEIGHT}px`,
-          left: "0px",
           width: "100%",
           maxWidth: "100vw",
-          zIndex: 50,
-          background: "color-mix(in oklch, var(--background) 82%, transparent)",
-          backdropFilter: "blur(24px) saturate(180%)",
-          WebkitBackdropFilter: "blur(24px) saturate(180%)",
-          boxShadow: scrolled ? "0 4px 18px rgba(0,0,0,0.07)" : "none",
-          transition: `background-color ${NAV_DURATION} ${NAV_EASE}, border-color ${NAV_DURATION} ${NAV_EASE}, box-shadow ${NAV_DURATION} ${NAV_EASE}, backdrop-filter ${NAV_DURATION} ${NAV_EASE}`,
+          background: scrolled
+            ? "color-mix(in oklch, var(--background) 72%, transparent)"
+            : "transparent",
+          backdropFilter: scrolled ? "blur(18px) saturate(160%)" : "blur(0px)",
+          WebkitBackdropFilter: scrolled ? "blur(18px) saturate(160%)" : "blur(0px)",
+          boxShadow: "none",
+          transition: "background-color 360ms ease, backdrop-filter 360ms ease",
         }}
       >
         <div
@@ -93,7 +85,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
             alignItems: "center",
             justifyContent: "space-between",
             gap: "32px",
-            padding: isMobile ? "14px 20px" : "18px 32px",
+            padding: isMobile ? "18px 28px" : "24px 32px",
             width: "100%",
             maxWidth: "76rem",
             margin: "0 auto",
@@ -105,14 +97,35 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
             WebkitBackdropFilter: "none",
             border: "0",
             boxShadow: "none",
-            transition: `background-color ${NAV_DURATION} ${NAV_EASE}, border-color ${NAV_DURATION} ${NAV_EASE}, box-shadow ${NAV_DURATION} ${NAV_EASE}, backdrop-filter ${NAV_DURATION} ${NAV_EASE}`,
           }}
         >
-          <Link href="/" className="flex shrink-0 select-none items-center font-space text-xl font-bold text-foreground">
-            The<span className="text-[#c4622d]">Odd</span>Ones
+          <Link href="/" className="flex shrink-0 select-none items-center gap-1" aria-label="TheOddOnes home">
+            <Image
+              src="/assets/theoddones-white-logo.png"
+              alt="TheOddOnes"
+              width={44}
+              height={44}
+              priority
+              className="h-11 w-11 object-contain dark:hidden"
+            />
+            <Image
+              src="/assets/theoddones-black-logo.png"
+              alt="TheOddOnes"
+              width={44}
+              height={44}
+              priority
+              className="hidden h-11 w-11 object-contain dark:block"
+            />
+            <span className="font-space text-xl font-bold text-foreground">
+              The<span className="text-[#c4622d]">Odd</span>Ones
+            </span>
           </Link>
 
-          <div className="absolute left-1/2 hidden -translate-x-1/2 rounded-2xl border border-foreground/10 bg-background/70 p-1 shadow-[0_1px_8px_rgba(0,0,0,0.06)] md:flex">
+          <div
+            className={`absolute left-1/2 hidden -translate-x-1/2 rounded-2xl p-1 transition-colors duration-300 md:flex ${
+              scrolled ? "border border-foreground/10 bg-background/35" : "bg-transparent"
+            }`}
+          >
             {navLinks.map((item) => {
               const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
@@ -122,7 +135,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
                   href={item.href}
                   className={
                     active
-                      ? "rounded-xl bg-background px-5 py-2 font-space text-sm font-semibold text-foreground shadow-sm"
+                      ? "rounded-xl bg-transparent px-5 py-2 font-space text-sm font-semibold text-foreground"
                       : "rounded-xl px-5 py-2 font-space text-sm font-semibold text-foreground/50 transition-colors hover:text-foreground"
                   }
                 >
@@ -189,7 +202,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
         className={`fixed inset-0 z-40 flex flex-col bg-background/85 px-8 pb-10 pt-24 backdrop-blur-2xl transition-all duration-700 ease-out md:hidden ${
           mobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
-        style={{ paddingTop: `${BANNER_HEIGHT + 72}px` }}
+        style={{ paddingTop: "88px" }}
       >
         <div className="flex flex-1 flex-col gap-1">
           {navLinks.map((item, index) => (

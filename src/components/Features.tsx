@@ -1,5 +1,5 @@
 "use client";
-import { Cpu, Radio, Users, Zap, Wrench, GitMerge } from "lucide-react";
+import { Cpu, Radio, Users, Zap, Wrench, GitMerge } from "@/components/ui/huge-icons";
 
 const features = [
   {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Cpu, Orbit, RadioTower, Shapes, Sparkles, Waves } from "lucide-react";
+import { Cpu, Orbit, RadioTower, Shapes, Sparkles, Waves } from "@/components/ui/huge-icons";
 
 const companies = [
   { name: "Loynix Studio", icon: Sparkles },

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useActionState } from "react";
-import { ImageUp, Loader2, Plus } from "lucide-react";
+import { ImageUp, Loader2, Plus } from "@/components/ui/huge-icons";
 
 import { createLearningPathAction } from "@/app/admin-actions";
 import { Button } from "@/components/ui/button";

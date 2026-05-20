@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { desc } from "drizzle-orm";
-import { ArrowUpRight, ChevronRight, FileText, Home } from "lucide-react";
+import { ArrowUpRight, ChevronRight, FileText, Home } from "@/components/ui/huge-icons";
 
 import { getDb } from "@/db";
 import { blogPosts, learningPaths } from "@/db/schema";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, ChevronRight, Home, MessageCircle, Sparkles, Users } from "lucide-react";
+import { ArrowUpRight, ChevronRight, Home, MessageCircle, Sparkles, Users } from "@/components/ui/huge-icons";
 
 import { pageMetadata } from "@/lib/seo";
 

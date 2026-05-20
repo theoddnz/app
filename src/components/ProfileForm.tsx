@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save } from "@/components/ui/huge-icons";
 
 import { updateProfileAction } from "@/app/admin-actions";
 import { Button } from "@/components/ui/button";

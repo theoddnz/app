@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 
 export default function Footer() {
@@ -53,13 +54,26 @@ export default function Footer() {
             <div className="flex flex-col gap-5">
               <Link
                 href="/"
-                className="group inline-flex items-center font-space text-[20px] font-extrabold leading-none tracking-[-0.03em] text-black/85 dark:text-[#f0ebe5]"
+                className="inline-flex w-fit items-center gap-1"
+                aria-label="TheOddOnes home"
               >
-                The
-                <span className="text-[#c4622d] transition-colors duration-300 group-hover:text-[#e07a3f]">
-                  Odd
+                <Image
+                  src="/assets/theoddones-white-logo.png"
+                  alt="TheOddOnes"
+                  width={52}
+                  height={52}
+                  className="h-13 w-13 object-contain dark:hidden"
+                />
+                <Image
+                  src="/assets/theoddones-black-logo.png"
+                  alt="TheOddOnes"
+                  width={52}
+                  height={52}
+                  className="hidden h-13 w-13 object-contain dark:block"
+                />
+                <span className="font-space text-[20px] font-extrabold leading-none tracking-[-0.03em] text-black/85 dark:text-[#f0ebe5]">
+                  The<span className="text-[#c4622d]">Odd</span>Ones
                 </span>
-                Ones
               </Link>
               <p className="max-w-[26rem] font-inter text-[13.5px] font-light leading-[1.85] text-black/45 dark:text-white/35">
                 A movement for builders who learn together in public—with focus,
@@ -103,9 +117,26 @@ export default function Footer() {
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <Link
               href="/"
-              className="font-space text-[16px] font-bold tracking-[-0.02em] text-black/70 hover:text-black dark:text-white/60 dark:hover:text-[#f0ebe5]"
+              className="inline-flex items-center gap-1"
+              aria-label="TheOddOnes home"
             >
-              The<span className="text-secondary">Odd</span>Ones
+              <Image
+                src="/assets/theoddones-white-logo.png"
+                alt="TheOddOnes"
+                width={36}
+                height={36}
+                className="h-9 w-9 object-contain dark:hidden"
+              />
+              <Image
+                src="/assets/theoddones-black-logo.png"
+                alt="TheOddOnes"
+                width={36}
+                height={36}
+                className="hidden h-9 w-9 object-contain dark:block"
+              />
+              <span className="font-space text-[16px] font-bold tracking-[-0.02em] text-black/70 hover:text-black dark:text-white/60 dark:hover:text-[#f0ebe5]">
+                The<span className="text-secondary">Odd</span>Ones
+              </span>
             </Link>
             <p className="font-inter text-[12px] font-light tracking-[0.04em] text-black/35 dark:text-white/30">
               © 2026 The<span className="text-secondary">Odd</span>Ones

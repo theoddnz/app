@@ -17,7 +17,7 @@ import {
   Code2,
   Home,
   TestTube2,
-} from "lucide-react";
+} from "@/components/ui/huge-icons";
 import { getLearningPaths } from "@/lib/learning";
 
 export const dynamic = "force-dynamic";

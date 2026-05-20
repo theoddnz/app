@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, FileText, LayoutDashboard, LogOut, Route, Users } from "lucide-react";
+import { BookOpen, FileText, LayoutDashboard, LogOut, Route, Users } from "@/components/ui/huge-icons";
 
 import { logoutAction } from "@/app/admin-actions";
 import { Button } from "@/components/ui/button";

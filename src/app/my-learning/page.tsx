@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, BookOpen, CheckCircle2, Clock3, FileText, Play, Route } from "lucide-react";
+import { ArrowUpRight, BookOpen, CheckCircle2, Clock3, FileText, Play, Route } from "@/components/ui/huge-icons";
 
 import { selectLearningPathAction } from "@/app/admin-actions";
 import { Button } from "@/components/ui/button";
