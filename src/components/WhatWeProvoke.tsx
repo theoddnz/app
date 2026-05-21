@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, cubicBezier } from "framer-motion";
-import { SectionHeader } from "./Header";
 
 const EASE = cubicBezier(0.16, 1, 0.3, 1);
 

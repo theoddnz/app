@@ -17,7 +17,7 @@ export default function Hero() {
   const router = useRouter();
 
   return (
-    <section className="relative min-h-screen bg-background flex flex-col items-center justify-center overflow-hidden pt-0 dark:bg-[#0a0806]">
+    <section className="relative flex h-[100svh] min-h-[620px] flex-col items-center justify-center overflow-hidden bg-background pt-0 dark:bg-[#0a0806]">
       <Spotlight className="-top-8 left-0 md:-top-20 md:left-20" fill="#c4622d" filterId="hero-spotlight-primary" />
       <Spotlight className="-top-24 left-full hidden -scale-x-100 dark:block" fill="#ffffff" filterId="hero-spotlight-secondary" />
 
