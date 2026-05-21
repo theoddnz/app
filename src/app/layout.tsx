@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Footer from "@/components/Footer";
+import { FooterGate } from "@/components/FooterGate";
 import Navbar from "@/components/Navbar";
 import { absoluteUrl, jsonLd, siteConfig } from "@/lib/seo";
 
@@ -128,7 +129,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               },
             }}
           />
-          <Footer />
+          <FooterGate>
+            <Footer />
+          </FooterGate>
         </ThemeProvider>
       </body>
     </html>

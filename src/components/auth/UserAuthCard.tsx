@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Eye, EyeOff, Loader2 } from "@/components/ui/huge-icons";
+import { Eye, EyeOff, Loader2 } from "@/components/ui/huge-icons";
 import { useActionState } from "react";
 
 import { loginAction, signupAction } from "@/app/admin-actions";
@@ -39,17 +40,6 @@ const copy = {
     switchLabel: "Sign in",
   },
 };
-
-function OddOnesLogo({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 28 28" fill="none" className={cn("size-6", className)} aria-label="TheOddOnes">
-      <rect width="28" height="28" rx="7" fill="currentColor" opacity="0.12" />
-      <circle cx="9" cy="14" r="3" fill="currentColor" />
-      <circle cx="19" cy="14" r="3" fill="currentColor" opacity="0.45" />
-      <circle cx="14" cy="9" r="2" fill="currentColor" opacity="0.7" />
-    </svg>
-  );
-}
 
 function OrDivider() {
   return (
@@ -129,11 +119,12 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
   const pending = isSignup ? signupPending : loginPending;
 
   return (
-    <main className="relative min-h-[100svh] bg-background text-foreground">
-    
-     
-
-      <div className="relative mx-auto flex min-h-[calc(100svh-72px)] max-w-[420px] items-center px-6 py-10 md:px-0">
+    <main className="relative min-h-[100svh] bg-background px-4 pt-24 text-foreground sm:px-6">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-20 mx-auto h-64 max-w-xl rounded-full bg-secondary/10 blur-3xl"
+      />
+      <div className="relative mx-auto flex min-h-[calc(100svh-96px)] w-full max-w-[440px] items-center py-8 sm:py-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={mode}
@@ -141,12 +132,33 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4, ease: typeof EASE === "function" ? EASE : undefined }}
-            className="w-full"
+            className="w-full rounded-lg border border-border bg-card/75 px-5 py-7 shadow-sm backdrop-blur sm:px-8 sm:py-9"
           >
-            <h1 className="font-space text-[2rem] font-bold leading-[1.05] tracking-[-0.04em] text-foreground">
-              {page.heading}
-            </h1>
-            <p className="mt-2.5 font-space text-[14px] leading-relaxed text-foreground/45">{page.sub}</p>
+            <Link href="/" className="mb-8 inline-flex items-center gap-2" aria-label="TheOddOnes home">
+              <Image
+                src="/assets/theoddones-white-logo.png"
+                alt="TheOddOnes"
+                width={54}
+                height={54}
+                priority
+                className="h-14 w-14 object-contain dark:hidden"
+              />
+              <Image
+                src="/assets/theoddones-black-logo.png"
+                alt="TheOddOnes"
+                width={54}
+                height={54}
+                priority
+                className="hidden h-14 w-14 object-contain dark:block"
+              />
+            </Link>
+
+            <div>
+              <h1 className="font-space text-[1.9rem] font-bold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-[2.15rem]">
+                {page.heading}
+              </h1>
+              <p className="mt-2.5 font-space text-[14px] leading-relaxed text-foreground/45 sm:text-[15px]">{page.sub}</p>
+            </div>
 
             <form action={isSignup ? signupFormAction : loginFormAction} className="mt-8 space-y-4">
               <SocialAuthButtons />
@@ -170,7 +182,7 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
                 {page.submit}
               </Button3D>
 
-              <p className="text-center font-space text-[12px] text-foreground/30">
+              <p className="text-center font-space text-[12.5px] leading-6 text-foreground/35">
                 {page.switchText}{" "}
                 <Link href={page.switchHref} className="text-foreground/55 transition-colors hover:text-foreground">
                   {page.switchLabel}
