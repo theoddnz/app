@@ -103,47 +103,59 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
             <Image
               src="/assets/theoddones-white-logo.png"
               alt="TheOddOnes"
-              width={44}
-              height={44}
+              width={50}
+              height={50}
               priority
-              className="h-11 w-11 object-contain dark:hidden"
+              className="h-14 w-14 object-contain dark:hidden"
             />
             <Image
               src="/assets/theoddones-black-logo.png"
               alt="TheOddOnes"
-              width={44}
-              height={44}
+              width={50}
+              height={50}
               priority
-              className="hidden h-11 w-11 object-contain dark:block"
+              className="hidden h-14 w-14 object-contain dark:block"
             />
-            <span className="font-space text-xl font-bold text-foreground">
+            {/* <span className="font-space text-xl font-bold text-foreground">
               The<span className="text-[#c4622d]">Odd</span>Ones
-            </span>
+            </span> */}
           </Link>
 
-          <div
-            className={`absolute left-1/2 hidden -translate-x-1/2 rounded-2xl p-1 transition-colors duration-300 md:flex ${
-              scrolled ? "border border-foreground/10 bg-background/35" : "bg-transparent"
-            }`}
+      <div
+      className={[
+        "absolute left-1/2 hidden -translate-x-1/2 md:flex",
+        "items-center gap-0.5 rounded-2xl p-1",
+        "transition-all duration-300",
+        scrolled
+          ? "border border-foreground/[0.08] bg-background/60 shadow-sm backdrop-blur-md"
+          : "bg-transparent",
+      ].join(" ")}
+    >
+      {navLinks.map((item) => {
+        const active =
+          pathname === item.href || pathname.startsWith(`${item.href}/`);
+ 
+        return (
+          <Link
+            key={item.label}
+            href={item.href}
+            className={[
+              "relative rounded-[10px] px-4 py-1.5",
+              "font-space text-[13px] font-medium",
+              "transition-colors duration-200",
+              active
+                ? "bg-foreground/[0.06] text-foreground"
+                : "text-foreground/40 hover:text-foreground/75",
+            ].join(" ")}
           >
-            {navLinks.map((item) => {
-              const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={
-                    active
-                      ? "rounded-xl bg-transparent px-5 py-2 font-space text-sm font-semibold text-foreground"
-                      : "rounded-xl px-5 py-2 font-space text-sm font-semibold text-foreground/50 transition-colors hover:text-foreground"
-                  }
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
+            {item.label}
+            {active && (
+              <span className="absolute bottom-1 left-1/2 -translate-x-1/2 size-[3px] rounded-full bg-secondary" />
+            )}
+          </Link>
+        );
+      })}
+    </div>
 
           <div className="hidden shrink-0 items-center gap-3 font-space md:flex">
             {session ? (

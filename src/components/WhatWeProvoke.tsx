@@ -127,7 +127,7 @@ export default function WhatWeProvoke() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: EASE }}
-            className="font-space text-[11px] font-normal tracking-[0.08em] text-muted-foreground"
+            className=" text-[11px] font-normal tracking-[0.08em] text-muted-foreground"
           >
             What we provide
           </motion.p>
@@ -137,11 +137,11 @@ export default function WhatWeProvoke() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.05, ease: EASE }}
-            className="mt-3 font-space text-3xl font-light tracking-[-0.025em] text-foreground md:text-[42px] md:leading-[1.1]"
+            className="mt-3 font-space text-3xl font-normal tracking-[-0.025em] text-foreground md:text-[42px] md:leading-[1.1]"
           >
             Everything you need to
             <br />
-            <em className="font-light not-italic text-foreground/70">learn, build, and grow.</em>
+            <em className="font-normal not-italic text-foreground/70">learn, build, and grow.</em>
           </motion.h2>
 
           <motion.p
@@ -182,10 +182,10 @@ export default function WhatWeProvoke() {
 
               {/* title + desc */}
               <div>
-                <h3 className="font-space text-[15px] font-semibold leading-snug text-foreground">
+                <h3 className="font-space text-[18px] font-semibold leading-snug text-foreground">
                   {card.title}
                 </h3>
-                <p className="mt-1.5 font-space text-[13px] leading-relaxed text-muted-foreground">
+                <p className="mt-1.5 font-space text-[14px] leading-relaxed text-muted-foreground">
                   {card.desc}
                 </p>
               </div>
@@ -198,7 +198,7 @@ export default function WhatWeProvoke() {
                 {card.bullets.map((b) => (
                   <li
                     key={b}
-                    className="flex items-start gap-2 font-space text-[13px] leading-snug text-muted-foreground"
+                    className="flex items-start gap-2 font-space font-normal text-[14px] leading-snug text-muted-foreground"
                   >
                     <CheckIcon />
                     {b}

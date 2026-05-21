@@ -72,12 +72,7 @@ export default async function LearnPage() {
 
       <section className="px-6 py-16">
         {learningPaths.length === 0 ? (
-          <div className="mx-auto max-w-6xl rounded-2xl border border-dashed border-black/10 px-8 py-16 text-center dark:border-white/10">
-            <h2 className="font-space text-3xl font-bold">We&apos;re cooking something insanely great.</h2>
-            <p className="mx-auto mt-4 max-w-md font-inter text-sm leading-6 text-foreground/45">
-              The paths are still under wraps. A few beautiful things need heat, patience, and one more thing.
-            </p>
-          </div>
+          <ComingSoonCard/>
         ) : (
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-px overflow-hidden rounded-2xl bg-black/6 dark:bg-white/[0.08] md:grid-cols-3">
           {learningPaths.map((path, index) => {
@@ -163,5 +158,71 @@ export default async function LearnPage() {
       </section>
 
     </main>
+  );
+}
+
+
+
+ function ComingSoonCard() {
+  return (
+    <div className="mx-auto max-w-6xl rounded-2xl border border-dashed border-black/10 px-8 py-16 text-center dark:border-white/10">
+
+      {/* flame / heat SVG — "cooking something great" */}
+      <div className="mx-auto mb-8 flex items-end justify-center gap-3">
+        {/* left flame — smaller */}
+        <svg width="24" height="36" viewBox="0 0 24 36" fill="none" aria-hidden className="opacity-40 dark:opacity-30">
+          <path
+            d="M12 2C12 2 6 10 6 17c0 3.31 2.69 6 6 6s6-2.69 6-6c0-3-2-6-2-6s0 4-4 4c0 0 2-6 0-13z"
+            fill="#c4622d"
+          />
+        </svg>
+
+        {/* center flame — main, tall */}
+        <svg width="36" height="54" viewBox="0 0 36 54" fill="none" aria-hidden className="opacity-80 dark:opacity-70">
+          <path
+            d="M18 2C18 2 4 16 4 28c0 7.73 6.27 14 14 14s14-6.27 14-14c0-6-4-11-4-11s1 8-6 10c0 0 4-12 0-25z"
+            fill="#c4622d"
+          />
+          <path
+            d="M18 16C18 16 11 24 11 30c0 3.87 3.13 7 7 7s7-3.13 7-7c0-3-2-5.5-2-5.5s0 4-3 5c0 0 2-6 0-13.5z"
+            fill="#e8855a"
+            opacity="0.6"
+          />
+        </svg>
+
+        {/* right flame — smaller */}
+        <svg width="24" height="36" viewBox="0 0 24 36" fill="none" aria-hidden className="opacity-40 dark:opacity-30">
+          <path
+            d="M12 2C12 2 6 10 6 17c0 3.31 2.69 6 6 6s6-2.69 6-6c0-3-2-6-2-6s0 4-4 4c0 0 2-6 0-13z"
+            fill="#c4622d"
+          />
+        </svg>
+      </div>
+
+      {/* label */}
+      <span className="font-space text-[10.5px] font-medium tracking-[0.22em] text-muted-foreground/50 uppercase">
+        Coming soon
+      </span>
+
+      {/* heading */}
+      <h2 className="mt-3 font-space text-[1.75rem] font-bold leading-[1.1] tracking-[-0.03em] text-foreground md:text-3xl">
+        We&apos;re cooking something{" "}
+        <span className="text-foreground/40">insanely great.</span>
+      </h2>
+
+      {/* body */}
+      <p className="mx-auto mt-4 max-w-sm font-space text-[14px] font-light leading-relaxed text-foreground/45">
+        The paths are still under wraps. A few beautiful things need heat,
+        patience, and one more thing.
+      </p>
+
+      {/* subtle progress dots — "heat & patience" */}
+      <div className="mx-auto mt-8 flex items-center justify-center gap-2">
+        <span className="size-1.5 rounded-full bg-secondary/80" />
+        <span className="size-1.5 rounded-full bg-secondary/40" />
+        <span className="size-1.5 rounded-full bg-foreground/10" />
+      </div>
+
+    </div>
   );
 }

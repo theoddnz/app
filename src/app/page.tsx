@@ -3,7 +3,6 @@ import WhatWeProvoke from "../components/WhatWeProvoke";
 import CTA from "../components/CTA";
 import WhatYouGet from "@/components/Whatyouget";
 import Collaborators from "@/components/Collaborators";
-import AvailablePaths from "@/components/Availablepaths";
 import { pageMetadata, siteConfig } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -25,7 +24,7 @@ export default function Home() {
       <Hero />
       <WhatWeProvoke />
       <WhatYouGet/>
-      <AvailablePaths />
+
       <Collaborators />
       <CTA />
 

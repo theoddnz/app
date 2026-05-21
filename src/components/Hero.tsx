@@ -114,11 +114,11 @@ export default function Hero() {
         </div>
 
         {/* Subtitle — word by word */}
-        <div className="flex flex-wrap justify-center gap-x-[6px] gap-y-0 max-w-md mb-9">
+        <div className="flex flex-wrap justify-center font-bold gap-x-[6px] gap-y-0 max-w-md mb-9">
           {SUBTITLE.split(" ").map((word, i) => (
             <div key={i} className="overflow-hidden">
               <motion.span
-                className="inline-block text-[1.05rem] font-light text-foreground/60 leading-relaxed"
+                className="inline-block text-[1.12rem] font-semibold text-foreground/60 leading-relaxed"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{

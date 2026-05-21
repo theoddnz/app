@@ -60,20 +60,20 @@ export default function Footer() {
                 <Image
                   src="/assets/theoddones-white-logo.png"
                   alt="TheOddOnes"
-                  width={52}
-                  height={52}
-                  className="h-13 w-13 object-contain dark:hidden"
+                  width={50}
+                  height={50}
+                  className="h-15 w-15 object-contain dark:hidden"
                 />
                 <Image
                   src="/assets/theoddones-black-logo.png"
                   alt="TheOddOnes"
-                  width={52}
-                  height={52}
-                  className="hidden h-13 w-13 object-contain dark:block"
+                  width={50}
+                  height={50}
+                  className="hidden h-15 w-15  object-contain dark:block"
                 />
-                <span className="font-space text-[20px] font-extrabold leading-none tracking-[-0.03em] text-black/85 dark:text-[#f0ebe5]">
+                {/* <span className="font-space text-[20px] font-extrabold leading-none tracking-[-0.03em] text-black/85 dark:text-[#f0ebe5]">
                   The<span className="text-[#c4622d]">Odd</span>Ones
-                </span>
+                </span> */}
               </Link>
               <p className="max-w-[26rem] font-inter text-[13.5px] font-light leading-[1.85] text-black/45 dark:text-white/35">
                 A movement for builders who learn together in public—with focus,

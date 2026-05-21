@@ -130,17 +130,8 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
 
   return (
     <main className="relative min-h-[100svh] bg-background text-foreground">
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-0 h-[520px] w-[640px] -translate-x-1/2 rounded-full bg-primary/[0.06] blur-[120px]" />
-      </div>
-
-      <div className="relative mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="inline-flex items-center gap-2 font-space text-sm text-foreground/55 hover:text-foreground">
-          <ArrowLeft className="size-4" />
-          Home
-        </Link>
-        <OddOnesLogo className="text-foreground" />
-      </div>
+    
+     
 
       <div className="relative mx-auto flex min-h-[calc(100svh-72px)] max-w-[420px] items-center px-6 py-10 md:px-0">
         <AnimatePresence mode="wait">
@@ -162,7 +153,7 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
               <OrDivider />
 
               {isSignup ? <Field id="name" label="Full name" placeholder="Your name" /> : null}
-              <Field id="email" label="Email" type="email" placeholder="you@domain.com" />
+              <Field id="email" label="Email" type="email" placeholder="Email" />
               <Field
                 id="password"
                 label="Password"
