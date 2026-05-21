@@ -149,9 +149,9 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
             ].join(" ")}
           >
             {item.label}
-            {active && (
+            {/* {active && (
               <span className="absolute bottom-1 left-1/2 -translate-x-1/2 size-[3px] rounded-full bg-secondary" />
-            )}
+            )} */}
           </Link>
         );
       })}

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, cubicBezier } from "framer-motion";
+import { SectionHeader } from "./Header";
 
 const EASE = cubicBezier(0.16, 1, 0.3, 1);
 
@@ -155,7 +156,7 @@ export default function WhatWeProvoke() {
             through feedback from other builders.
           </motion.p>
         </div>
-
+  
         {/* cards */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {cards.map((card, i) => (

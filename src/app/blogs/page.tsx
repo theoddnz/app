@@ -5,9 +5,18 @@ import { ArrowUpRight, ChevronRight, FileText, Home } from "@/components/ui/huge
 
 import { getDb } from "@/db";
 import { blogPosts, learningPaths } from "@/db/schema";
-import { pageMetadata } from "@/lib/seo";
+import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+const categoryCardStyles = [
+  "bg-[#fff4d8] text-[#1f1a10] border-[#f2d27c]",
+  "bg-[#e0f2fe] text-[#102033] border-[#8ec7e8]",
+  "bg-[#dcfce7] text-[#102217] border-[#86d39b]",
+  "bg-[#ffe4e6] text-[#2c1218] border-[#f0a7b0]",
+  "bg-[#ede9fe] text-[#1f1735] border-[#b8a8ee]",
+  "bg-[#fef3c7] text-[#251709] border-[#e8bc5f]",
+];
 
 export const metadata: Metadata = pageMetadata({
   title: "Field Notes",
@@ -25,9 +34,38 @@ export default async function BlogPage() {
   const pathNames = new Map(paths.map((path) => [path.id, path.name]));
   const featured = blogs[0];
   const rest = blogs.slice(1);
+  const blogCountByPath = blogs.reduce<Record<string, number>>((counts, blog) => {
+    counts[blog.pathId] = (counts[blog.pathId] ?? 0) + 1;
+    return counts;
+  }, {});
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": absoluteUrl("/blogs#blog"),
+    name: "TheOddOnes Field Notes",
+    description:
+      "Practical essays, build logs, learning reflections, and field notes from TheOddOnes.",
+    url: absoluteUrl("/blogs"),
+    publisher: {
+      "@id": `${siteConfig.url}/#organization`,
+    },
+    blogPost: blogs.slice(0, 12).map((blog) => ({
+      "@type": "BlogPosting",
+      headline: blog.title,
+      description: blog.excerpt,
+      url: absoluteUrl(`/blogs/${blog.slug}`),
+      image: blog.thumbnailUrl ? absoluteUrl(blog.thumbnailUrl) : undefined,
+      datePublished: blog.createdAt.toISOString(),
+      dateModified: blog.updatedAt.toISOString(),
+    })),
+  };
 
   return (
     <main className="min-h-screen bg-background px-6 pt-32 text-foreground font-space">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
+      />
       <div className="mx-auto max-w-6xl">
         <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs font-semibold text-foreground/40">
           <Link href="/" className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground">
@@ -43,19 +81,45 @@ export default async function BlogPage() {
           <p className="mt-5 max-w-xl text-base leading-7 text-foreground/55">
             Blogs connected to learning paths, written in markdown with practical notes and images from the middle of the work.
           </p>
-
-          <div className="mt-8 flex flex-wrap gap-2">
-            {paths.map((path) => (
-              <Link
-                key={path.id}
-                href={`/blogs/path/${path.slug}`}
-                className="rounded-full border border-border px-4 py-2 text-sm text-foreground/65 transition-colors hover:bg-muted hover:text-foreground"
-              >
-                {path.name}
-              </Link>
-            ))}
-          </div>
         </section>
+
+        {paths.length > 0 ? (
+          <section className="border-b border-border py-12">
+            <div className="mb-6 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Categories</p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight">Pick a path.</h2>
+              </div>
+              <p className="hidden text-sm text-muted-foreground sm:block">Each card opens only the blogs for that category.</p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {paths.map((path, index) => {
+                const count = blogCountByPath[path.id] ?? 0;
+                const style = categoryCardStyles[index % categoryCardStyles.length];
+
+                return (
+                  <Link
+                    key={path.id}
+                    href={`/blogs/path/${path.slug}`}
+                    className={`group relative flex min-h-[168px] items-center justify-center overflow-hidden rounded-lg border p-6 text-center transition duration-200  ${style}`}
+                  >
+                    <span className="absolute left-5 top-4 text-xs font-semibold uppercase tracking-[0.18em] opacity-55">
+                      {count} {count === 1 ? "post" : "posts"}
+                    </span>
+                  
+                    <span className="relative max-w-[14rem] text-balance text-2xl font-bold leading-tight tracking-tight">
+                      {path.name}
+                    </span>
+                    <span className="absolute bottom-4 right-5 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.18em] opacity-60 transition-opacity group-hover:opacity-100">
+                      Open <ArrowUpRight className="size-3.5" />
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        ) : null}
 
         {blogs.length === 0 ? (
           <section className="py-20 text-sm text-muted-foreground">No blogs published yet.</section>

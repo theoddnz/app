@@ -44,7 +44,7 @@ export default function CTA() {
           {/* cta */}
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button3D
-              variant="ghost"
+
               onClick={() => router.push("/community")}
             >
               Partner with us

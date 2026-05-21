@@ -2,7 +2,6 @@ import { MetadataRoute } from "next";
 
 import { getDb } from "@/db";
 import { blogPosts, learningPaths as learningPathRows } from "@/db/schema";
-import { posts } from "@/lib/posts";
 import { absoluteUrl } from "@/lib/seo";
 
 const now = new Date();
@@ -23,15 +22,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }));
 
-  let blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: absoluteUrl(`/blogs/${post.slug}`),
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: post.featured ? 0.85 : 0.7,
-  }));
-
+  let blogRoutes: MetadataRoute.Sitemap = [];
   let learnRoutes: MetadataRoute.Sitemap = [];
-
   let blogPathRoutes: MetadataRoute.Sitemap = [];
 
   try {
@@ -40,15 +32,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       getDb().select().from(learningPathRows),
     ]);
 
-    if (dbPosts.length > 0) {
-      blogRoutes = dbPosts.map((post) => ({
-        url: absoluteUrl(`/blogs/${post.slug}`),
-        lastModified: post.updatedAt,
-        changeFrequency: "monthly",
-        priority: 0.75,
-        images: post.thumbnailUrl ? [absoluteUrl(post.thumbnailUrl)] : undefined,
-      }));
-    }
+    blogRoutes = dbPosts.map((post) => ({
+      url: absoluteUrl(`/blogs/${post.slug}`),
+      lastModified: post.updatedAt,
+      changeFrequency: "monthly",
+      priority: 0.75,
+      images: post.thumbnailUrl ? [absoluteUrl(post.thumbnailUrl)] : undefined,
+    }));
 
     if (dbPaths.length > 0) {
       learnRoutes = dbPaths
@@ -71,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }));
     }
   } catch {
-    // Keep sitemap generation available in local builds without database access.
+    // Keep sitemap generation available with only confirmed static pages if database access fails.
   }
 
   return [...staticRoutes, ...learnRoutes, ...blogPathRoutes, ...blogRoutes];

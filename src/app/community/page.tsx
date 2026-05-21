@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight, ChevronRight, Home, MessageCircle, Sparkles, Users } from "@/components/ui/huge-icons";
 
 import { pageMetadata } from "@/lib/seo";
+import { Button3D } from "@/components/ui/button-3d";
 
 export const metadata: Metadata = pageMetadata({
   title: "TheOddOnes Community",
@@ -38,7 +39,7 @@ const principles = [
 export default function CommunityPage() {
   return (
     <main className="min-h-screen bg-background px-6 pt-32 text-foreground">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <nav
           aria-label="Breadcrumb"
           className="mb-16 flex items-center gap-2 font-inter text-xs font-semibold text-foreground/40"
@@ -56,8 +57,7 @@ export default function CommunityPage() {
             Community
           </p>
           <h1
-            className="max-w-4xl font-space font-bold leading-[0.92] tracking-tight"
-            style={{ fontSize: "clamp(3.6rem, 10vw, 7.5rem)" }}
+            className="max-w-4xl text-[2rem] font-space font-bold leading-[0.92] tracking-tight"
           >
             A quiet room for serious builders.
           </h1>
@@ -66,15 +66,14 @@ export default function CommunityPage() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center rounded-full border border-border px-4 py-2 font-inter text-xs text-muted-foreground">
-              Opening soon
-            </span>
-            <Link
-              href="/learn"
-              className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 font-inter text-xs font-medium text-background transition-opacity hover:opacity-85"
-            >
-              Explore paths <ArrowUpRight className="size-3.5" />
-            </Link>
+           
+            <Button3D>
+Opening soon
+            </Button3D>
+            <Button3D variant="ghost" >
+             Explore paths <ArrowUpRight className="size-3.5" />
+             </Button3D>
+           
           </div>
         </section>
 

@@ -20,7 +20,7 @@ import { notFound } from "next/navigation";
 import { selectLearningPathAction } from "@/app/admin-actions";
 import { Button } from "@/components/ui/button";
 import { getLearningPath, type CurriculumModule } from "@/lib/learning";
-import { pageMetadata } from "@/lib/seo";
+import { absoluteUrl, jsonLd, keywordVariants, pageMetadata, siteConfig } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -43,11 +43,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = await getLearningPath(slug);
   if (!path) return { title: "Learning path not found | TheOddOnes" };
   return pageMetadata({
-    title: path.name,
-    description: path.description,
+    title: `${path.name} Learning Path`,
+    description: `${path.description} Learn ${path.name} with build-first lessons, articles, and practical project work on TheOddOnes.`,
     path: `/learn/${path.slug}`,
     images: path.thumbnailUrl ? [path.thumbnailUrl] : undefined,
-    keywords: [path.name, `${path.name} learning path`, "TheOddOnes learning path", "build first learning"],
+    keywords: [
+      ...keywordVariants(path.name, path.label),
+      "TheOddOnes learning path",
+      "build first learning",
+      "hands on course",
+      "project based course",
+    ],
   });
 }
 
@@ -60,21 +66,37 @@ export default async function LearningDetailPage({ params }: Props) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Course",
+    "@id": absoluteUrl(`/learn/${path.slug}#course`),
     name: path.name,
     description: path.description,
+    url: absoluteUrl(`/learn/${path.slug}`),
+    image: path.thumbnailUrl ? absoluteUrl(path.thumbnailUrl) : absoluteUrl("/opengraph-image"),
+    inLanguage: "en-US",
     provider: {
       "@type": "Organization",
       name: "TheOddOnes",
+      url: siteConfig.url,
     },
     coursePrerequisites: "Curiosity, persistence, and a willingness to build.",
     educationalCredentialAwarded: path.outcome,
+    hasCourseInstance: {
+      "@type": "CourseInstance",
+      courseMode: "online",
+      courseWorkload: path.pace,
+    },
+    hasPart: path.curriculum.map((item, index) => ({
+      "@type": "LearningResource",
+      position: index + 1,
+      name: item.moduleName,
+      description: item.keyConcepts.join(", "),
+    })),
   };
 
   return (
     <main className="min-h-screen bg-background text-foreground font-space">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
       />
 
       {/* ── HERO ── */}

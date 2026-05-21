@@ -4,27 +4,40 @@ export const siteConfig = {
   name: "TheOddOnes",
   domain: "theodd1s.com",
   url: "https://theodd1s.com",
-  title: "TheOddOnes - Learning community for people who think differently",
+  title: "TheOddOnes - Build-First Learning Paths for Curious Builders",
   tagline: "A place for people who think differently about learning.",
   description:
-    "TheOddOnes is a build-first learning community for people who think differently about learning. Pick a path, build real projects, share progress, and grow with focused builders.",
+    "TheOddOnes is a build-first learning community with practical learning paths, field notes, and project-based lessons for curious builders who learn by making.",
   keywords: [
     "TheOddOnes",
+    "The Odd Ones",
+    "theodd1s",
     "TheOddOnes learning community",
+    "build first learning platform",
     "learning community",
     "online learning community",
     "build-first learning",
     "people who think differently about learning",
     "project based learning community",
     "project based learning",
+    "project based courses",
     "learn by building",
+    "learn robotics by building",
+    "learn programming by building",
+    "learn manual testing",
+    "learn embedded systems",
     "builder community",
     "learning paths",
+    "online learning paths",
     "practical learning",
+    "hands on learning",
     "build in public",
     "student dashboard",
     "skill based learning",
   ],
+  social: {
+    twitter: "@theoddoneshub",
+  },
 } as const;
 
 export function absoluteUrl(path = "/") {
@@ -59,9 +72,12 @@ export function pageMetadata({
   const mergedKeywords = [...new Set([...siteConfig.keywords, ...keywords])];
 
   return {
+    metadataBase: new URL(siteConfig.url),
     title,
     description,
     applicationName: siteConfig.name,
+    generator: "Next.js",
+    referrer: "origin-when-cross-origin",
     authors: [{ name: siteConfig.name, url: siteConfig.url }],
     creator: siteConfig.name,
     publisher: siteConfig.name,
@@ -84,7 +100,7 @@ export function pageMetadata({
       title,
       description,
       images: resolvedImages,
-      creator: "@theoddoneshub",
+      creator: siteConfig.social.twitter,
     },
     robots: noIndex
       ? {
@@ -95,6 +111,30 @@ export function pageMetadata({
             follow: false,
           },
         }
-      : undefined,
+      : {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+            "max-video-preview": -1,
+          },
+        },
   };
+}
+
+export function keywordVariants(...parts: Array<string | null | undefined>) {
+  const cleaned = parts
+    .filter(Boolean)
+    .flatMap((part) => String(part).split(/[,|]/))
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  return [...new Set(cleaned.flatMap((part) => [part, `${part} learning path`, `${part} project based learning`]))];
+}
+
+export function jsonLd(data: object) {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }

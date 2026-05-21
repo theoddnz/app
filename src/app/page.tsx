@@ -3,7 +3,7 @@ import WhatWeProvoke from "../components/WhatWeProvoke";
 import CTA from "../components/CTA";
 import WhatYouGet from "@/components/Whatyouget";
 import Collaborators from "@/components/Collaborators";
-import { pageMetadata, siteConfig } from "@/lib/seo";
+import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "TheOddOnes Learning Community",
@@ -18,8 +18,28 @@ export const metadata = pageMetadata({
 });
 
 export default function Home() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${siteConfig.url}/#home`,
+    url: siteConfig.url,
+    name: siteConfig.title,
+    description: siteConfig.description,
+    isPartOf: {
+      "@id": `${siteConfig.url}/#website`,
+    },
+    about: {
+      "@id": `${siteConfig.url}/#organization`,
+    },
+    primaryImageOfPage: absoluteUrl("/opengraph-image"),
+  };
+
   return (
     <main className="overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
+      />
 
       <Hero />
       <WhatWeProvoke />

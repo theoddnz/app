@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { pageMetadata } from "@/lib/seo";
+import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Learning Paths",
@@ -30,9 +30,34 @@ const pathIcons = {
 
 export default async function LearnPage() {
   const learningPaths = await getLearningPaths();
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "TheOddOnes Learning Paths",
+    description:
+      "Explore TheOddOnes learning paths: guided, build-first routes for people who learn by making things and sharing progress.",
+    url: absoluteUrl("/learn"),
+    isPartOf: {
+      "@id": `${siteConfig.url}/#website`,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: learningPaths.map((path, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: path.name,
+        url: absoluteUrl(`/learn/${path.slug}`),
+        description: path.description,
+      })),
+    },
+  };
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
+      />
 
       <section className="px-6 pb-14 pt-36 border-b border-black/6 dark:border-white/[0.06] font-space">
         <div className="mx-auto max-w-6xl">

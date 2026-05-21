@@ -5,7 +5,7 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { siteConfig } from "@/lib/seo";
+import { absoluteUrl, jsonLd, siteConfig } from "@/lib/seo";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   creator: "TheOddOnes",
   publisher: "TheOddOnes",
   category: "education",
+  manifest: "/manifest.webmanifest",
   title: {
     default: siteConfig.title,
     template: `%s | ${siteConfig.name}`,
@@ -82,7 +83,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: siteConfig.name,
         url: siteConfig.url,
         description: siteConfig.description,
+        logo: absoluteUrl("/assets/theoddones-white-logo.png"),
         sameAs: [],
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          url: siteConfig.url,
+        },
       },
       {
         "@type": "WebSite",
@@ -107,7 +114,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+            dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
           />
 
           <Toaster
