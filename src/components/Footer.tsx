@@ -1,6 +1,29 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ThemeSwitcher } from "./ThemeSwitcher";
+import { siteConfig } from "@/lib/seo";
+
+function InstagramIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none">
+      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="17.25" cy="6.75" r="1.1" fill="currentColor" />
+    </svg>
+  );
+}
+
+const socialLinks = [
+  {
+    label: "Instagram",
+    href: siteConfig.social.instagram,
+    icon: InstagramIcon,
+  },
+  {
+    label: "X",
+    href: siteConfig.social.x,
+    icon: null,
+  },
+];
 
 export default function Footer() {
   const groups: Array<{
@@ -79,8 +102,19 @@ export default function Footer() {
                 A movement for builders who learn together in public—with focus,
                 craft, and care.
               </p>
-              <div className="pt-1">
-                <ThemeSwitcher />
+              <div className="flex items-center gap-2" aria-label="Social links">
+                {socialLinks.map(({ label, href, icon: Icon }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`TheOddOnes on ${label}`}
+                    className="inline-flex size-9 items-center justify-center rounded-full border border-black/10 text-black/45 transition-colors hover:border-black/25 hover:text-black dark:border-white/10 dark:text-white/40 dark:hover:border-white/25 dark:hover:text-[#f0ebe5]"
+                  >
+                    {Icon ? <Icon className="size-4" /> : <span className="font-space text-sm font-bold">X</span>}
+                  </Link>
+                ))}
               </div>
             </div>
 
@@ -141,6 +175,20 @@ export default function Footer() {
             <p className="font-inter text-[12px] font-light tracking-[0.04em] text-black/35 dark:text-white/30">
               © 2026 The<span className="text-secondary">Odd</span>Ones
             </p>
+            <div className="flex items-center gap-2">
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`TheOddOnes on ${label}`}
+                  className="inline-flex size-9 items-center justify-center rounded-full border border-black/10 text-black/45 transition-colors hover:border-black/25 hover:text-black dark:border-white/10 dark:text-white/40 dark:hover:border-white/25 dark:hover:text-[#f0ebe5]"
+                >
+                  {Icon ? <Icon className="size-4" /> : <span className="font-space text-sm font-bold">X</span>}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>

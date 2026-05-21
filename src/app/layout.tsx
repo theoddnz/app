@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   referrer: "origin-when-cross-origin",
   keywords: [...siteConfig.keywords],
   authors: [{ name: "TheOddOnes", url: siteConfig.url }],
-  creator: "TheOddOnes",
-  publisher: "TheOddOnes",
+    creator: "TheOddOnes",
+    publisher: "TheOddOnes",
   category: "education",
   manifest: "/manifest.webmanifest",
   title: {
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.title,
     description: siteConfig.description,
-    creator: "@theoddoneshub",
+    creator: `@${siteConfig.social.handle}`,
   },
   robots: {
     index: true,
@@ -84,7 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         url: siteConfig.url,
         description: siteConfig.description,
         logo: absoluteUrl("/assets/theoddones-white-logo.png"),
-        sameAs: [],
+        sameAs: [siteConfig.social.x, siteConfig.social.instagram],
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "customer support",

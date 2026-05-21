@@ -36,7 +36,9 @@ export const siteConfig = {
     "skill based learning",
   ],
   social: {
-    twitter: "@theoddoneshub",
+    handle: "theoddoneshub",
+    x: "https://x.com/theoddoneshub",
+    instagram: "https://www.instagram.com/theoddoneshub",
   },
 } as const;
 
@@ -100,7 +102,7 @@ export function pageMetadata({
       title,
       description,
       images: resolvedImages,
-      creator: siteConfig.social.twitter,
+      creator: `@${siteConfig.social.handle}`,
     },
     robots: noIndex
       ? {

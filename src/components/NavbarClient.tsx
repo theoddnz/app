@@ -18,6 +18,7 @@ import { usePathname } from "next/navigation";
 
 import { logoutAction } from "@/app/admin-actions";
 import { Button3D } from "@/components/ui/button-3d";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import type { AppSession } from "@/types/admin";
 
 const navLinks = [
@@ -158,6 +159,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
     </div>
 
           <div className="hidden shrink-0 items-center gap-3 font-space md:flex">
+            <ThemeSwitcher />
             {session ? (
               <div ref={profileRef} className="relative">
                 <button
@@ -240,9 +242,10 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
           ) : null}
         </div>
 
-        <div className="w-full pt-6">
+        <div className="flex w-full items-center gap-3 pt-6">
+          <ThemeSwitcher />
           {session ? (
-            <form action={logoutAction}>
+            <form action={logoutAction} className="flex-1">
               <button type="submit" className="flex w-full items-center justify-center gap-2 rounded-full border border-border px-5 py-3 font-space font-semibold">
                 <LogOut className="size-4" />
                 Log out
@@ -250,7 +253,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
             </form>
           ) : (
             <Button3D
-              className="w-full"
+              className="flex-1"
               onClick={() => {
                 setMobileOpen(false);
                 router.push("/users/signup");
