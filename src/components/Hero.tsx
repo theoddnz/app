@@ -1,5 +1,5 @@
 "use client";
-import { BookOpen, Camera, Terminal, Wrench } from "@/components/ui/huge-icons";
+import { BookOpen, Camera, Terminal, Wrench } from "@/components/ui/tabler-icons";
 import { motion } from "framer-motion";
 import { Button3D } from "@/components/ui/button-3d";
 import { Spotlight } from "@/components/ui/spotlight";

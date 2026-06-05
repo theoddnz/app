@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { eq, ne } from "drizzle-orm";
-import { ArrowLeft, ArrowUpRight, ChevronRight, Share2 } from "@/components/ui/huge-icons";
+import { ArrowLeft, ArrowUpRight, ChevronRight, Share2 } from "@/components/ui/tabler-icons";
 import { notFound } from "next/navigation";
 
 import { MarkdownPreview } from "@/components/blog/MarkdownPreview";

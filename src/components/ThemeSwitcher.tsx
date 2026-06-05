@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Moon, Sun } from "@/components/ui/huge-icons";
+import { IconBrightness } from "@/components/ui/tabler-icons";
 import { useTheme } from "next-themes";
 
 export function ThemeSwitcher() {
@@ -26,7 +26,7 @@ export function ThemeSwitcher() {
   }
 
   const isDark = resolvedTheme === "dark";
-  const Icon = isDark ? Sun : Moon;
+  const Icon = isDark ? IconBrightness : IconBrightness;
 
   return (
     <button

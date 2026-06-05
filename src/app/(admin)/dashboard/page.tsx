@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, Eye, FileText, Route, Users } from "@/components/ui/huge-icons";
+import { BookOpen, Eye, FileText, Route, Users } from "@/components/ui/tabler-icons";
 
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { getDb } from "@/db";

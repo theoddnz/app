@@ -1,6 +1,6 @@
 "use client";
 
-import { Cpu, Orbit, RadioTower, Shapes, Sparkles, Waves } from "@/components/ui/huge-icons";
+import { Cpu, Orbit, RadioTower, Shapes, Sparkles, Waves } from "@/components/ui/tabler-icons";
 
 const companies = [
   { name: "Loynix Studio", icon: Sparkles },

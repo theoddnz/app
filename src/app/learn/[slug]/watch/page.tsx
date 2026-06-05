@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getLearningPath } from "@/lib/learning";
 import Link from "next/link";
-import { ArrowLeft, Play, Clock3, Info, Lock } from "@/components/ui/huge-icons";
+import { ArrowLeft, Play, Clock3, Info, Lock } from "@/components/ui/tabler-icons";
 
 import { Metadata } from "next";
 import { redirect } from "next/navigation";

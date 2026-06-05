@@ -43,9 +43,9 @@ export default function Home() {
 
       <Hero />
       <WhatWeProvoke />
-      <WhatYouGet/>
+      {/* <WhatYouGet/> */}
 
-      <Collaborators />
+      {/* <Collaborators /> */}
       <CTA />
 
     </main>

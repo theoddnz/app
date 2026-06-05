@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { Eye, EyeOff, Loader2 } from "@/components/ui/huge-icons";
+import { Eye, EyeOff, Loader2 } from "@/components/ui/tabler-icons";
 import { useActionState } from "react";
 
 import { loginAction, signupAction } from "@/app/admin-actions";

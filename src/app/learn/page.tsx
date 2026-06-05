@@ -17,7 +17,7 @@ import {
   Code2,
   Home,
   TestTube2,
-} from "@/components/ui/huge-icons";
+} from "@/components/ui/tabler-icons";
 import { getLearningPaths } from "@/lib/learning";
 
 export const dynamic = "force-dynamic";

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Clock, ArrowBigDown, FlaskConical, Bot } from "@/components/ui/huge-icons";
+import { ArrowRight, Clock, ArrowBigDown, FlaskConical, Bot } from "@/components/ui/tabler-icons";
 import { cn } from "@/lib/utils";
 
 const paths = [

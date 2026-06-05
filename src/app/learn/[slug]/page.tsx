@@ -15,7 +15,7 @@ import {
   VideoOff,
   ChevronRight,
   Timer,
-} from "@/components/ui/huge-icons";
+} from "@/components/ui/tabler-icons";
 import { notFound } from "next/navigation";
 import { selectLearningPathAction } from "@/app/admin-actions";
 import { Button } from "@/components/ui/button";

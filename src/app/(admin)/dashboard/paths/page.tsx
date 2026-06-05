@@ -1,5 +1,5 @@
 import { desc } from "drizzle-orm";
-import { Eye, EyeOff, Rocket, Trash2 } from "@/components/ui/huge-icons";
+import { Eye, EyeOff, Rocket, Trash2 } from "@/components/ui/tabler-icons";
 
 import {
   deleteLearningPathAction,

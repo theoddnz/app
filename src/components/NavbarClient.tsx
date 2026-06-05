@@ -13,7 +13,7 @@ import {
   Settings,
   User,
   X,
-} from "@/components/ui/huge-icons";
+} from "@/components/ui/tabler-icons";
 import { usePathname } from "next/navigation";
 
 import { logoutAction } from "@/app/admin-actions";

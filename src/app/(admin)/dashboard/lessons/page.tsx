@@ -1,5 +1,5 @@
 import { desc } from "drizzle-orm";
-import { Clock, LinkIcon, PauseCircle, PlayCircle, Trash2 } from "@/components/ui/huge-icons";
+import { Clock, LinkIcon, PauseCircle, PlayCircle, Trash2 } from "@/components/ui/tabler-icons";
 
 import {
   deleteLessonAction,

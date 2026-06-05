@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Bebas_Neue, Manrope } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -11,6 +11,12 @@ import { absoluteUrl, jsonLd, siteConfig } from "@/lib/seo";
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-bebas-neue",
 });
 
 export const metadata: Metadata = {
@@ -109,7 +115,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${manrope.className} ${manrope.variable} bg-background text-foreground antialiased`}>
+      <body className={`${manrope.className} ${manrope.variable} ${bebasNeue.variable} bg-background text-foreground antialiased`}>
         <ThemeProvider>
           <Navbar />
           {children}

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Map, BookOpen, Trophy, PenLine, ShieldCheck, Globe } from "@/components/ui/huge-icons";
+import { Map, BookOpen, Trophy, PenLine, ShieldCheck, Globe } from "@/components/ui/tabler-icons";
 
 const EASE = "easeInOut";
 

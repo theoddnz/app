@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
-import { ArrowUpRight, BadgeCheck, BookOpen, CalendarDays, Mail, Shield, User } from "@/components/ui/huge-icons";
+import { ArrowUpRight, BadgeCheck, BookOpen, CalendarDays, Mail, Shield, User } from "@/components/ui/tabler-icons";
 
 import { getDb } from "@/db";
 import { learningPaths, userPathSelections, users } from "@/db/schema";

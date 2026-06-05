@@ -1,5 +1,5 @@
 import { desc } from "drizzle-orm";
-import { ExternalLink, Trash2 } from "@/components/ui/huge-icons";
+import { ExternalLink, Trash2 } from "@/components/ui/tabler-icons";
 import Link from "next/link";
 
 import { deleteBlogPostAction } from "@/app/admin-actions";

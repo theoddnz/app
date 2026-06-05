@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { desc } from "drizzle-orm";
-import { ArrowUpRight, ChevronRight, FileText, Home } from "@/components/ui/huge-icons";
+import { ArrowUpRight, ChevronRight, FileText, Home } from "@/components/ui/tabler-icons";
 
 import { getDb } from "@/db";
 import { blogPosts, learningPaths } from "@/db/schema";
