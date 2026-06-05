@@ -21,22 +21,19 @@ export default function CTA() {
       <div className="relative mx-auto max-w-6xl">
         <div className="mx-auto max-w-2xl text-center">
 
-          <span className="inline-block font-space text-[10.5px] font-medium tracking-[0.22em] text-muted-foreground/60 uppercase">
+          <span  className="inline-flex items-center rounded-full border border-border/60 bg-muted px-3 py-1 font-space text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
             Join the movement
           </span>
 
-          <h3 className="mt-6 font-space text-[2rem] font-light leading-[1.1] tracking-[-0.03em] text-foreground md:text-[2.75rem]">
+       
+          <h3 className="mt-6 font-space  text-[clamp(3.2rem,9vw,6rem)] font-extrabold  leading-[1.1] tracking-[-0.03em] text-foreground md:text-[2.75rem]">
             Build in public.{" "}
-            <span className="text-foreground/40">Ship with people who get it.</span>
+            <span className="text-foreground/60">Ship with people who get it.</span>
           </h3>
-
-          <p className="mx-auto mt-5 max-w-lg font-space text-[14.5px] font-light leading-[1.75] text-muted-foreground/70">
-            <span className="text-secondary font-normal">Odd</span>Ones is where serious builders come to learn fast, ship real things, and grow alongside a community that holds the bar high.
-          </p>
 
           <div className="mt-10 flex items-center justify-center">
             <Button3D onClick={() => router.push("/community")}>
-              Get early access
+              Join Now
             </Button3D>
           </div>
 

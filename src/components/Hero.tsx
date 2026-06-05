@@ -141,7 +141,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 1.35, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-            <Button3D onClick={() => router.push("/login")}>Join now</Button3D>
+            <Button3D  onClick={() => router.push("/login")}>Join now</Button3D>
           </motion.div>
         </motion.div>
       </div>
