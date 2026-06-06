@@ -6,6 +6,7 @@ import Collaborators from "@/components/Collaborators";
 import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
 import FAQ from "@/components/landing/FAQ";
 import WhyTheOddOnes from "@/components/landing/WhyTheOddOnes";
+import Pricing from "@/components/landing/Pricings";
 
 export const metadata = pageMetadata({
   title: "TheOddOnes Learning Community",
@@ -47,7 +48,9 @@ export default function Home() {
       <WhatWeProvoke />
       <WhyTheOddOnes/>
       {/* <WhatYouGet/> */}
+        <Pricing/>
       <FAQ/>
+    
 
       {/* <Collaborators /> */}
       <CTA />

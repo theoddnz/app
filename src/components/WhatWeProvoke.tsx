@@ -29,7 +29,7 @@ const cards = [
 
 export default function WhatWeProvide() {
   return (
-    <section className="bg-background px-6 py-20 md:px-10 md:py-28">
+    <section className="bg-background px-2 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
 
         {/* header */}

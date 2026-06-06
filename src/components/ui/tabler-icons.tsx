@@ -44,7 +44,7 @@ export {
   IconLogout as LogOut,
   IconMail as Mail,
   IconMap as Map,
-  IconMenu2 as Menu,
+  IconMenu3 as Menu,
   IconMessageCircle as MessageCircle,
   IconMoon as Moon,
   IconNotebook as NotebookText,

@@ -93,7 +93,7 @@ function SocialButton({ label, href, icon: Icon }: { label: string; href: string
 
 export default function Footer() {
   return (
-    <div className="bg-background px-2 pb-0 pt-16 dark:bg-[#0a0806] md:px-10">
+    <div className="bg-background   pt-16 dark:bg-[#0a0806] md:px-1">
       <div className="mx-auto max-w-6xl">
         <div className="rounded-t-[32px] bg-white p-3 shadow-[0_-4px_0_rgba(13,38,58,0.04),0_-12px_40px_rgba(13,38,58,0.10)] ring-1 ring-black/[0.05] dark:bg-neutral-900 dark:shadow-[0_-4px_0_rgba(0,0,0,0.2),0_-12px_40px_rgba(0,0,0,0.3)] dark:ring-white/[0.04]">
           <footer className="rounded-t-[22px] border border-b-0 border-black/[0.04] bg-[#f8f7f5] px-8 pb-10 pt-14 text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] dark:border-white/[0.04] dark:bg-neutral-950 dark:text-[#f0ebe5] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] md:px-12">

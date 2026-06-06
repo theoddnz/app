@@ -291,7 +291,7 @@ function Tag({ label }: { label: string }) {
 ───────────────────────────────────────── */
 export default function WhyTheOddOnes() {
   return (
-    <section className="bg-background px-6 py-20 md:px-10 md:py-28 dark:bg-[#0a0806]">
+    <section className="bg-background px-2 py-20 md:px-10 md:py-28 dark:bg-[#0a0806]">
       <div className="mx-auto max-w-6xl">
 
         {/* header */}
@@ -353,7 +353,7 @@ export default function WhyTheOddOnes() {
                   <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/25">01</span>
                 </div>
                 <div className="mt-8">
-                  <h3 className="font-space text-[21px] font-extrabold leading-tight tracking-tight text-foreground">
+                  <h3 className="font-heading text-[21px] font-extrabold leading-tight tracking-tight text-foreground">
                     ROS2 video walkthroughs
                   </h3>
                   <p className="mt-3 font-space text-[13px] font-light leading-[1.75] text-foreground/50">
@@ -385,7 +385,7 @@ export default function WhyTheOddOnes() {
             <NoteLines />
 
             <div className="mt-auto pt-5">
-              <h3 className="font-space text-[21px] font-extrabold leading-tight tracking-tight text-foreground">
+              <h3 className="font-heading text-[21px] font-extrabold leading-tight tracking-tight text-foreground">
                 Structured notes
               </h3>
               <p className="mt-3 font-space text-[13px] font-light leading-[1.75] text-foreground/50">
@@ -414,7 +414,7 @@ export default function WhyTheOddOnes() {
             <CommunityFeed />
 
             <div className="mt-auto pt-5">
-              <h3 className="font-space text-[21px] font-extrabold leading-tight tracking-tight text-foreground">
+              <h3 className="font-heading text-[21px] font-extrabold leading-tight tracking-tight text-foreground">
                 Community of builders
               </h3>
               <p className="mt-3 font-space text-[13px] font-light leading-[1.75] text-foreground/50">

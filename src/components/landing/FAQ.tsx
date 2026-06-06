@@ -89,7 +89,7 @@ export default function FAQ() {
   const filtered = active === "All" ? faqs : faqs.filter((f) => f.badge === active);
 
   return (
-    <section className="bg-background px-6 py-20 md:px-10 md:py-28 dark:bg-[#0a0806]">
+    <section className="bg-background px-2 py-20 md:px-10 md:py-28 dark:bg-[#0a0806]">
       <div className="mx-auto max-w-4xl">
 
         {/* Header */}
@@ -111,8 +111,8 @@ export default function FAQ() {
             transition={{ duration: 0.7, delay: 0.05, ease: EASE }}
             className="mt-4 font-space text-3xl font-extrabold tracking-tight text-foreground md:text-[42px] md:leading-[1.1]"
           >
-            Honest answers
-
+            Honest answers for{" "}
+            <span className="text-[#c4622d]">serious builders.</span>
           </motion.h2>
         </div>
 
