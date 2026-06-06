@@ -39,6 +39,9 @@ export const siteConfig = {
     handle: "theoddoneshub",
     x: "https://x.com/theoddoneshub",
     instagram: "https://www.instagram.com/theoddoneshub",
+    linkedin:"",
+    youtube:"",
+    discord:""
   },
 } as const;
 

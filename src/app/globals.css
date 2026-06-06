@@ -142,7 +142,7 @@
   }
 
   html {
-    @apply font-sans overflow-x-hidden;
+    @apply scroll-smooth font-sans overflow-x-hidden;
   }
 }
 
