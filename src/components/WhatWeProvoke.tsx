@@ -34,62 +34,70 @@ export default function WhatWeProvide() {
 
         {/* header */}
         <div className="mb-16 text-center">
-           <motion.p
-    initial={{ opacity: 0, y: 8 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.6, ease: EASE }}
-    className="inline-flex items-center rounded-full border border-border/60 bg-muted px-3 py-1 font-space text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground"
-  >
-    Robotics Roadmap
-  </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.6, ease: EASE }}
+            className="inline-flex items-center rounded-full border border-border/60 bg-muted px-3 py-1 font-space text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground"
+          >
+            Robotics Roadmap
+          </motion.p>
 
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.7, delay: 0.05, ease: EASE }}
-            className="mt-4 font-space text-3xl font-light tracking-[-0.3em] text-foreground md:text-[42px] md:leading-[1.1]"
+            className="mt-4 font-space text-3xl font-extrabold tracking-tight text-foreground md:text-[42px] md:leading-[1.1]"
           >
-            From zero to robotics engineer - {" "}
+            From zero to robotics engineer -{" "}
             <span className="text-foreground/40">by building the real thing.</span>
           </motion.h2>
 
-            <motion.p
-    initial={{ opacity: 0, y: 12 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.7, delay: 0.08, ease: EASE }}
-    className="mx-auto mt-6 max-w-2xl font-space text-[15px] leading-relaxed text-muted-foreground"
-  >
-    Learn ROS2, simulation, navigation, robot architecture, and real-world
-    debugging through hands-on projects that mirror how robotics teams build
-    production systems.
-  </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.7, delay: 0.08, ease: EASE }}
+            className="mx-auto mt-6 max-w-2xl font-space text-[15px] leading-relaxed text-muted-foreground"
+          >
+            Learn ROS2, simulation, navigation, robot architecture, and real-world
+            debugging through hands-on projects that mirror how robotics teams build
+            production systems.
+          </motion.p>
         </div>
 
         {/* cards */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {cards.map((card, i) => (
             <motion.div
               key={card.number}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.6, delay: i * 0.07, ease: EASE }}
-              className="flex flex-col gap-6 rounded-xl border border-border bg-neutral-50 dark:bg-neutral-900 px-6 py-7 text-center transition-colors duration-200 hover:bg-accent/20"
+              className="group rounded-[30px] bg-card p-2.5 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-black/[0.05] transition-transform duration-300 hover:-translate-y-1 dark:bg-[#1b1915] dark:shadow-[0_14px_0_rgba(0,0,0,0.24),0_22px_42px_rgba(0,0,0,0.38)] dark:ring-white/[0.08]"
             >
-              <span className="font-space text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] tabular-nums text-muted-foreground/30">
-                {card.number}
-              </span>
+              <div className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-[24px] border border-black/[0.04] bg-muted/60 p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/[0.08] dark:bg-[#211f1a] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
 
-              <div className="flex flex-col gap-2">
-                <h3 className="font-space text-[18px] font-medium leading-snug text-foreground">
-                  {card.title}
-                </h3>
-                <p className="font-space text-[13.5px] font-light leading-[1.7] text-muted-foreground/60">
-                  {card.desc}
-                </p>
+                {/* number */}
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/30 dark:text-foreground/36">
+                    {card.number}
+                  </span>
+                </div>
+
+                {/* title + desc */}
+                <div className="mt-auto pt-10">
+                  <h3 className="font-heading text-[20px] font-semibold leading-tight text-foreground">
+                    {card.title}
+                  </h3>
+                  <p className="mt-3 font-space text-[13px] font-light leading-[1.7] text-foreground/50 dark:text-foreground/58">
+                    {card.desc}
+                  </p>
+                </div>
+
               </div>
             </motion.div>
           ))}

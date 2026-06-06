@@ -16,6 +16,7 @@ import {
   ChevronRight,
   Code2,
   Home,
+  Play,
   TestTube2,
 } from "@/components/ui/tabler-icons";
 import { getLearningPaths } from "@/lib/learning";
@@ -92,37 +93,52 @@ export default async function LearnPage() {
 
       {/* Paths grid */}
       <section className="px-6 py-16">
-        <div className="mx-auto max-w-6xl grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 md:grid-cols-2">
           {learningPaths.map((path) => {
             const Icon = pathIcons[path.slug as keyof typeof pathIcons] ?? Code2;
-          
 
             return (
               <Link
                 key={path.slug}
                 href={`/learn/${path.slug}`}
-                className="group flex flex-col gap-3"
+                className="group block"
               >
-                {/* Card thumbnail */}
-               <div className="relative h-[440px] md:h-[420px] w-full overflow-hidden rounded-3xl bg-[#111]">
-  <Image
-    src={ros2Thumbnail}
-    alt={path.name}
-    fill
-    className="object-cover transition-transform duration-700 group-hover:scale-105"
-  />
-</div>
+                <div className="rounded-[34px] bg-white p-2.5 shadow-[0_18px_0_rgba(13,38,58,0.08),0_26px_45px_rgba(13,38,58,0.14)] ring-1 ring-black/[0.04] transition-transform duration-300 group-hover:-translate-y-1 dark:bg-[#f7f7f4]">
+                  <div className="overflow-hidden rounded-[28px] border border-black/[0.03] bg-[#f8f8f6] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                    <div className="relative h-[320px] w-full overflow-hidden rounded-[26px] bg-[#111] sm:h-[380px] md:h-[360px]">
+                      <Image
+                        src={ros2Thumbnail}
+                        alt={path.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-white/5" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="flex size-16 items-center justify-center rounded-full bg-white/35 text-white shadow-[0_10px_35px_rgba(20,42,55,0.22)] backdrop-blur-md transition-transform duration-300 group-hover:scale-105">
+                          <Play size={30} fill="currentColor" strokeWidth={1.5} />
+                        </span>
+                      </div>
+                    </div>
 
-                {/* Name + label row */}
-                <div className="flex flex-col gap-0.5 px-0.5">
-                  <p className="font-space text-[13px] font-semibold leading-snug text-foreground transition-opacity duration-200 group-hover:opacity-55">
-                    {path.name}
-                  </p>
-                  {path.label && (
-                    <span className="font-inter text-[11px] uppercase tracking-[0.14em] text-foreground/35">
-                      {path.label}
-                    </span>
-                  )}
+                    <div className="flex items-center justify-between gap-3 px-3 py-4">
+                      <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#29445b] shadow-[0_9px_18px_rgba(13,38,58,0.12),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-black/[0.04]">
+                        <Icon size={22} strokeWidth={2} />
+                      </span>
+                      <div className="min-w-0 flex-1 rounded-full bg-white px-5 py-3 shadow-[0_9px_18px_rgba(13,38,58,0.1),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-black/[0.04]">
+                        <p className="truncate font-space text-base font-semibold leading-tight text-[#29445b]">
+                          {path.name}
+                        </p>
+                        {path.label && (
+                          <span className="mt-0.5 block truncate font-inter text-[10px] uppercase tracking-[0.14em] text-[#29445b]/45">
+                            {path.label}
+                          </span>
+                        )}
+                      </div>
+                      <span className="hidden shrink-0 rounded-full bg-white px-5 py-4 font-inter text-xs font-semibold text-[#29445b] shadow-[0_9px_18px_rgba(13,38,58,0.1),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-black/[0.04] sm:inline-flex">
+                        Open
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </Link>
             );

@@ -4,6 +4,7 @@ import CTA from "../components/CTA";
 import WhatYouGet from "@/components/Whatyouget";
 import Collaborators from "@/components/Collaborators";
 import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
+import FAQ from "@/components/landing/FAQ";
 
 export const metadata = pageMetadata({
   title: "TheOddOnes Learning Community",
@@ -44,6 +45,7 @@ export default function Home() {
       <Hero />
       <WhatWeProvoke />
       {/* <WhatYouGet/> */}
+      <FAQ/>
 
       {/* <Collaborators /> */}
       <CTA />

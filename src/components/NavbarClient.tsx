@@ -125,11 +125,11 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
       <div
       className={[
         "absolute left-1/2 hidden -translate-x-1/2 md:flex",
-        "items-center gap-0.5 rounded-2xl p-1",
+        "items-center gap-1 rounded-full bg-white/86 p-1.5",
+        "shadow-[0_8px_0_rgba(13,38,58,0.06),0_16px_30px_rgba(13,38,58,0.12)]",
+        "ring-1 ring-black/[0.05] backdrop-blur-md",
         "transition-all duration-300",
-        scrolled
-          ? "border border-foreground/[0.08] bg-background/60 shadow-sm backdrop-blur-md"
-          : "bg-transparent",
+        "dark:bg-[#1b1915]/88 dark:shadow-[0_8px_0_rgba(0,0,0,0.24),0_16px_30px_rgba(0,0,0,0.34)] dark:ring-white/[0.08]",
       ].join(" ")}
     >
       {navLinks.map((item) => {
@@ -141,12 +141,12 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
             key={item.label}
             href={item.href}
             className={[
-              "relative rounded-[10px] px-4 py-1.5",
-              "font-space text-[13px] font-medium",
-              "transition-colors duration-200",
+              "relative rounded-full px-4 py-2",
+              "font-heading text-[13px] font-medium",
+              "transition-all duration-200",
               active
-                ? "bg-foreground/[0.06] text-foreground"
-                : "text-foreground/40 hover:text-foreground/75",
+                ? "bg-[#29445b] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] dark:bg-[#f0ebe5] dark:text-[#1b1915] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_6px_14px_rgba(0,0,0,0.18)]"
+                : "text-[#29445b]/55 hover:bg-white hover:text-[#29445b] hover:shadow-[0_6px_14px_rgba(13,38,58,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] dark:text-[#f0ebe5]/52 dark:hover:bg-white/[0.08] dark:hover:text-[#f0ebe5] dark:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]",
             ].join(" ")}
           >
             {item.label}
@@ -159,13 +159,15 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
     </div>
 
           <div className="hidden shrink-0 items-center gap-3 font-space md:flex">
-            <ThemeSwitcher />
+            <div className="rounded-full bg-white/86 p-1 shadow-[0_8px_0_rgba(13,38,58,0.05),0_14px_24px_rgba(13,38,58,0.1)] ring-1 ring-black/[0.05] backdrop-blur-md dark:bg-[#1b1915]/88 dark:shadow-[0_8px_0_rgba(0,0,0,0.24),0_14px_24px_rgba(0,0,0,0.32)] dark:ring-white/[0.08]">
+              <ThemeSwitcher />
+            </div>
             {session ? (
               <div ref={profileRef} className="relative">
                 <button
                   type="button"
                   onClick={() => setProfileOpen((value) => !value)}
-                  className="flex size-10 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-muted"
+                  className="flex size-12 items-center justify-center rounded-full bg-white/86 text-[#29445b] shadow-[0_8px_0_rgba(13,38,58,0.05),0_14px_24px_rgba(13,38,58,0.1)] ring-1 ring-black/[0.05] transition-transform duration-200 hover:-translate-y-0.5 dark:bg-[#f7f7f4]/90"
                   aria-label="Open profile menu"
                   aria-expanded={profileOpen}
                 >
@@ -173,21 +175,21 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
                 </button>
 
                 {profileOpen ? (
-                  <div className="absolute right-0 mt-3 w-56 overflow-hidden rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-xl">
-                    <div className="border-b border-border px-3 py-2">
+                  <div className="absolute right-0 mt-4 w-60 overflow-hidden rounded-[24px] bg-white p-2 text-[#29445b] shadow-[0_10px_0_rgba(13,38,58,0.06),0_20px_38px_rgba(13,38,58,0.14)] ring-1 ring-black/[0.05] dark:bg-[#f7f7f4]">
+                    <div className="rounded-[18px] bg-[#f8f8f6] px-4 py-3 ring-1 ring-black/[0.03]">
                       <p className="truncate text-sm font-medium">{session.email}</p>
-                      <p className="text-xs capitalize text-muted-foreground">{session.role}</p>
+                      <p className="text-xs capitalize text-[#29445b]/45">{session.role}</p>
                     </div>
-                    <Link href={accountHref} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted" onClick={() => setProfileOpen(false)}>
+                    <Link href={accountHref} className="mt-1 flex items-center gap-2 rounded-full px-4 py-2.5 text-sm text-[#29445b]/70 transition-colors hover:bg-[#f8f8f6] hover:text-[#29445b]" onClick={() => setProfileOpen(false)}>
                       {session.role === "admin" ? <LayoutDashboard className="size-4" /> : <BookOpen className="size-4" />}
                       {session.role === "admin" ? "Dashboard" : "My learning"}
                     </Link>
-                    <Link href="/settings" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted" onClick={() => setProfileOpen(false)}>
+                    <Link href="/settings" className="flex items-center gap-2 rounded-full px-4 py-2.5 text-sm text-[#29445b]/70 transition-colors hover:bg-[#f8f8f6] hover:text-[#29445b]" onClick={() => setProfileOpen(false)}>
                       <Settings className="size-4" />
                       Profile settings
                     </Link>
                     <form action={logoutAction}>
-                      <button type="submit" className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm hover:bg-muted">
+                      <button type="submit" className="flex w-full items-center gap-2 rounded-full px-4 py-2.5 text-left text-sm text-[#29445b]/70 transition-colors hover:bg-[#f8f8f6] hover:text-[#29445b]">
                         <LogOut className="size-4" />
                         Log out
                       </button>
@@ -224,7 +226,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
               key={item.label}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className="py-2 font-space text-3xl font-bold text-foreground/25 transition-colors duration-200 hover:text-foreground"
+              className="py-2 font-heading text-3xl font-bold text-foreground/25 transition-colors duration-200 hover:text-foreground"
               style={{ transitionDelay: `${index * 40}ms` }}
             >
               {item.label}
