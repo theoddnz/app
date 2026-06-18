@@ -86,7 +86,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
             alignItems: "center",
             justifyContent: "space-between",
             gap: "32px",
-            padding: isMobile ? "18px 28px" : "24px 32px",
+            padding: isMobile ? "18px 28px" : "16px 32px",
             width: "100%",
             maxWidth: "76rem",
             margin: "0 auto",
@@ -145,8 +145,8 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
               "font-heading text-[13px] font-medium",
               "transition-all duration-200",
               active
-                ? "bg-[#29445b] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] dark:bg-[#f0ebe5] dark:text-[#1b1915] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_6px_14px_rgba(0,0,0,0.18)]"
-                : "text-[#29445b]/55 hover:bg-white hover:text-[#29445b] hover:shadow-[0_6px_14px_rgba(13,38,58,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] dark:text-[#f0ebe5]/52 dark:hover:bg-white/[0.08] dark:hover:text-[#f0ebe5] dark:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]",
+                ? "bg-[#c4622d] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] dark:bg-[#c4622d] dark:text-white dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_6px_14px_rgba(0,0,0,0.18)]"
+                : "text-[#29445b]/55 hover:bg-[#c4622d]/10 hover:text-[#c4622d] hover:shadow-[0_6px_14px_rgba(196,98,45,0.12),inset_0_1px_0_rgba(255,255,255,0.9)] dark:text-[#f0ebe5]/52 dark:hover:bg-[#c4622d]/15 dark:hover:text-[#e8854f] dark:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]",
             ].join(" ")}
           >
             {item.label}

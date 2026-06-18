@@ -46,7 +46,7 @@ export default function Home() {
 
       <Hero />
       <WhatWeProvoke />
-      <WhyTheOddOnes/>
+      {/* <WhyTheOddOnes/> */}
       {/* <WhatYouGet/> */}
       {/* <Pricing/> */}
       {/* <FAQ/> */}

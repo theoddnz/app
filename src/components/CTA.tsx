@@ -47,12 +47,12 @@ export default function CTA() {
             <div className="relative z-10 mx-auto max-w-3xl">
 
               <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-white/80 backdrop-blur-sm">
-                Join the movement
+                Join TheOddOnes movement
               </span>
 
               <h3 className="mt-6 font-heading text-[clamp(2.4rem,7vw,4.5rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-white">
-                Build in public.{" "}
-                <span className="text-white/55">Ship with people who get it.</span>
+                Build, break,{" "}
+                <span className="text-white/55">and learn.</span>
               </h3>
 
               <div className="mt-10 flex items-center justify-center">

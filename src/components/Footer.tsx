@@ -56,8 +56,6 @@ const navLinks = [
   { label: "Learning paths", href: "/learn" },
   { label: "Community",      href: "/community" },
   { label: "Field notes",    href: "/blogs" },
-  { label: "Sign in",        href: "/users/login" },
-  { label: "Sign up",        href: "/users/signup" },
 ];
 
 const exploreLinks = [
@@ -69,8 +67,6 @@ const exploreLinks = [
 const communityLinks = [
   { label: "Community",  href: "/community" },
   { label: "Discord",    href: siteConfig.social.discord ?? "#" },
-  { label: "Sign in",    href: "/users/login" },
-  { label: "Sign up",    href: "/users/signup" },
 ];
 
 function SocialButton({ label, href, icon: Icon }: { label: string; href: string; icon: React.ComponentType<{ className?: string }> | null }) {
@@ -99,16 +95,16 @@ export default function Footer() {
           <footer className="rounded-t-[22px] border border-b-0 border-black/[0.04] bg-[#f8f7f5] px-8 pb-10 pt-14 text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] dark:border-white/[0.04] dark:bg-neutral-950 dark:text-[#f0ebe5] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] md:px-12">
 
             {/* Main grid: brand | navigate | community | connect */}
-            <div className="grid gap-12 pb-12 md:grid-cols-[1fr_1fr_1fr_1.2fr] md:gap-10 md:pb-16">
+            <div className="grid gap-12 pb-12 md:grid-cols-[1.6fr_1fr_1fr_1fr] md:gap-12 md:pb-16">
 
               {/* Brand */}
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-6 md:pr-8">
                 <Link href="/" aria-label="TheOddOnes home" className="inline-flex w-fit">
                   <Image src="/assets/theoddones-white-logo.png" alt="TheOddOnes" width={48} height={48} className="h-12 w-12 object-contain dark:hidden" />
                   <Image src="/assets/theoddones-black-logo.png" alt="TheOddOnes" width={48} height={48} className="hidden h-12 w-12 object-contain dark:block" />
                 </Link>
-                <p className="max-w-[18rem] font-heading text-[13px] text-black/45 dark:text-white/35">
-                  A movement for builders who learn together in public — with focus, craft, and care.
+                <p className="max-w-[16rem] font-heading text-[15px] leading-relaxed text-black/50 dark:text-white/40">
+                  A place for people who think differently about learning.
                 </p>
               </div>
 
@@ -155,7 +151,7 @@ export default function Footer() {
                 <p className="font-space text-[11px] uppercase tracking-[0.18em] text-black/30 dark:text-white/25">
                   Connect
                 </p>
-                <div className="mt-5 flex flex-wrap gap-2">
+                <div className="mt-5 grid w-fit grid-cols-3 gap-2">
                   {socialLinks.map((s) => (
                     <SocialButton key={s.label} {...s} />
                   ))}
@@ -179,18 +175,9 @@ export default function Footer() {
                   © 2026 The<span className="text-secondary">Odd</span>Ones
                 </p>
 
-                <div className="flex items-center gap-4">
-                  {socialLinks.map((s) => (
-                    <Link
-                      key={s.label}
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={s.label}
-                      className="font-space text-[12px] font-medium text-black/35 transition-colors hover:text-black dark:text-white/30 dark:hover:text-[#f0ebe5]"
-                    >
-                      {s.label}
-                    </Link>
+                <div className="flex items-center gap-2">
+                  {socialLinks.slice(0, 2).map((s) => (
+                    <SocialButton key={s.label} {...s} />
                   ))}
                 </div>
               </div>

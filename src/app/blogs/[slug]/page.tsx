@@ -22,12 +22,20 @@ function renderBlock(block: Block, index: number) {
       );
     case "quote":
       return (
-        <blockquote
+        <figure
           key={index}
-          className="my-8 border-l-2 border-[#c4622d] pl-5 font-heading text-lg font-medium leading-relaxed text-foreground/80 sm:my-10 sm:pl-6 sm:text-xl"
+          className="my-10 rounded-2xl border border-border bg-card px-6 py-8 text-center sm:my-12 sm:px-10 sm:py-10"
         >
-          {block.text}
-        </blockquote>
+          <span
+            aria-hidden
+            className="block font-heading text-5xl leading-none text-[#c4622d] sm:text-6xl"
+          >
+            &ldquo;
+          </span>
+          <blockquote className="mt-2 font-heading text-xl font-semibold leading-snug tracking-tight text-foreground/90 sm:text-2xl">
+            {block.text}
+          </blockquote>
+        </figure>
       );
     case "list":
       return (
