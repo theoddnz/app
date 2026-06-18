@@ -1,145 +1,187 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { eq, ne } from "drizzle-orm";
-import { ArrowLeft, ArrowUpRight, ChevronRight, Share2 } from "@/components/ui/tabler-icons";
 import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowUpRight, Sparkles } from "@/components/ui/tabler-icons";
+import { ShareButton } from "@/components/blog/ShareButton";
+import { POSTS, getPost, type Block } from "@/lib/blog-data";
 
-import { MarkdownPreview } from "@/components/blog/MarkdownPreview";
-import { getDb } from "@/db";
-import { blogPosts, learningPaths } from "@/db/schema";
-import { absoluteUrl, pageMetadata } from "@/lib/seo";
-
-type Props = {
-  params: Promise<{ slug: string }>;
-};
-
-export const dynamic = "force-dynamic";
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const blog = await getDb().query.blogPosts.findFirst({
-    where: eq(blogPosts.slug, slug),
-  });
-
-  if (!blog) {
-    return { title: "Article not found | TheOddOnes" };
-  }
-
-  return {
-    ...pageMetadata({
-      title: blog.title,
-      description: blog.excerpt,
-      path: `/blogs/${blog.slug}`,
-      images: blog.thumbnailUrl ? [blog.thumbnailUrl] : undefined,
-      type: "article",
-      keywords: [blog.title, "TheOddOnes field notes", "learning community essay", "build log"],
-    }),
-    title: blog.title,
-    description: blog.excerpt,
-    openGraph: {
-      title: blog.title,
-      description: blog.excerpt,
-      url: absoluteUrl(`/blogs/${blog.slug}`),
-      type: "article",
-      publishedTime: blog.createdAt.toISOString(),
-      modifiedTime: blog.updatedAt.toISOString(),
-      authors: ["TheOddOnes"],
-      images: blog.thumbnailUrl ? [absoluteUrl(blog.thumbnailUrl)] : undefined,
-    },
-  };
+export function generateStaticParams() {
+  return POSTS.map((post) => ({ slug: post.slug }));
 }
 
-export default async function BlogPostPage({ params }: Props) {
-  const { slug } = await params;
-  const blog = await getDb().query.blogPosts.findFirst({
-    where: eq(blogPosts.slug, slug),
-  });
+function renderBlock(block: Block, index: number) {
+  switch (block.type) {
+    case "h2":
+      return (
+        <h2
+          key={index}
+          className="mt-12 mb-4 font-heading text-2xl font-bold tracking-tight sm:text-3xl"
+        >
+          {block.text}
+        </h2>
+      );
+    case "quote":
+      return (
+        <blockquote
+          key={index}
+          className="my-10 border-l-2 border-[#c4622d] pl-6 font-heading text-xl font-medium leading-relaxed text-foreground/80 sm:text-2xl"
+        >
+          {block.text}
+        </blockquote>
+      );
+    case "list":
+      return (
+        <ul key={index} className="my-6 space-y-3">
+          {block.items.map((item, i) => (
+            <li key={i} className="flex gap-3 text-lg leading-8 text-foreground/70">
+              <span className="mt-3 size-1.5 shrink-0 rounded-full bg-[#c4622d]" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      );
+    case "video":
+      return (
+        <figure key={index} className="my-10">
+          <div className="aspect-video overflow-hidden rounded-2xl border border-border bg-black">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${block.youtubeId}`}
+              title={block.caption ?? "Video"}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="size-full"
+            />
+          </div>
+          {block.caption ? (
+            <figcaption className="mt-3 text-center text-sm text-foreground/45">
+              {block.caption}
+            </figcaption>
+          ) : null}
+        </figure>
+      );
+    default:
+      return (
+        <p key={index} className="my-5 text-lg leading-8 text-foreground/70">
+          {block.text}
+        </p>
+      );
+  }
+}
 
-  if (!blog) {
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = getPost(slug);
+
+  if (!post) {
     notFound();
   }
 
-  const path = await getDb().query.learningPaths.findFirst({
-    where: eq(learningPaths.id, blog.pathId),
-  });
-  const related = await getDb()
-    .select()
-    .from(blogPosts)
-    .where(ne(blogPosts.slug, blog.slug))
-    .limit(3);
-  const articleStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: blog.title,
-    description: blog.excerpt,
-    image: blog.thumbnailUrl ? [absoluteUrl(blog.thumbnailUrl)] : undefined,
-    datePublished: blog.createdAt.toISOString(),
-    dateModified: blog.updatedAt.toISOString(),
-    author: {
-      "@type": "Organization",
-      name: "TheOddOnes",
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "TheOddOnes",
-    },
-    mainEntityOfPage: absoluteUrl(`/blogs/${blog.slug}`),
-  };
+  const more = POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-background px-6 pt-32 text-foreground font-space">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
-      />
-      <article className="mx-auto max-w-4xl">
-        <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs font-semibold text-foreground/40">
-          <Link href="/blogs" className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground">
-            <ArrowLeft size={14} />
-            Field notes
+    <main className="min-h-screen bg-background px-6 pt-32 pb-24 text-foreground font-space">
+      <article className="mx-auto max-w-2xl">
+        <div className="flex items-center justify-between">
+          <Link
+            href="/blogs"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/50 transition-colors hover:text-foreground"
+          >
+            <ArrowLeft size={15} />
+            Back to blog
           </Link>
-          <ChevronRight size={12} className="opacity-40" />
-          <span className="text-foreground/70">{path?.name ?? "Blog"}</span>
-        </nav>
+          <ShareButton title={post.title} />
+        </div>
 
-        <header className="border-b border-border pb-10">
-          <p className="mb-5 inline-flex rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">{path?.name ?? "Blog"}</p>
-          <h1 className="text-5xl font-bold leading-tight tracking-tight">{blog.title}</h1>
-          <p className="mt-6 text-lg leading-8 text-foreground/60">{blog.excerpt}</p>
+        <div className="mt-10 flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.14em]">
+          <span className="inline-flex rounded-md bg-[#c4622d]/12 px-2.5 py-1 text-[#c4622d]">
+            {post.category}
+          </span>
+          <span className="text-foreground/30">·</span>
+          <span className="text-foreground/45">{post.readingTime}</span>
+        </div>
 
-          <div className="mt-8 flex items-center justify-between border-t border-border pt-5">
-            <p className="text-sm text-muted-foreground">TheOddOnes</p>
-            <button className="inline-flex size-10 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground" aria-label="Share article">
-              <Share2 className="size-4" />
-            </button>
+        <h1 className="mt-5 font-heading text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
+          {post.title}
+        </h1>
+
+        <p className="mt-5 text-lg leading-7 text-foreground/55">{post.excerpt}</p>
+
+        <div className="mt-8 flex items-center gap-3 border-b border-border pb-8">
+          <span className="inline-flex size-10 items-center justify-center rounded-full bg-[#c4622d]/15 text-sm font-bold text-[#c4622d]">
+            {post.author.charAt(0)}
+          </span>
+          <div className="text-sm">
+            <p className="font-semibold text-foreground/85">{post.author}</p>
+            <p className="text-foreground/50">
+              {post.role} · {post.date}
+            </p>
           </div>
-        </header>
+          <div className="ml-auto">
+            <ShareButton title={post.title} />
+          </div>
+        </div>
 
-        {blog.thumbnailUrl ? (
-          <img src={blog.thumbnailUrl} alt="" className="my-12 aspect-video w-full rounded-lg border border-border object-cover" />
-        ) : null}
+        {/* Cover */}
+        <div
+          className={`mt-10 flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-border bg-linear-to-br ${post.gradient}`}
+        >
+          <span className="px-8 text-center font-heading text-3xl font-bold leading-tight text-white/90 sm:text-4xl">
+            {post.title}
+          </span>
+        </div>
 
-        <div className="pb-24">
-          <MarkdownPreview content={blog.content} />
+        {/* Body */}
+        <div className="mt-12">{post.body.map(renderBlock)}</div>
+
+        {/* Subscribe CTA */}
+        <div className="mt-16 flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-8 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-heading text-xl font-bold tracking-tight">
+              Enjoyed this?
+            </p>
+            <p className="mt-1 text-sm text-foreground/55">
+              Get new field notes straight to your inbox.
+            </p>
+          </div>
+          <button className="inline-flex items-center gap-2 rounded-full bg-[#c4622d] px-5 py-2.5 text-sm font-semibold text-[#fff4ed] transition-opacity hover:opacity-90">
+            <Sparkles size={15} />
+            Subscribe
+          </button>
         </div>
       </article>
 
-      {related.length > 0 ? (
-        <section className="mx-auto max-w-5xl border-t border-border py-16">
-          <h2 className="text-2xl font-semibold">More field notes</h2>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {related.map((item) => (
-              <Link key={item.id} href={`/blogs/${item.slug}`} className="rounded-lg border border-border bg-card p-5 hover:bg-muted/35">
-                <h3 className="line-clamp-2 font-semibold">{item.title}</h3>
-                <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{item.excerpt}</p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm text-foreground/60">
-                  Read <ArrowUpRight className="size-4" />
+      {/* More posts */}
+      <section className="mx-auto mt-24 max-w-6xl">
+        <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground/45">
+          Keep reading
+        </h2>
+        <div className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {more.map((p) => (
+            <Link key={p.slug} href={`/blogs/${p.slug}`} className="group block">
+              <div
+                className={`relative flex aspect-16/10 items-center justify-center overflow-hidden rounded-2xl border border-border bg-linear-to-br ${p.gradient}`}
+              >
+                <span className="absolute left-4 top-4 rounded-md bg-black/30 px-2 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur">
+                  {p.category}
                 </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ) : null}
+                <span className="px-6 text-center font-heading text-xl font-bold leading-tight text-white/90">
+                  {p.title}
+                </span>
+              </div>
+              <h3 className="mt-4 text-lg font-semibold leading-snug tracking-tight transition-colors group-hover:text-[#c4622d]">
+                {p.title}
+              </h3>
+              <span className="mt-2 inline-flex items-center gap-1 text-sm text-foreground/50 group-hover:text-foreground">
+                Read <ArrowUpRight size={14} />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

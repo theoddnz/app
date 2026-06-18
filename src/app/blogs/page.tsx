@@ -1,173 +1,165 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { desc } from "drizzle-orm";
-import { ArrowUpRight, ChevronRight, FileText, Home } from "@/components/ui/tabler-icons";
+import { ArrowUpRight, Search, Sparkles } from "@/components/ui/tabler-icons";
+import { CATEGORIES, POSTS, type Category, type Post } from "@/lib/blog-data";
 
-import { getDb } from "@/db";
-import { blogPosts, learningPaths } from "@/db/schema";
-import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
+function PostMeta({ post }: { post: Post }) {
+  return (
+    <div className="mt-3 flex items-center gap-2 text-sm text-foreground/55">
+      <span className="inline-flex size-6 items-center justify-center rounded-full bg-[#c4622d]/15 text-[11px] font-bold text-[#c4622d]">
+        {post.author.charAt(0)}
+      </span>
+      <span className="font-medium text-foreground/70">{post.author}</span>
+      <span className="opacity-40">·</span>
+      <span>{post.date}</span>
+    </div>
+  );
+}
 
-export const dynamic = "force-dynamic";
+export default function BlogPage() {
+  const [active, setActive] = useState<"All" | Category>("All");
+  const [query, setQuery] = useState("");
 
-const categoryCardStyles = [
-  "bg-[#fff4d8] text-[#1f1a10] border-[#f2d27c]",
-  "bg-[#e0f2fe] text-[#102033] border-[#8ec7e8]",
-  "bg-[#dcfce7] text-[#102217] border-[#86d39b]",
-  "bg-[#ffe4e6] text-[#2c1218] border-[#f0a7b0]",
-  "bg-[#ede9fe] text-[#1f1735] border-[#b8a8ee]",
-  "bg-[#fef3c7] text-[#251709] border-[#e8bc5f]",
-];
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return POSTS.filter((post) => {
+      const matchesCategory = active === "All" || post.category === active;
+      const matchesQuery =
+        q.length === 0 ||
+        post.title.toLowerCase().includes(q) ||
+        post.excerpt.toLowerCase().includes(q);
+      return matchesCategory && matchesQuery;
+    });
+  }, [active, query]);
 
-export const metadata: Metadata = pageMetadata({
-  title: "Field Notes",
-  description:
-    "Field notes from TheOddOnes: practical essays, build logs, and learning reflections from a focused builder community.",
-  path: "/blogs",
-  keywords: ["TheOddOnes field notes", "learning essays", "build logs", "builder community blog"],
-});
-
-export default async function BlogPage() {
-  const [blogs, paths] = await Promise.all([
-    getDb().select().from(blogPosts).orderBy(desc(blogPosts.createdAt)),
-    getDb().select().from(learningPaths).orderBy(desc(learningPaths.createdAt)),
-  ]);
-  const pathNames = new Map(paths.map((path) => [path.id, path.name]));
-  const featured = blogs[0];
-  const rest = blogs.slice(1);
-  const blogCountByPath = blogs.reduce<Record<string, number>>((counts, blog) => {
-    counts[blog.pathId] = (counts[blog.pathId] ?? 0) + 1;
-    return counts;
-  }, {});
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    "@id": absoluteUrl("/blogs#blog"),
-    name: "TheOddOnes Field Notes",
-    description:
-      "Practical essays, build logs, learning reflections, and field notes from TheOddOnes.",
-    url: absoluteUrl("/blogs"),
-    publisher: {
-      "@id": `${siteConfig.url}/#organization`,
-    },
-    blogPost: blogs.slice(0, 12).map((blog) => ({
-      "@type": "BlogPosting",
-      headline: blog.title,
-      description: blog.excerpt,
-      url: absoluteUrl(`/blogs/${blog.slug}`),
-      image: blog.thumbnailUrl ? absoluteUrl(blog.thumbnailUrl) : undefined,
-      datePublished: blog.createdAt.toISOString(),
-      dateModified: blog.updatedAt.toISOString(),
-    })),
-  };
+  const featured = filtered.filter((post) => post.featured).slice(0, 2);
+  const latest = filtered.filter((post) => !featured.includes(post));
 
   return (
-    <main className="min-h-screen bg-background px-6 pt-32 text-foreground font-space">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
-      />
+    <main className="min-h-screen bg-background px-6 pt-32 pb-24 text-foreground font-space">
       <div className="mx-auto max-w-6xl">
-        <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs font-semibold text-foreground/40">
-          <Link href="/" className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground">
-            <Home size={14} />
-            Home
-          </Link>
-          <ChevronRight size={12} className="opacity-40" />
-          <span className="text-foreground/70">Blogs</span>
+        {/* Header */}
+        <header className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+          <h1 className="font-heading text-6xl font-bold tracking-tight sm:text-7xl">
+            Blog
+          </h1>
+
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2.5 text-sm text-foreground/50">
+              <Search size={16} />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search..."
+                className="w-40 bg-transparent outline-none placeholder:text-foreground/40"
+              />
+              <kbd className="hidden rounded border border-border px-1.5 py-0.5 text-[10px] text-foreground/40 sm:inline">
+                Ctrl K
+              </kbd>
+            </div>
+            <button className="inline-flex items-center gap-2 rounded-full bg-[#c4622d] px-5 py-2.5 text-sm font-semibold text-[#fff4ed] transition-opacity hover:opacity-90">
+              <Sparkles size={15} />
+              Subscribe
+            </button>
+          </div>
+        </header>
+
+        {/* Category tabs */}
+        <nav className="mt-8 flex flex-wrap items-center gap-2">
+          {CATEGORIES.map((category) => {
+            const isActive = active === category;
+            return (
+              <button
+                key={category}
+                onClick={() => setActive(category)}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-foreground text-background"
+                    : "border border-border bg-card text-foreground/60 hover:text-foreground"
+                }`}
+              >
+                {category}
+              </button>
+            );
+          })}
         </nav>
 
-        <section className="border-b border-border pb-12">
-          <h1 className="font-space text-5xl font-bold tracking-tight">Field notes.</h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-foreground/55">
-            Blogs connected to learning paths, written in markdown with practical notes and images from the middle of the work.
-          </p>
-        </section>
-
-        {paths.length > 0 ? (
-          <section className="border-b border-border py-12">
-            <div className="mb-6 flex items-end justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Categories</p>
-                <h2 className="mt-2 text-2xl font-semibold tracking-tight">Pick a path.</h2>
-              </div>
-              <p className="hidden text-sm text-muted-foreground sm:block">Each card opens only the blogs for that category.</p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {paths.map((path, index) => {
-                const count = blogCountByPath[path.id] ?? 0;
-                const style = categoryCardStyles[index % categoryCardStyles.length];
-
-                return (
-                  <Link
-                    key={path.id}
-                    href={`/blogs/path/${path.slug}`}
-                    className={`group relative flex min-h-[168px] items-center justify-center overflow-hidden rounded-lg border p-6 text-center transition duration-200  ${style}`}
-                  >
-                    <span className="absolute left-5 top-4 text-xs font-semibold uppercase tracking-[0.18em] opacity-55">
-                      {count} {count === 1 ? "post" : "posts"}
-                    </span>
-                  
-                    <span className="relative max-w-[14rem] text-balance text-2xl font-bold leading-tight tracking-tight">
-                      {path.name}
-                    </span>
-                    <span className="absolute bottom-4 right-5 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.18em] opacity-60 transition-opacity group-hover:opacity-100">
-                      Open <ArrowUpRight className="size-3.5" />
-                    </span>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-        ) : null}
-
-        {blogs.length === 0 ? (
-          <section className="py-20 text-sm text-muted-foreground">No blogs published yet.</section>
-        ) : (
-          <section className="grid gap-5 py-16 md:grid-cols-2 lg:grid-cols-3">
-            {featured ? (
+        {/* Featured */}
+        {featured.length > 0 ? (
+          <section className="mt-10 grid gap-6 md:grid-cols-2">
+            {featured.map((post) => (
               <Link
-                href={`/blogs/${featured.slug}`}
-                className="group flex min-h-[320px] flex-col justify-between overflow-hidden rounded-lg border border-border bg-card p-7 transition-colors hover:bg-muted/35 lg:col-span-2"
+                key={post.slug}
+                href={`/blogs/${post.slug}`}
+                className="group block"
               >
-                <div>
-                  {featured.thumbnailUrl ? (
-                    <img src={featured.thumbnailUrl} alt="" className="mb-7 aspect-video w-full rounded-lg border border-border object-cover" />
-                  ) : null}
-                  <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
-                    <FileText className="size-3" />
-                    {pathNames.get(featured.pathId) ?? "Blog"}
-                  </p>
-                  <h2 className="text-3xl font-semibold leading-tight">{featured.title}</h2>
-                  <p className="mt-4 line-clamp-3 text-sm leading-7 text-foreground/60">{featured.excerpt}</p>
+                <div
+                  className={`relative flex aspect-16/10 items-center justify-center overflow-hidden rounded-2xl border border-border bg-linear-to-br ${post.gradient}`}
+                >
+                  <span className="absolute left-5 top-5 rounded-md bg-black/30 px-2.5 py-1 text-xs font-medium text-white/90 backdrop-blur">
+                    {post.category}
+                  </span>
+                  <span className="px-8 text-center font-heading text-3xl font-bold leading-tight text-white/90">
+                    {post.title}
+                  </span>
                 </div>
-                <span className="mt-8 inline-flex items-center gap-2 text-sm text-foreground/60 group-hover:text-foreground">
-                  Read post <ArrowUpRight className="size-4" />
-                </span>
-              </Link>
-            ) : null}
-
-            {rest.map((blog) => (
-              <Link
-                key={blog.id}
-                href={`/blogs/${blog.slug}`}
-                className="group flex min-h-[280px] flex-col justify-between rounded-lg border border-border bg-card p-6 transition-colors hover:bg-muted/35"
-              >
-                <div>
-                  {blog.thumbnailUrl ? (
-                    <img src={blog.thumbnailUrl} alt="" className="mb-5 aspect-video w-full rounded-lg border border-border object-cover" />
-                  ) : null}
-                  <p className="mb-3 text-xs text-muted-foreground">{pathNames.get(blog.pathId) ?? "Blog"}</p>
-                  <h3 className="text-xl font-semibold leading-snug">{blog.title}</h3>
-                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-foreground/55">{blog.excerpt}</p>
-                </div>
-                <span className="mt-7 inline-flex items-center gap-2 text-sm text-foreground/50 group-hover:text-foreground">
-                  Read <ChevronRight className="size-4" />
-                </span>
+                <h2 className="mt-4 text-2xl font-semibold tracking-tight transition-colors group-hover:text-[#c4622d]">
+                  {post.title}
+                </h2>
+                <PostMeta post={post} />
               </Link>
             ))}
           </section>
-        )}
+        ) : null}
+
+        {/* Latest posts */}
+        <section className="mt-16">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground/45">
+            Latest Posts
+          </h2>
+
+          {latest.length === 0 ? (
+            <p className="mt-8 text-sm text-foreground/50">No posts found.</p>
+          ) : (
+            <div className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+              {latest.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/blogs/${post.slug}`}
+                  className="group block"
+                >
+                  <div
+                    className={`relative flex aspect-16/10 items-center justify-center overflow-hidden rounded-2xl border border-border bg-linear-to-br ${post.gradient}`}
+                  >
+                    <span className="absolute left-4 top-4 rounded-md bg-black/30 px-2 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur">
+                      {post.category}
+                    </span>
+                    <span className="px-6 text-center font-heading text-xl font-bold leading-tight text-white/90">
+                      {post.title}
+                    </span>
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold leading-snug tracking-tight transition-colors group-hover:text-[#c4622d]">
+                    {post.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-foreground/55">
+                    {post.excerpt}
+                  </p>
+                  <PostMeta post={post} />
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Footer note */}
+        <div className="mt-20 flex items-center justify-center gap-2 text-sm text-foreground/45">
+          <span>Want these in your inbox?</span>
+          <button className="inline-flex items-center gap-1 font-semibold text-[#c4622d] hover:underline">
+            Subscribe <ArrowUpRight size={14} />
+          </button>
+        </div>
       </div>
     </main>
   );

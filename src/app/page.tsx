@@ -48,8 +48,8 @@ export default function Home() {
       <WhatWeProvoke />
       <WhyTheOddOnes/>
       {/* <WhatYouGet/> */}
-        <Pricing/>
-      <FAQ/>
+      {/* <Pricing/> */}
+      {/* <FAQ/> */}
     
 
       {/* <Collaborators /> */}
