@@ -38,11 +38,11 @@ export default function BlogPage() {
   const latest = filtered.filter((post) => !featured.includes(post));
 
   return (
-    <main className="min-h-screen bg-background px-6 pt-32 pb-24 text-foreground font-space">
+    <main className="min-h-screen bg-background px-5 pt-28 pb-24 text-foreground font-space sm:px-6 sm:pt-32">
       <div className="mx-auto max-w-6xl">
         {/* Header */}
-        <header className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-          <h1 className="font-heading text-6xl font-bold tracking-tight sm:text-7xl">
+        <header className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <h1 className="font-heading text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
             Blog
           </h1>
 
@@ -101,11 +101,11 @@ export default function BlogPage() {
                   <span className="absolute left-5 top-5 rounded-md bg-black/30 px-2.5 py-1 text-xs font-medium text-white/90 backdrop-blur">
                     {post.category}
                   </span>
-                  <span className="px-8 text-center font-heading text-3xl font-bold leading-tight text-white/90">
+                  <span className="px-6 text-center font-heading text-xl font-bold leading-tight text-white/90 sm:px-8 sm:text-3xl">
                     {post.title}
                   </span>
                 </div>
-                <h2 className="mt-4 text-2xl font-semibold tracking-tight transition-colors group-hover:text-[#c4622d]">
+                <h2 className="mt-4 text-xl font-semibold tracking-tight transition-colors group-hover:text-[#c4622d] sm:text-2xl">
                   {post.title}
                 </h2>
                 <PostMeta post={post} />
@@ -136,11 +136,11 @@ export default function BlogPage() {
                     <span className="absolute left-4 top-4 rounded-md bg-black/30 px-2 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur">
                       {post.category}
                     </span>
-                    <span className="px-6 text-center font-heading text-xl font-bold leading-tight text-white/90">
+                    <span className="px-5 text-center font-heading text-lg font-bold leading-tight text-white/90 sm:px-6 sm:text-xl">
                       {post.title}
                     </span>
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold leading-snug tracking-tight transition-colors group-hover:text-[#c4622d]">
+                  <h3 className="mt-4 text-base font-semibold leading-snug tracking-tight transition-colors group-hover:text-[#c4622d] sm:text-lg">
                     {post.title}
                   </h3>
                   <p className="mt-2 line-clamp-2 text-sm leading-6 text-foreground/55">

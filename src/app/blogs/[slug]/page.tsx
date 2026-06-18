@@ -14,7 +14,7 @@ function renderBlock(block: Block, index: number) {
       return (
         <h2
           key={index}
-          className="mt-12 mb-4 font-heading text-2xl font-bold tracking-tight sm:text-3xl"
+          className="mt-10 mb-3 font-heading text-xl font-bold tracking-tight sm:mt-12 sm:mb-4 sm:text-2xl"
         >
           {block.text}
         </h2>
@@ -23,7 +23,7 @@ function renderBlock(block: Block, index: number) {
       return (
         <blockquote
           key={index}
-          className="my-10 border-l-2 border-[#c4622d] pl-6 font-heading text-xl font-medium leading-relaxed text-foreground/80 sm:text-2xl"
+          className="my-8 border-l-2 border-[#c4622d] pl-5 font-heading text-lg font-medium leading-relaxed text-foreground/80 sm:my-10 sm:pl-6 sm:text-xl"
         >
           {block.text}
         </blockquote>
@@ -32,8 +32,8 @@ function renderBlock(block: Block, index: number) {
       return (
         <ul key={index} className="my-6 space-y-3">
           {block.items.map((item, i) => (
-            <li key={i} className="flex gap-3 text-lg leading-8 text-foreground/70">
-              <span className="mt-3 size-1.5 shrink-0 rounded-full bg-[#c4622d]" />
+            <li key={i} className="flex gap-3 text-base leading-7 text-foreground/70 sm:text-[17px] sm:leading-8">
+              <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-[#c4622d]" />
               <span>{item}</span>
             </li>
           ))}
@@ -61,7 +61,7 @@ function renderBlock(block: Block, index: number) {
       );
     default:
       return (
-        <p key={index} className="my-5 text-lg leading-8 text-foreground/70">
+        <p key={index} className="my-5 text-base leading-7 text-foreground/70 sm:text-[17px] sm:leading-8">
           {block.text}
         </p>
       );
@@ -83,7 +83,7 @@ export default async function BlogPostPage({
   const more = POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-background px-6 pt-32 pb-24 text-foreground font-space">
+    <main className="min-h-screen bg-background px-5 pt-28 pb-24 text-foreground font-space sm:px-6 sm:pt-32">
       <article className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between">
           <Link
@@ -104,11 +104,11 @@ export default async function BlogPostPage({
           <span className="text-foreground/45">{post.readingTime}</span>
         </div>
 
-        <h1 className="mt-5 font-heading text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
+        <h1 className="mt-5 font-heading text-3xl font-bold leading-[1.12] tracking-tight sm:text-4xl lg:text-5xl">
           {post.title}
         </h1>
 
-        <p className="mt-5 text-lg leading-7 text-foreground/55">{post.excerpt}</p>
+        <p className="mt-4 text-base leading-7 text-foreground/55 sm:mt-5 sm:text-lg">{post.excerpt}</p>
 
         <div className="mt-8 flex items-center gap-3 border-b border-border pb-8">
           <span className="inline-flex size-10 items-center justify-center rounded-full bg-[#c4622d]/15 text-sm font-bold text-[#c4622d]">
@@ -127,15 +127,15 @@ export default async function BlogPostPage({
 
         {/* Cover */}
         <div
-          className={`mt-10 flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-border bg-linear-to-br ${post.gradient}`}
+          className={`mt-8 flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-border bg-linear-to-br sm:mt-10 ${post.gradient}`}
         >
-          <span className="px-8 text-center font-heading text-3xl font-bold leading-tight text-white/90 sm:text-4xl">
+          <span className="px-6 text-center font-heading text-2xl font-bold leading-tight text-white/90 sm:px-8 sm:text-3xl lg:text-4xl">
             {post.title}
           </span>
         </div>
 
         {/* Body */}
-        <div className="mt-12">{post.body.map(renderBlock)}</div>
+        <div className="mt-10 sm:mt-12">{post.body.map(renderBlock)}</div>
 
         {/* Subscribe CTA */}
         <div className="mt-16 flex flex-col items-start gap-4 rounded-2xl border border-border bg-card p-8 sm:flex-row sm:items-center sm:justify-between">
@@ -168,11 +168,11 @@ export default async function BlogPostPage({
                 <span className="absolute left-4 top-4 rounded-md bg-black/30 px-2 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur">
                   {p.category}
                 </span>
-                <span className="px-6 text-center font-heading text-xl font-bold leading-tight text-white/90">
+                <span className="px-5 text-center font-heading text-lg font-bold leading-tight text-white/90 sm:px-6 sm:text-xl">
                   {p.title}
                 </span>
               </div>
-              <h3 className="mt-4 text-lg font-semibold leading-snug tracking-tight transition-colors group-hover:text-[#c4622d]">
+              <h3 className="mt-4 text-base font-semibold leading-snug tracking-tight transition-colors group-hover:text-[#c4622d] sm:text-lg">
                 {p.title}
               </h3>
               <span className="mt-2 inline-flex items-center gap-1 text-sm text-foreground/50 group-hover:text-foreground">
