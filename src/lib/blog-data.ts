@@ -37,7 +37,7 @@ export const POSTS: Post[] = [
     excerpt:
       "We were the kids who learned differently, built weird things, and never quite fit the mold. So we built the place we always wished existed.",
     category: "Community",
-    author: "Neel",
+    author: "Karthik",
     role: "Founder, TheOddOnes",
     date: "Jun 18, 2026",
     readingTime: "5 min read",

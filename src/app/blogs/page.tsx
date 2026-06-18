@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Search, Sparkles } from "@/components/ui/tabler-icons";
+import { Search } from "@/components/ui/tabler-icons";
 import { CATEGORIES, POSTS, type Category, type Post } from "@/lib/blog-data";
 
 function PostMeta({ post }: { post: Post }) {
@@ -59,10 +59,6 @@ export default function BlogPage() {
                 Ctrl K
               </kbd>
             </div>
-            <button className="inline-flex items-center gap-2 rounded-full bg-[#c4622d] px-5 py-2.5 text-sm font-semibold text-[#fff4ed] transition-opacity hover:opacity-90">
-              <Sparkles size={15} />
-              Subscribe
-            </button>
           </div>
         </header>
 
@@ -152,14 +148,6 @@ export default function BlogPage() {
             </div>
           )}
         </section>
-
-        {/* Footer note */}
-        <div className="mt-20 flex items-center justify-center gap-2 text-sm text-foreground/45">
-          <span>Want these in your inbox?</span>
-          <button className="inline-flex items-center gap-1 font-semibold text-[#c4622d] hover:underline">
-            Subscribe <ArrowUpRight size={14} />
-          </button>
-        </div>
       </div>
     </main>
   );
