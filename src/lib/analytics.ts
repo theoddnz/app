@@ -41,7 +41,9 @@ export async function getSiteViews(): Promise<number | null> {
     return null;
   }
 
-  const lookbackDays = Number(process.env.CF_ANALYTICS_LOOKBACK_DAYS ?? "365");
+  const requestedDays = Number(process.env.CF_ANALYTICS_LOOKBACK_DAYS ?? "90");
+  // Cloudflare's free Web Analytics rejects single queries wider than ~92 days.
+  const lookbackDays = Math.min(Number.isFinite(requestedDays) ? requestedDays : 90, 90);
   const end = new Date();
   const start = new Date(end.getTime() - lookbackDays * 24 * 60 * 60 * 1000);
 
