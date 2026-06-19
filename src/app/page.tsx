@@ -1,5 +1,6 @@
 import Hero from "../components/Hero";
 import WhatWeProvoke from "../components/WhatWeProvoke";
+import WhyWeStarted from "../components/WhyWeStarted";
 import CTA from "../components/CTA";
 import WhatYouGet from "@/components/Whatyouget";
 import Collaborators from "@/components/Collaborators";
@@ -53,6 +54,7 @@ export default function Home() {
     
 
       {/* <Collaborators /> */}
+      <WhyWeStarted />
       <CTA />
 
     </main>

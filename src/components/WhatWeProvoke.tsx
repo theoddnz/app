@@ -6,24 +6,24 @@ const EASE = cubicBezier(0.16, 1, 0.3, 1);
 
 const cards = [
   {
-    number: "01",
-    title: "Wire it up",
+    number: "#1",
+    title: "Build",
     desc: "Start from zero. Learn electronics, sensors, and actuators by building circuits that actually move things.",
   },
   {
-    number: "02",
-    title: "Write the code",
-    desc: "Program motion, perception, and decision-making. No simulations — real robots, real bugs, real fixes.",
+    number: "#2",
+    title: "Break",
+    desc: "Ship imperfect builds, push them till they fail, and document exactly what went wrong and why.",
   },
   {
-    number: "03",
-    title: "Break things publicly",
-    desc: "Ship imperfect builds, document what failed, and learn faster than anyone working alone.",
+    number: "#3",
+    title: "Learn",
+    desc: "Turn every failure into instinct. Debug in public, ask sharper questions, and learn faster than working alone.",
   },
   {
-    number: "04",
-    title: "Think like an engineer",
-    desc: "Move from hobbyist to engineer through first-principles thinking, iteration, and peer review.",
+    number: "#4",
+    title: "Repeat",
+    desc: "Do it again with better instincts. Move from hobbyist to engineer through iteration and peer review.",
   },
 ];
 
@@ -79,17 +79,18 @@ export default function WhatWeProvide() {
               transition={{ duration: 0.6, delay: i * 0.07, ease: EASE }}
               className="group rounded-[30px] bg-card p-2.5 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-black/[0.05] transition-transform duration-300 hover:-translate-y-1 dark:bg-[#1b1915] dark:shadow-[0_14px_0_rgba(0,0,0,0.24),0_22px_42px_rgba(0,0,0,0.38)] dark:ring-white/[0.08]"
             >
-              <div className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-[24px] border border-black/[0.04] bg-muted/60 p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/[0.08] dark:bg-[#211f1a] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+              <div className="relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-[24px] border border-black/[0.04] bg-muted/60 p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/[0.08] dark:bg-[#211f1a] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
 
-                {/* number */}
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/30 dark:text-foreground/36">
-                    {card.number}
-                  </span>
-                </div>
+                {/* big watermark number in empty space */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 top-10 select-none text-center font-heading text-[120px] font-bold leading-none text-foreground/[0.04] dark:text-white/[0.05]"
+                >
+                  {card.number}
+                </span>
 
                 {/* title + desc */}
-                <div className="mt-auto pt-10">
+                <div className="relative z-10 mt-auto pt-10">
                   <h3 className="font-heading text-[20px] font-semibold leading-tight text-foreground">
                     {card.title}
                   </h3>
