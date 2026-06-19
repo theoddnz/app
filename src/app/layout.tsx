@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Phudu } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -138,6 +139,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
           </FooterGate>
         </ThemeProvider>
+        {process.env.NEXT_PUBLIC_CF_BEACON_TOKEN && (
+          <Script
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            strategy="afterInteractive"
+            data-cf-beacon={`{"token": "${process.env.NEXT_PUBLIC_CF_BEACON_TOKEN}"}`}
+          />
+        )}
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/lib/seo";
+import { getSiteViews, formatViews } from "@/lib/analytics";
 
 function InstagramIcon({ className = "" }: { className?: string }) {
   return (
@@ -87,7 +88,8 @@ function SocialButton({ label, href, icon: Icon }: { label: string; href: string
   );
 }
 
-export default function Footer() {
+export default async function Footer() {
+  const views = await getSiteViews();
   return (
     <div className="bg-background   pt-16 dark:bg-[#0a0806] md:px-1">
       <div className="mx-auto max-w-6xl">
@@ -174,6 +176,14 @@ export default function Footer() {
                 <p className="font-inter text-[12px] font-light tracking-[0.04em] text-black/35 dark:text-white/30">
                   © 2026 The<span className="text-secondary">Odd</span>Ones
                 </p>
+
+                {views !== null && (
+                  <p className="flex items-center gap-1.5 font-inter text-[12px] font-light tracking-[0.04em] text-black/35 dark:text-white/30">
+                    <span className="inline-block size-1.5 rounded-full bg-secondary" aria-hidden="true" />
+                    <span className="font-medium text-black/55 dark:text-white/45 tabular-nums">{formatViews(views)}</span>
+                    <span>views</span>
+                  </p>
+                )}
 
                 <div className="flex items-center gap-2">
                   {socialLinks.slice(0, 2).map((s) => (
