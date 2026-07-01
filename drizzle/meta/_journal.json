@@ -43,6 +43,13 @@
       "when": 1779202941652,
       "tag": "0005_student_path_selections",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1782922847406,
+      "tag": "0006_bored_bloodaxe",
+      "breakpoints": true
     }
   ]
 }

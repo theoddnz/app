@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "@/components/ui/tabler-icons";
 import { ShareButton } from "@/components/blog/ShareButton";
 import { AuthorCard } from "@/components/blog/AuthorCard";
-import { POSTS, getPost, type Block } from "@/lib/blog-data";
+import { MarkdownPreview } from "@/components/blog/MarkdownPreview";
+import type { Block } from "@/lib/blog-data";
+import { getPublicBlogPost, getPublicBlogPosts } from "@/lib/public-blogs";
 
-export function generateStaticParams() {
-  return POSTS.map((post) => ({ slug: post.slug }));
-}
+export const dynamic = "force-dynamic";
 
 function renderBlock(block: Block, index: number) {
   switch (block.type) {
@@ -83,13 +83,13 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPublicBlogPost(slug);
 
   if (!post) {
     notFound();
   }
 
-  const more = POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const more = (await getPublicBlogPosts()).filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
     <main className="min-h-screen bg-background px-5 pt-28 pb-24 text-foreground font-space sm:px-6 sm:pt-32">
@@ -121,22 +121,31 @@ export default async function BlogPostPage({
 
         <div className="mt-8 flex items-center gap-3 border-b border-border pb-8">
           <AuthorCard name={post.author} />
+          <div className="min-w-0">
+            <p className="truncate text-xs text-foreground/45">{post.role}</p>
+          </div>
           <div className="ml-auto">
             <ShareButton title={post.title} />
           </div>
         </div>
 
-        {/* Cover */}
-        <div
-          className={`mt-8 flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-border bg-linear-to-br sm:mt-10 ${post.gradient}`}
-        >
-          <span className="px-6 text-center font-heading text-2xl font-bold leading-tight text-white/90 sm:px-8 sm:text-3xl lg:text-4xl">
-            {post.title}
-          </span>
-        </div>
+        {post.thumbnailUrl ? (
+          <div className="mt-8 aspect-video overflow-hidden rounded-2xl border border-border bg-muted sm:mt-10">
+            <img src={post.thumbnailUrl} alt="" className="size-full object-cover" />
+          </div>
+        ) : (
+          <div
+            className={`mt-8 flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-border bg-linear-to-br sm:mt-10 ${post.gradient}`}
+          >
+            <span className="px-6 text-center font-heading text-2xl font-bold leading-tight text-white/90 sm:px-8 sm:text-3xl lg:text-4xl">
+              {post.title}
+            </span>
+          </div>
+        )}
 
-        {/* Body */}
-        <div className="mt-10 sm:mt-12">{post.body.map(renderBlock)}</div>
+        <div className="mt-10 sm:mt-12">
+          {post.content ? <MarkdownPreview content={post.content} empty="" /> : post.body?.map(renderBlock)}
+        </div>
       </article>
 
       {/* More posts */}

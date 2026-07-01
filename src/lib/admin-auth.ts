@@ -54,7 +54,7 @@ export async function getAppSession(): Promise<AppSession | null> {
     if (
       typeof userId !== "string" ||
       typeof email !== "string" ||
-      (role !== "admin" && role !== "student") ||
+      (role !== "admin" && role !== "student" && role !== "author") ||
       !expiresAt
     ) {
       return null;
@@ -90,6 +90,28 @@ export async function requireStudentSession() {
 
   if (session.role === "admin") {
     redirect("/dashboard");
+  }
+
+  if (session.role === "author") {
+    redirect("/author/dashboard");
+  }
+
+  return session;
+}
+
+export async function requireAuthorSession() {
+  const session = await getAppSession();
+
+  if (!session) {
+    redirect("/users/login");
+  }
+
+  if (session.role === "admin") {
+    redirect("/dashboard");
+  }
+
+  if (session.role !== "author") {
+    redirect("/learn");
   }
 
   return session;

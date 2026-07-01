@@ -2,7 +2,7 @@ import type { InferSelectModel } from "drizzle-orm";
 
 import type { blogPosts, learningPaths, lessons, userPathSelections, users } from "@/db/schema";
 
-export type UserRole = "admin" | "student";
+export type UserRole = "admin" | "student" | "author";
 
 export type AppSession = {
   userId: string;

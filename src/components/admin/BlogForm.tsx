@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useActionState } from "react";
-import { Bold, Eye, Heading2, ImageUp, Italic, LinkIcon, Loader2, Plus } from "@/components/ui/tabler-icons";
+import { Bold, Eye, Heading2, ImageUp, Italic, LinkIcon, Loader2, Plus, Save } from "@/components/ui/tabler-icons";
 
 import { createBlogPostAction } from "@/app/admin-actions";
 import { MarkdownPreview } from "@/components/blog/MarkdownPreview";
@@ -16,10 +16,37 @@ const initialState: ActionState = {
   message: "",
 };
 
-export function BlogForm({ paths }: { paths: Pick<LearningPath, "id" | "name">[] }) {
-  const [state, action, pending] = useActionState(createBlogPostAction, initialState);
-  const [content, setContent] = React.useState("");
-  const [thumbnailUrl, setThumbnailUrl] = React.useState("");
+type BlogFormProps = {
+  paths: Pick<LearningPath, "id" | "name">[];
+  action?: (
+    state: ActionState,
+    formData: FormData,
+  ) => Promise<ActionState>;
+  initialValues?: {
+    id?: string;
+    pathId?: string;
+    title?: string;
+    slug?: string;
+    excerpt?: string;
+    content?: string;
+    thumbnailUrl?: string;
+  };
+  heading?: string;
+  description?: string;
+  submitLabel?: string;
+};
+
+export function BlogForm({
+  paths,
+  action: createAction = createBlogPostAction,
+  initialValues,
+  heading = "Add blog",
+  description = "Write in MDX-style markdown, preview it, and attach it to a path.",
+  submitLabel = "Create blog",
+}: BlogFormProps) {
+  const [state, action, pending] = useActionState(createAction, initialState);
+  const [content, setContent] = React.useState(initialValues?.content ?? "");
+  const [thumbnailUrl, setThumbnailUrl] = React.useState(initialValues?.thumbnailUrl ?? "");
   const [uploading, setUploading] = React.useState(false);
   const [uploadError, setUploadError] = React.useState("");
   const editorRef = React.useRef<HTMLTextAreaElement>(null);
@@ -75,9 +102,11 @@ export function BlogForm({ paths }: { paths: Pick<LearningPath, "id" | "name">[]
 
   return (
     <form action={action} className="space-y-5 rounded-lg border border-border bg-card p-5">
+      {initialValues?.id ? <input type="hidden" name="id" value={initialValues.id} /> : null}
+
       <div>
-        <h2 className="text-lg font-semibold">Add blog</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Write in MDX-style markdown, preview it, and attach it to a path.</p>
+        <h2 className="text-lg font-semibold">{heading}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -89,6 +118,7 @@ export function BlogForm({ paths }: { paths: Pick<LearningPath, "id" | "name">[]
             required
             className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             disabled={paths.length === 0}
+            defaultValue={initialValues?.pathId ?? ""}
           >
             <option value="">Choose path</option>
             {paths.map((path) => (
@@ -101,18 +131,18 @@ export function BlogForm({ paths }: { paths: Pick<LearningPath, "id" | "name">[]
 
         <div className="space-y-2">
           <Label htmlFor="title">Blog name</Label>
-          <Input id="title" name="title" required placeholder="How builders learn faster" className="h-10" />
+          <Input id="title" name="title" required defaultValue={initialValues?.title} placeholder="How builders learn faster" className="h-10" />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="slug">Blog slug</Label>
-          <Input id="slug" name="slug" placeholder="how-builders-learn-faster" className="h-10" />
+          <Input id="slug" name="slug" defaultValue={initialValues?.slug} placeholder="how-builders-learn-faster" className="h-10" />
         </div>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="excerpt">Small description</Label>
-        <Input id="excerpt" name="excerpt" placeholder="A short summary shown in blog cards." className="h-10" />
+        <Input id="excerpt" name="excerpt" defaultValue={initialValues?.excerpt} placeholder="A short summary shown in blog cards." className="h-10" />
       </div>
 
       <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
@@ -186,8 +216,8 @@ export function BlogForm({ paths }: { paths: Pick<LearningPath, "id" | "name">[]
       ) : null}
 
       <Button type="submit" disabled={pending || uploading || paths.length === 0} className="h-10">
-        {pending ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
-        Create blog
+        {pending ? <Loader2 className="size-4 animate-spin" /> : initialValues?.id ? <Save className="size-4" /> : <Plus className="size-4" />}
+        {submitLabel}
       </Button>
     </form>
   );

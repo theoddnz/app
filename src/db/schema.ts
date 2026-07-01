@@ -18,6 +18,7 @@ export const users = pgTable(
     email: varchar("email", { length: 255 }).notNull().unique(),
     passwordHash: text("password_hash"),
     role: varchar("role", { length: 24 }).notNull().default("student"),
+    profileRole: varchar("profile_role", { length: 120 }).notNull().default(""),
     authProvider: varchar("auth_provider", { length: 32 }).notNull().default("password"),
     providerAccountId: varchar("provider_account_id", { length: 120 }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -82,6 +83,7 @@ export const blogPosts = pgTable(
     pathId: uuid("path_id")
       .notNull()
       .references(() => learningPaths.id, { onDelete: "cascade" }),
+    authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
     title: varchar("title", { length: 220 }).notNull(),
     slug: varchar("slug", { length: 240 }).notNull().unique(),
     excerpt: text("excerpt").notNull().default(""),
@@ -92,6 +94,7 @@ export const blogPosts = pgTable(
   },
   (table) => [
     index("blog_posts_path_id_idx").on(table.pathId),
+    index("blog_posts_author_id_idx").on(table.authorId),
     index("blog_posts_slug_idx").on(table.slug),
     index("blog_posts_created_at_idx").on(table.createdAt),
     index("blog_posts_path_created_at_idx").on(table.pathId, table.createdAt),

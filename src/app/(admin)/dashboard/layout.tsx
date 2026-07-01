@@ -10,6 +10,7 @@ const navItems = [
   { href: "/dashboard/paths", label: "Paths", icon: Route },
   { href: "/dashboard/lessons", label: "Lessons", icon: BookOpen },
   { href: "/dashboard/blogs", label: "Blogs", icon: FileText },
+  { href: "/dashboard/authors", label: "Authors", icon: Users },
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {

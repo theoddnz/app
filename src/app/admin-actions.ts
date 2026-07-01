@@ -1,12 +1,12 @@
 "use server";
 
-import { eq, like } from "drizzle-orm";
+import { and, eq, like } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { getDb } from "@/db";
 import { blogPosts, learningPaths, lessons, userPathSelections, users } from "@/db/schema";
-import { clearAppSession, createAppSession, getAppSession, requireAdminSession, requireStudentSession } from "@/lib/admin-auth";
+import { clearAppSession, createAppSession, getAppSession, requireAdminSession, requireAuthorSession, requireStudentSession } from "@/lib/admin-auth";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import type { ActionState } from "@/types/admin";
 
@@ -57,6 +57,28 @@ async function uniqueBlogSlug(input: string) {
   return nextAvailableSlug(baseSlug, existingRows.map((row) => row.slug));
 }
 
+async function uniqueBlogSlugForUpdate(input: string, currentSlug: string) {
+  const baseSlug = slugify(input);
+
+  if (!baseSlug) {
+    return "";
+  }
+
+  if (baseSlug === currentSlug) {
+    return currentSlug;
+  }
+
+  const existingRows = await getDb()
+    .select({ slug: blogPosts.slug })
+    .from(blogPosts)
+    .where(like(blogPosts.slug, `${baseSlug}%`));
+
+  return nextAvailableSlug(
+    baseSlug,
+    existingRows.map((row) => row.slug).filter((slug) => slug !== currentSlug),
+  );
+}
+
 function nextAvailableSlug(baseSlug: string, existing: string[]) {
   const existingSlugs = new Set(existing);
   if (!existingSlugs.has(baseSlug)) {
@@ -89,10 +111,15 @@ export async function loginAction(state: ActionState = initialState, formData: F
     return { ok: false, message: "Invalid email or password." };
   }
 
-  await createAppSession({ id: user.id, email: user.email, role: user.role === "admin" ? "admin" : "student" });
+  const role = user.role === "admin" || user.role === "author" ? user.role : "student";
+  await createAppSession({ id: user.id, email: user.email, role });
 
   if (user.role === "admin") {
     redirect("/dashboard");
+  }
+
+  if (user.role === "author") {
+    redirect("/author/dashboard");
   }
 
   const selection = await getDb().query.userPathSelections.findFirst({
@@ -398,6 +425,7 @@ export async function createBlogPostAction(
   try {
     await getDb().insert(blogPosts).values({
       pathId,
+      authorId: null,
       title,
       slug,
       excerpt,
@@ -414,6 +442,140 @@ export async function createBlogPostAction(
   return { ok: true, message: `Blog created at /blogs/${slug}.` };
 }
 
+export async function createAuthorBlogPostAction(
+  state: ActionState = initialState,
+  formData: FormData,
+) {
+  void state;
+  const session = await requireAuthorSession();
+
+  const pathId = value(formData, "pathId");
+  const title = value(formData, "title");
+  const requestedSlug = value(formData, "slug");
+  const excerpt = value(formData, "excerpt");
+  const content = String(formData.get("content") ?? "").trim();
+  const thumbnailUrl = value(formData, "thumbnailUrl");
+  const slug = await uniqueBlogSlug(requestedSlug || title);
+
+  if (!pathId || !title || !slug) {
+    return { ok: false, message: "Path, title, and slug are required." };
+  }
+
+  if (!content) {
+    return { ok: false, message: "Blog content is required." };
+  }
+
+  try {
+    await getDb().insert(blogPosts).values({
+      pathId,
+      authorId: session.userId,
+      title,
+      slug,
+      excerpt,
+      content,
+      thumbnailUrl,
+    });
+  } catch {
+    return { ok: false, message: "Could not create the blog post." };
+  }
+
+  revalidatePath("/author/dashboard");
+  revalidatePath("/blogs");
+  revalidatePath(`/blogs/${slug}`);
+  return { ok: true, message: `Blog created at /blogs/${slug}.` };
+}
+
+export async function updateAuthorBlogPostAction(
+  state: ActionState = initialState,
+  formData: FormData,
+) {
+  void state;
+  const session = await requireAuthorSession();
+
+  const id = value(formData, "id");
+  const pathId = value(formData, "pathId");
+  const title = value(formData, "title");
+  const requestedSlug = value(formData, "slug");
+  const excerpt = value(formData, "excerpt");
+  const content = String(formData.get("content") ?? "").trim();
+  const thumbnailUrl = value(formData, "thumbnailUrl");
+
+  if (!id || !pathId || !title) {
+    return { ok: false, message: "Blog, path, and title are required." };
+  }
+
+  if (!content) {
+    return { ok: false, message: "Blog content is required." };
+  }
+
+  const existing = await getDb().query.blogPosts.findFirst({
+    where: and(eq(blogPosts.id, id), eq(blogPosts.authorId, session.userId)),
+  });
+
+  if (!existing) {
+    return { ok: false, message: "Blog not found." };
+  }
+
+  const slug = await uniqueBlogSlugForUpdate(requestedSlug || title, existing.slug);
+
+  if (!slug) {
+    return { ok: false, message: "A valid slug is required." };
+  }
+
+  try {
+    await getDb()
+      .update(blogPosts)
+      .set({
+        pathId,
+        title,
+        slug,
+        excerpt,
+        content,
+        thumbnailUrl,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(blogPosts.id, id), eq(blogPosts.authorId, session.userId)));
+  } catch {
+    return { ok: false, message: "Could not update the blog post." };
+  }
+
+  revalidatePath("/author/dashboard");
+  revalidatePath(`/author/dashboard/blogs/${id}/edit`);
+  revalidatePath("/blogs");
+  revalidatePath(`/blogs/${existing.slug}`);
+  revalidatePath(`/blogs/${slug}`);
+  return { ok: true, message: `Blog updated at /blogs/${slug}.` };
+}
+
+export async function deleteAuthorBlogPostAction(formData: FormData) {
+  const session = await requireAuthorSession();
+
+  const id = value(formData, "id");
+
+  if (!id) {
+    return;
+  }
+
+  const existing = await getDb().query.blogPosts.findFirst({
+    where: and(eq(blogPosts.id, id), eq(blogPosts.authorId, session.userId)),
+    columns: {
+      slug: true,
+    },
+  });
+
+  if (!existing) {
+    return;
+  }
+
+  await getDb()
+    .delete(blogPosts)
+    .where(and(eq(blogPosts.id, id), eq(blogPosts.authorId, session.userId)));
+
+  revalidatePath("/author/dashboard");
+  revalidatePath("/blogs");
+  revalidatePath(`/blogs/${existing.slug}`);
+}
+
 export async function deleteBlogPostAction(formData: FormData) {
   await requireAdminSession();
 
@@ -426,5 +588,55 @@ export async function deleteBlogPostAction(formData: FormData) {
   await getDb().delete(blogPosts).where(eq(blogPosts.id, id));
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/blogs");
+  revalidatePath("/blogs");
+}
+
+export async function createAuthorProfileAction(
+  state: ActionState = initialState,
+  formData: FormData,
+) {
+  void state;
+  await requireAdminSession();
+
+  const name = value(formData, "name");
+  const profileRole = value(formData, "profileRole");
+  const email = value(formData, "email").toLowerCase();
+  const password = value(formData, "password");
+
+  if (!name || !profileRole || !email || password.length < 8) {
+    return { ok: false, message: "Name, role, email, and an 8 character password are required." };
+  }
+
+  try {
+    await getDb().insert(users).values({
+      name,
+      email,
+      profileRole,
+      passwordHash: await hashPassword(password),
+      role: "author",
+    });
+  } catch (error) {
+    const message = error instanceof Error && error.message.includes("duplicate")
+      ? "An account with that email already exists."
+      : "Could not create author profile.";
+
+    return { ok: false, message };
+  }
+
+  revalidatePath("/dashboard/authors");
+  return { ok: true, message: "Author profile created." };
+}
+
+export async function deleteAuthorProfileAction(formData: FormData) {
+  await requireAdminSession();
+
+  const id = value(formData, "id");
+
+  if (!id) {
+    return;
+  }
+
+  await getDb().delete(users).where(eq(users.id, id));
+  revalidatePath("/dashboard/authors");
   revalidatePath("/blogs");
 }
