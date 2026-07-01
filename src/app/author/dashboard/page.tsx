@@ -2,7 +2,8 @@ import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { ExternalLink, LogOut, PenLine, Trash2 } from "@/components/ui/tabler-icons";
 
-import { createAuthorBlogPostAction, deleteAuthorBlogPostAction, logoutAction } from "@/app/admin-actions";
+import { createAuthorBlogPostAction, deleteAuthorBlogPostAction, logoutAction, updateOwnAuthorProfileAction } from "@/app/admin-actions";
+import { AuthorProfileForm } from "@/components/admin/AuthorProfileForm";
 import { BlogForm } from "@/components/admin/BlogForm";
 import { Button } from "@/components/ui/button";
 import { getDb } from "@/db";
@@ -18,7 +19,9 @@ export default async function AuthorDashboardPage() {
     getDb().query.users.findFirst({
       where: eq(users.id, session.userId),
       columns: {
+        id: true,
         name: true,
+        email: true,
         profileRole: true,
       },
     }),
@@ -64,6 +67,21 @@ export default async function AuthorDashboardPage() {
             </Button>
           </form>
         </header>
+
+        {author ? (
+          <AuthorProfileForm
+            action={updateOwnAuthorProfileAction}
+            initialValues={{
+              id: author.id,
+              name: author.name,
+              email: author.email,
+              profileRole: author.profileRole,
+            }}
+            heading="Your profile"
+            description="Update the name, role, email, and optional password shown on your public blog profile."
+            submitLabel="Save profile"
+          />
+        ) : null}
 
         <BlogForm
           paths={paths}

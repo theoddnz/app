@@ -1,5 +1,6 @@
 import { desc, eq } from "drizzle-orm";
-import { Trash2 } from "@/components/ui/tabler-icons";
+import Link from "next/link";
+import { PenLine, Trash2 } from "@/components/ui/tabler-icons";
 
 import { deleteAuthorProfileAction } from "@/app/admin-actions";
 import { AdminHeader } from "@/components/admin/AdminHeader";
@@ -58,12 +59,22 @@ export default async function AuthorsAdminPage() {
                     <p className="mt-1 text-sm text-muted-foreground">{author.email}</p>
                   </div>
 
-                  <form action={deleteAuthorProfileAction}>
-                    <input type="hidden" name="id" value={author.id} />
-                    <Button type="submit" variant="destructive" size="icon" aria-label={`Delete ${author.name}`}>
-                      <Trash2 className="size-4" />
+                  <div className="flex flex-wrap gap-2">
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/dashboard/authors/${author.id}/edit`}>
+                        <PenLine className="size-4" />
+                        Edit
+                      </Link>
                     </Button>
-                  </form>
+
+                    <form action={deleteAuthorProfileAction}>
+                      <input type="hidden" name="id" value={author.id} />
+                      <Button type="submit" variant="destructive" size="sm">
+                        <Trash2 className="size-4" />
+                        Delete
+                      </Button>
+                    </form>
+                  </div>
                 </div>
               ))}
             </div>

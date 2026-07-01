@@ -627,6 +627,122 @@ export async function createAuthorProfileAction(
   return { ok: true, message: "Author profile created." };
 }
 
+export async function updateAuthorProfileByAdminAction(
+  state: ActionState = initialState,
+  formData: FormData,
+) {
+  void state;
+  await requireAdminSession();
+
+  const id = value(formData, "id");
+  const name = value(formData, "name");
+  const profileRole = value(formData, "profileRole");
+  const email = value(formData, "email").toLowerCase();
+  const password = value(formData, "password");
+
+  if (!id || !name || !profileRole || !email) {
+    return { ok: false, message: "Name, role, and email are required." };
+  }
+
+  if (password && password.length < 8) {
+    return { ok: false, message: "New password must be at least 8 characters." };
+  }
+
+  const updates: {
+    name: string;
+    profileRole: string;
+    email: string;
+    passwordHash?: string;
+    updatedAt: Date;
+  } = {
+    name,
+    profileRole,
+    email,
+    updatedAt: new Date(),
+  };
+
+  if (password) {
+    updates.passwordHash = await hashPassword(password);
+  }
+
+  try {
+    await getDb()
+      .update(users)
+      .set(updates)
+      .where(and(eq(users.id, id), eq(users.role, "author")));
+  } catch (error) {
+    const message = error instanceof Error && error.message.includes("duplicate")
+      ? "An account with that email already exists."
+      : "Could not update author profile.";
+
+    return { ok: false, message };
+  }
+
+  revalidatePath("/dashboard/authors");
+  revalidatePath(`/dashboard/authors/${id}/edit`);
+  revalidatePath("/blogs");
+  return { ok: true, message: "Author profile updated." };
+}
+
+export async function updateOwnAuthorProfileAction(
+  state: ActionState = initialState,
+  formData: FormData,
+) {
+  void state;
+  const session = await requireAuthorSession();
+
+  const name = value(formData, "name");
+  const profileRole = value(formData, "profileRole");
+  const email = value(formData, "email").toLowerCase();
+  const password = value(formData, "password");
+
+  if (!name || !profileRole || !email) {
+    return { ok: false, message: "Name, role, and email are required." };
+  }
+
+  if (password && password.length < 8) {
+    return { ok: false, message: "New password must be at least 8 characters." };
+  }
+
+  const updates: {
+    name: string;
+    profileRole: string;
+    email: string;
+    passwordHash?: string;
+    updatedAt: Date;
+  } = {
+    name,
+    profileRole,
+    email,
+    updatedAt: new Date(),
+  };
+
+  if (password) {
+    updates.passwordHash = await hashPassword(password);
+  }
+
+  try {
+    await getDb()
+      .update(users)
+      .set(updates)
+      .where(and(eq(users.id, session.userId), eq(users.role, "author")));
+  } catch (error) {
+    const message = error instanceof Error && error.message.includes("duplicate")
+      ? "An account with that email already exists."
+      : "Could not update your profile.";
+
+    return { ok: false, message };
+  }
+
+  if (email !== session.email) {
+    await createAppSession({ id: session.userId, email, role: "author" });
+  }
+
+  revalidatePath("/author/dashboard");
+  revalidatePath("/blogs");
+  return { ok: true, message: "Profile updated." };
+}
+
 export async function deleteAuthorProfileAction(formData: FormData) {
   await requireAdminSession();
 
