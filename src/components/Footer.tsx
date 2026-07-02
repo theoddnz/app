@@ -63,6 +63,10 @@ const communityLinks = [
   { label: "Discord",    href: siteConfig.social.discord ?? "#" },
 ];
 
+const legalLinks = [
+  { label: "Privacy policy", href: "/privacy-policy" },
+];
+
 function SocialButton({ label, href, icon: Icon }: { label: string; href: string; icon: React.ComponentType<{ className?: string }> | null }) {
   return (
     <Link
@@ -70,112 +74,103 @@ function SocialButton({ label, href, icon: Icon }: { label: string; href: string
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`TheOddOnes on ${label}`}
-      className="inline-flex size-10 items-center justify-center rounded-[10px] border border-black/10 text-black/45 transition-colors hover:border-black/25 hover:text-black dark:border-white/[0.10] dark:text-white/40 dark:hover:border-white/25 dark:hover:text-[#f0ebe5]"
+      className="inline-flex size-10 items-center justify-center rounded-md border border-black/[0.08] bg-white/55 text-black/45 transition-colors hover:border-black/20 hover:text-black dark:border-white/[0.10] dark:bg-white/[0.03] dark:text-white/40 dark:hover:border-white/25 dark:hover:text-[#f0ebe5] sm:size-11"
     >
       {Icon ? (
         <Icon className="size-[18px]" />
       ) : (
-        <span className="font-space text-[14px] font-bold leading-none">X</span>
+        <span className="font-heading text-[14px] font-semibold leading-none tracking-[0.08em]">X</span>
       )}
     </Link>
   );
 }
 
-function formatOrdinal(value: number) {
-  const remainder = value % 100;
-  const suffix = remainder >= 11 && remainder <= 13
-    ? "th"
-    : value % 10 === 1
-      ? "st"
-      : value % 10 === 2
-        ? "nd"
-        : value % 10 === 3
-          ? "rd"
-          : "th";
-
-  return `${value.toLocaleString("en-US")}${suffix}`;
+function FooterColumn({ title, links }: { title: string; links: Array<{ label: string; href: string }> }) {
+  return (
+    <div className="border-t border-dashed border-black/[0.08] px-6 py-7 dark:border-white/[0.08] sm:px-8 sm:py-8 lg:border-l lg:border-t-0">
+      <p className="font-heading text-[13px] uppercase tracking-[0.18em] text-primary sm:tracking-[0.22em]">
+        {title}
+      </p>
+      <ul className="mt-5 space-y-3 sm:mt-6 sm:space-y-4">
+        {links.map((link) => (
+          <li key={link.label}>
+            <Link
+              href={link.href}
+              className="font-space text-[14px] font-medium text-black/50 transition-colors hover:text-black dark:text-white/45 dark:hover:text-[#f0ebe5] sm:text-[15px]"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default async function Footer() {
   const views = await getSiteViews();
+  const currentYear = new Date().getFullYear();
 
   return (
-    <div className="bg-background px-3 pt-16 dark:bg-[#0a0806] sm:px-5 md:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="rounded-t-[32px] bg-white p-2 shadow-[0_-4px_0_rgba(13,38,58,0.04),0_-12px_40px_rgba(13,38,58,0.10)] ring-1 ring-black/[0.05] dark:bg-neutral-900 dark:shadow-[0_-4px_0_rgba(0,0,0,0.2),0_-12px_40px_rgba(0,0,0,0.3)] dark:ring-white/[0.04] sm:p-3">
-          <footer className="rounded-t-[24px] border border-b-0 border-black/[0.04] bg-[#f8f7f5] px-5 pb-6 pt-10 text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] dark:border-white/[0.04] dark:bg-neutral-950 dark:text-[#f0ebe5] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:px-8 sm:pt-12 lg:px-12">
-            <div className="grid gap-10 pb-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.8fr)_1fr_1fr] lg:gap-16 lg:pb-12">
-              <div className="sm:col-span-2 lg:col-span-1">
-                <Link href="/" aria-label="TheOddOnes home" className="inline-flex items-center gap-3">
-                  <Image src="/assets/theoddones-white-logo.png" alt="" width={48} height={48} className="size-12 object-contain dark:hidden" />
-                  <Image src="/assets/theoddones-black-logo.png" alt="" width={48} height={48} className="hidden size-12 object-contain dark:block" />
-                  <span className="font-space text-xl font-bold tracking-[-0.03em]">
-                    The<span className="text-secondary">Odd</span>Ones
-                  </span>
-                </Link>
-                <p className="mt-5 max-w-sm font-heading text-base leading-7 text-black/50 dark:text-white/40">
-                  A place for people who think differently about learning.
-                </p>
-                <div className="mt-7 flex flex-wrap gap-2">
-                  {socialLinks.map((social) => (
-                    <SocialButton key={social.label} {...social} />
-                  ))}
-                </div>
-              </div>
+    <footer className="w-full bg-[#f8f7f5] pt-16 text-black dark:bg-[#0a0806] dark:text-[#f0ebe5]">
+      <div className="w-full sm:mx-auto sm:max-w-7xl sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 border-y border-dashed border-black/[0.08] dark:border-white/[0.08] lg:grid-cols-[1.65fr_0.85fr_0.85fr_0.85fr]">
+          <div className="col-span-2 px-6 py-8 sm:px-8 lg:col-span-1 lg:py-10">
+            <Link href="/" aria-label="TheOddOnes home" className="inline-flex items-center gap-1">
+              <Image src="/assets/theoddones-white-logo.png" alt="" width={40} height={40} className="size-10 object-contain dark:hidden" />
+              <Image src="/assets/theoddones-black-logo.png" alt="" width={40} height={40} className="hidden size-10 object-contain dark:block" />
+              <span className="font-space text-sm">
+                The<span className="text-secondary">Odd</span>Ones
+              </span>
+            </Link>
 
-              <div>
-                <p className="font-space text-[11px] uppercase tracking-[0.18em] text-black/30 dark:text-white/25">
-                  Explore
-                </p>
-                <ul className="mt-5 space-y-3">
-                  {exploreLinks.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="font-heading text-[15px] font-medium text-black/55 transition-colors hover:text-black dark:text-white/45 dark:hover:text-[#f0ebe5]"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <p className="mt-8 max-w-sm font-space text-[15px] leading-7 text-black/50 dark:text-white/45">
+              A place for people who think differently about learning.
+            </p>
 
-              <div>
-                <p className="font-space text-[11px] uppercase tracking-[0.18em] text-black/30 dark:text-white/25">
-                  Community
-                </p>
-                <ul className="mt-5 space-y-3">
-                  {communityLinks.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="font-heading text-[15px] font-medium text-black/55 transition-colors hover:text-black dark:text-white/45 dark:hover:text-[#f0ebe5]"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
+            <div className="mt-7 flex flex-wrap gap-3">
+              {socialLinks.map((social) => (
+                <SocialButton key={social.label} {...social} />
+              ))}
             </div>
 
-            <div className="flex flex-col gap-5 border-t border-black/[0.08] pt-6 dark:border-white/[0.06] sm:flex-row sm:items-center sm:justify-between">
-              <p className="font-inter text-xs tracking-[0.03em] text-black/35 dark:text-white/30">
-                © 2026 The<span className="text-secondary">Odd</span>Ones
-              </p>
-
-              {views !== null && (
-                <p className="font-inter text-xs text-black/50 dark:text-white/45">
-                  You’re the <span className="font-semibold tabular-nums text-[#c4622d]">{formatOrdinal(views)}</span> visitor
-                  <span className="sr-only">, based on {formatViews(views)} recorded page views</span>
+            <div className="mt-7">
+              {views !== null ? (
+                <p className="inline-flex items-center rounded-full border border-black/[0.08] bg-white/55 px-4 py-2 font-space text-sm font-medium text-black/60 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-white/55">
+                  <span className="mr-2 size-2 rounded-full bg-emerald-500" aria-hidden="true" />
+                  {formatViews(views)} views
+                  <span className="sr-only">, based on {views.toLocaleString("en-US")} recorded page views</span>
+                </p>
+              ) : (
+                <p className="inline-flex items-center rounded-full border border-black/[0.08] bg-white/55 px-4 py-2 font-space text-sm font-medium text-black/45 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-white/35">
+                  <span className="mr-2 size-2 rounded-full bg-emerald-500" aria-hidden="true" />
+                  Views updating
                 </p>
               )}
             </div>
-          </footer>
+
+            <p className="mt-16 hidden font-space text-sm text-black/45 dark:text-white/35 lg:mt-20 lg:block">
+              Copyright {currentYear} TheOddOnes. All rights reserved.
+            </p>
+          </div>
+
+          <FooterColumn title="Explore" links={exploreLinks} />
+          <FooterColumn title="Community" links={communityLinks} />
+          <div className="sm:col-span-2 lg:col-span-1">
+            <FooterColumn title="Legal" links={legalLinks} />
+          </div>
         </div>
+
+        <div className="relative h-[96px] overflow-hidden border-b border-dashed border-black/[0.08] dark:border-white/[0.08] sm:h-[190px] lg:h-[240px]">
+          <p className="absolute left-1/2 top-2 -translate-x-1/2 select-none whitespace-nowrap font-heading text-[clamp(3.7rem,14vw,13rem)] font-bold leading-none text-black/[0.04] dark:text-white/[0.04] sm:top-0 sm:text-[clamp(4.8rem,15vw,13rem)] sm:text-black/[0.035]">
+            TheOddOnes
+          </p>
+        </div>
+
+        <p className="border-b border-dashed border-black/[0.08] px-6 py-5 font-space text-sm text-black/45 dark:border-white/[0.08] dark:text-white/35 lg:hidden">
+          Copyright {currentYear} TheOddOnes. All rights reserved.
+        </p>
       </div>
-    </div>
+    </footer>
   );
 }

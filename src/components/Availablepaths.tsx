@@ -8,7 +8,7 @@ const paths = [
     label: "Path 01",
     title: "Cursor",
     description:
-      "AI-native code editing. Move fast without breaking things — on purpose.",
+      "Code editing that helps you move fast without breaking things on purpose.",
     icon: ArrowBigDown,
     available: true,
   },

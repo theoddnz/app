@@ -165,6 +165,22 @@ section h2 {
   letter-spacing: 0;
 }
 
+section h1,
+section h2,
+section h3 {
+  text-wrap: balance;
+}
+
+button,
+button.font-space,
+button.font-inter,
+[data-slot="button"],
+[role="button"],
+.btn-3d-face {
+  font-family: var(--font-phudu), var(--font-sans), sans-serif;
+  letter-spacing: 0.02em;
+}
+
 @keyframes float-1 {
 
   0%,

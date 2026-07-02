@@ -8,22 +8,22 @@ const cards = [
   {
     number: "#1",
     title: "Build",
-    desc: "Start from zero. Learn electronics, sensors, and actuators by building circuits that actually move things.",
+    desc: "Wire sensors, motors, and boards until something moves.",
   },
   {
     number: "#2",
     title: "Break",
-    desc: "Ship imperfect builds, push them till they fail, and document exactly what went wrong and why.",
+    desc: "Push your build, find the failure, and write down what happened.",
   },
   {
     number: "#3",
     title: "Learn",
-    desc: "Turn every failure into instinct. Debug in public, ask sharper questions, and learn faster than working alone.",
+    desc: "Debug the issue, ask better questions, and fix one layer at a time.",
   },
   {
     number: "#4",
     title: "Repeat",
-    desc: "Do it again with better instincts. Move from hobbyist to engineer through iteration and peer review.",
+    desc: "Rebuild with better instincts and cleaner decisions.",
   },
 ];
 
@@ -51,8 +51,8 @@ export default function WhatWeProvide() {
             transition={{ duration: 0.7, delay: 0.05, ease: EASE }}
             className="mt-4 font-space text-3xl font-extrabold tracking-tight text-foreground/80 md:text-[42px] md:leading-[1.1]"
           >
-            From zero to robotics engineer -{" "}
-            <span className="text-[#c4622d]">by building the real thing.</span>
+            Learn robotics by{" "}
+            <span className="text-[#c4622d]">building real machines.</span>
           </motion.h2>
 
           <motion.p
@@ -62,9 +62,8 @@ export default function WhatWeProvide() {
             transition={{ duration: 0.7, delay: 0.08, ease: EASE }}
             className="mx-auto mt-6 max-w-2xl font-space text-[15px] leading-relaxed text-muted-foreground"
           >
-            Learn ROS2, simulation, navigation, robot architecture, and real-world
-            debugging through hands-on projects that mirror how robotics teams build
-            production systems.
+            Start with the basics, build working projects, and learn ROS2,
+            simulation, navigation, and debugging only when the build needs it.
           </motion.p>
         </div>
 
@@ -90,11 +89,11 @@ export default function WhatWeProvide() {
                 </span>
 
                 {/* title + desc */}
-                <div className="relative z-10 mt-auto pt-10">
-                  <h3 className="font-heading text-[20px] font-semibold leading-tight text-foreground">
+                <div className="relative z-10 mt-auto min-h-[116px] pt-2">
+                  <h3 className="font-heading text-[20px] font-semibold uppercase leading-tight tracking-[0.02em] text-foreground">
                     {card.title}
                   </h3>
-                  <p className="mt-3 font-space text-[13px] font-light leading-[1.7] text-foreground/50 dark:text-foreground/58">
+                  <p className="mt-3 font-space text-[14px] font-normal leading-[1.65] text-foreground/62 dark:text-foreground/70">
                     {card.desc}
                   </p>
                 </div>

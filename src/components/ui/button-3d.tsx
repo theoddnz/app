@@ -37,7 +37,7 @@ const Button3D = forwardRef<HTMLButtonElement, Button3DProps>(
           className={cn(
             "pointer-events-none relative z-10 w-full",
             "inline-flex items-center justify-center gap-2 rounded-full",
-            "font-space font-semibold tracking-[0.01em] text-[#fff4ed] select-none",
+            "font-heading font-semibold tracking-[0.02em] text-[#fff4ed] select-none",
             // responsive size
             "text-[13px] px-5 py-2 sm:text-[14px] sm:px-6 sm:py-2.5 md:text-[15px] md:px-7 md:py-3",
             // translate states
