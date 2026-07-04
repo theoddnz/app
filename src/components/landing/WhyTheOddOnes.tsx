@@ -126,7 +126,7 @@ function NoteLines() {
       </div>
 
       {/* lined paper body */}
-      <div className="relative flex-1 overflow-hidden rounded-b-[14px] bg-[#fdfcfb] dark:bg-[#0f0d0a]">
+      <div className="relative flex-1 overflow-hidden rounded-b-[14px] bg-[#fdfcfb] dark:bg-[#242424]">
         {/* red margin line */}
         <div className="absolute left-10 top-0 h-full w-px bg-red-300/40 dark:bg-red-900/40"/>
         {/* blue horizontal rules */}
@@ -201,7 +201,7 @@ function CommunityFeed() {
   }, [inView]);
 
   return (
-    <div ref={ref} className="mt-5 flex flex-1 flex-col justify-center gap-4 rounded-[18px] bg-card p-4 shadow-[0_8px_0_rgba(13,38,58,0.05),0_12px_22px_rgba(13,38,58,0.08)] ring-1 ring-border/30 dark:bg-[#1a1612] dark:ring-white/[0.05]">
+    <div ref={ref} className="mt-5 flex flex-1 flex-col justify-center gap-4 rounded-[18px] bg-card p-4 shadow-[0_8px_0_rgba(13,38,58,0.05),0_12px_22px_rgba(13,38,58,0.08)] ring-1 ring-border/30 dark:bg-[#181818] dark:ring-white/[0.05]">
       <AnimatePresence>
         {MESSAGES.map((m, i) => shown > i && (
           <motion.div
@@ -217,7 +217,7 @@ function CommunityFeed() {
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", stiffness: 500, damping: 20, delay: 0.08 }}
               className={`flex size-8 shrink-0 items-center justify-center rounded-full font-mono text-[9px] font-bold ${
-                m.side === "right" ? "bg-[#c4622d] text-white" : "bg-muted text-foreground/55 dark:bg-[#1a1612]"
+                m.side === "right" ? "bg-[#c4622d] text-white" : "bg-muted text-foreground/55 dark:bg-[#181818]"
               }`}
             >
               {m.initials}
@@ -228,7 +228,7 @@ function CommunityFeed() {
               className={`max-w-[82%] rounded-[18px] px-4 py-3 shadow-[0_4px_0_rgba(13,38,58,0.05),0_8px_20px_rgba(13,38,58,0.10)] ring-1 ring-border/20 dark:ring-white/[0.05] ${
                 m.side === "right"
                   ? "rounded-br-[4px] bg-[#c4622d] text-white"
-                  : "rounded-bl-[4px] bg-muted/60 text-foreground dark:bg-[#0f0d0b]"
+                  : "rounded-bl-[4px] bg-muted/60 text-foreground dark:bg-[#242424]"
               }`}
               whileHover={{ y: -2 }}
               transition={SPRING}
@@ -259,9 +259,9 @@ function Card({ children, className="", delay=0, fullWidth=false }:
       viewport={{ once: true, amount: 0.12 }}
       transition={{ duration: 0.65, delay, ease: EASE }}
       whileHover={{ y: -4 }}
-      className={`group rounded-[30px] bg-card p-3 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-border/40 dark:bg-[#1a1612] dark:shadow-[0_14px_0_rgba(0,0,0,0.2),0_22px_38px_rgba(0,0,0,0.3)] dark:ring-white/[0.04] ${fullWidth?"md:col-span-2":""} ${className}`}
+      className={`group rounded-[30px] bg-card p-3 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-border/40 dark:bg-[#181818] dark:shadow-[0_14px_0_rgba(0,0,0,0.2),0_22px_38px_rgba(0,0,0,0.3)] dark:ring-white/[0.04] ${fullWidth?"md:col-span-2":""} ${className}`}
     >
-      <div className="flex h-full min-h-[340px] flex-col overflow-hidden rounded-[22px] border border-border/30 bg-muted/40 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/[0.04] dark:bg-[#0f0d0b] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] md:p-8">
+      <div className="flex h-full min-h-[340px] flex-col overflow-hidden rounded-[22px] border border-border/30 bg-muted/40 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/[0.04] dark:bg-[#242424] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] md:p-8">
         {children}
       </div>
     </motion.div>
@@ -270,8 +270,8 @@ function Card({ children, className="", delay=0, fullWidth=false }:
 
 function IconBox({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-[14px] bg-card p-3 shadow-[0_6px_0_rgba(13,38,58,0.07),0_8px_18px_rgba(13,38,58,0.10)] ring-1 ring-border/30 dark:bg-[#1e1a16] dark:ring-white/[0.05]">
-      <div className="rounded-[10px] bg-muted/60 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] dark:bg-[#161310] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+    <div className="rounded-[14px] bg-card p-3 shadow-[0_6px_0_rgba(13,38,58,0.07),0_8px_18px_rgba(13,38,58,0.10)] ring-1 ring-border/30 dark:bg-[#181818] dark:ring-white/[0.05]">
+      <div className="rounded-[10px] bg-muted/60 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] dark:bg-[#242424] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
         {children}
       </div>
     </div>
@@ -280,7 +280,7 @@ function IconBox({ children }: { children: React.ReactNode }) {
 
 function Tag({ label }: { label: string }) {
   return (
-    <span className="rounded-full bg-card px-3 py-1 font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em] text-foreground/40 shadow-[0_2px_0_rgba(13,38,58,0.06),0_3px_8px_rgba(13,38,58,0.07)] ring-1 ring-border/30 dark:bg-[#1a1612] dark:ring-white/[0.05]">
+    <span className="rounded-full bg-card px-3 py-1 font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em] text-foreground/40 shadow-[0_2px_0_rgba(13,38,58,0.06),0_3px_8px_rgba(13,38,58,0.07)] ring-1 ring-border/30 dark:bg-[#181818] dark:ring-white/[0.05]">
       {label}
     </span>
   );
@@ -291,7 +291,7 @@ function Tag({ label }: { label: string }) {
 ───────────────────────────────────────── */
 export default function WhyTheOddOnes() {
   return (
-    <section className="bg-background px-2 py-20 md:px-10 md:py-28 dark:bg-[#0a0806]">
+    <section className="bg-background px-2 py-20 md:px-10 md:py-28 dark:bg-[#131313]">
       <div className="mx-auto max-w-6xl">
 
         {/* header */}
@@ -335,9 +335,9 @@ export default function WhyTheOddOnes() {
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.65, delay: 0, ease: EASE }}
             whileHover={{ y: -4 }}
-            className="group rounded-[30px] bg-card p-3 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-border/40 dark:bg-[#1a1612] dark:shadow-[0_14px_0_rgba(0,0,0,0.2),0_22px_38px_rgba(0,0,0,0.3)] dark:ring-white/[0.04] md:col-span-2"
+            className="group rounded-[30px] bg-card p-3 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-border/40 dark:bg-[#181818] dark:shadow-[0_14px_0_rgba(0,0,0,0.2),0_22px_38px_rgba(0,0,0,0.3)] dark:ring-white/[0.04] md:col-span-2"
           >
-            <div className="relative flex min-h-[300px] flex-col overflow-visible rounded-[22px] border border-border/30 bg-muted/40 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/[0.04] dark:bg-[#0f0d0b] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] md:flex-row md:items-stretch md:p-8">
+            <div className="relative flex min-h-[300px] flex-col overflow-visible rounded-[22px] border border-border/30 bg-muted/40 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/[0.04] dark:bg-[#242424] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] md:flex-row md:items-stretch md:p-8">
               <div className="flex flex-1 flex-col justify-between pr-0 md:pr-[220px]">
                 <div className="flex items-start justify-between">
                   <IconBox>

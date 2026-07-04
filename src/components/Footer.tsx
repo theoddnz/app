@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/lib/seo";
-import { getSiteViews, formatViews } from "@/lib/analytics";
+import { getSiteViews } from "@/lib/analytics";
+import { ViewCountBadge } from "@/components/ViewCountBadge";
 
 function InstagramIcon({ className = "" }: { className?: string }) {
   return (
@@ -60,7 +61,14 @@ const exploreLinks = [
 
 const communityLinks = [
   { label: "Community",  href: "/community" },
+  { label: "Sponsors",   href: "/sponsors" },
   { label: "Discord",    href: siteConfig.social.discord ?? "#" },
+];
+
+const importantLinks = [
+  { label: "Log in",      href: "/users/login" },
+  { label: "My learning", href: "/my-learning" },
+  { label: "Sitemap",     href: "/sitemap.xml" },
 ];
 
 const legalLinks = [
@@ -112,9 +120,9 @@ export default async function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#f8f7f5] pt-16 text-black dark:bg-[#0a0806] dark:text-[#f0ebe5]">
+    <footer className="w-full bg-[#f8f7f5] pt-16 text-black dark:bg-[#131313] dark:text-[#f0ebe5]">
       <div className="w-full sm:mx-auto sm:max-w-7xl sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 border-y border-dashed border-black/[0.08] dark:border-white/[0.08] lg:grid-cols-[1.65fr_0.85fr_0.85fr_0.85fr]">
+        <div className="grid grid-cols-2 border-y border-dashed border-black/[0.08] dark:border-white/[0.08] lg:grid-cols-[1.45fr_0.75fr_0.75fr_0.75fr_0.75fr]">
           <div className="col-span-2 px-6 py-8 sm:px-8 lg:col-span-1 lg:py-10">
             <Link href="/" aria-label="TheOddOnes home" className="inline-flex items-center gap-1">
               <Image src="/assets/theoddones-white-logo.png" alt="" width={40} height={40} className="size-10 object-contain dark:hidden" />
@@ -135,18 +143,7 @@ export default async function Footer() {
             </div>
 
             <div className="mt-7">
-              {views !== null ? (
-                <p className="inline-flex items-center rounded-full border border-black/[0.08] bg-white/55 px-4 py-2 font-space text-sm font-medium text-black/60 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-white/55">
-                  <span className="mr-2 size-2 rounded-full bg-emerald-500" aria-hidden="true" />
-                  {formatViews(views)} views
-                  <span className="sr-only">, based on {views.toLocaleString("en-US")} recorded page views</span>
-                </p>
-              ) : (
-                <p className="inline-flex items-center rounded-full border border-black/[0.08] bg-white/55 px-4 py-2 font-space text-sm font-medium text-black/45 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-white/35">
-                  <span className="mr-2 size-2 rounded-full bg-emerald-500" aria-hidden="true" />
-                  Views updating
-                </p>
-              )}
+              <ViewCountBadge views={views} />
             </div>
 
             <p className="mt-16 hidden font-space text-sm text-black/45 dark:text-white/35 lg:mt-20 lg:block">
@@ -156,6 +153,7 @@ export default async function Footer() {
 
           <FooterColumn title="Explore" links={exploreLinks} />
           <FooterColumn title="Community" links={communityLinks} />
+          <FooterColumn title="Important" links={importantLinks} />
           <div className="sm:col-span-2 lg:col-span-1">
             <FooterColumn title="Legal" links={legalLinks} />
           </div>

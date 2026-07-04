@@ -36,6 +36,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
   const profileRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
+  const hideNavbar = pathname === "/dashboard" || pathname.startsWith("/dashboard/");
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -63,6 +64,10 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
   }, []);
 
   const accountHref = session?.role === "admin" ? "/dashboard" : "/my-learning";
+
+  if (hideNavbar) {
+    return null;
+  }
 
   return (
     <>
@@ -129,7 +134,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
         "shadow-[0_8px_0_rgba(13,38,58,0.06),0_16px_30px_rgba(13,38,58,0.12)]",
         "ring-1 ring-black/[0.05] backdrop-blur-md",
         "transition-all duration-300",
-        "dark:bg-[#1b1915]/88 dark:shadow-[0_8px_0_rgba(0,0,0,0.24),0_16px_30px_rgba(0,0,0,0.34)] dark:ring-white/[0.08]",
+        "dark:bg-[#181818]/88 dark:shadow-[0_8px_0_rgba(0,0,0,0.24),0_16px_30px_rgba(0,0,0,0.34)] dark:ring-white/[0.08]",
       ].join(" ")}
     >
       {navLinks.map((item) => {
@@ -159,7 +164,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
     </div>
 
           <div className="hidden shrink-0 items-center gap-3 font-space md:flex">
-            <div className="rounded-full bg-white/86 p-1 shadow-[0_8px_0_rgba(13,38,58,0.05),0_14px_24px_rgba(13,38,58,0.1)] ring-1 ring-black/[0.05] backdrop-blur-md dark:bg-[#1b1915]/88 dark:shadow-[0_8px_0_rgba(0,0,0,0.24),0_14px_24px_rgba(0,0,0,0.32)] dark:ring-white/[0.08]">
+            <div className="rounded-full bg-white/86 p-1 shadow-[0_8px_0_rgba(13,38,58,0.05),0_14px_24px_rgba(13,38,58,0.1)] ring-1 ring-black/[0.05] backdrop-blur-md dark:bg-[#181818]/88 dark:shadow-[0_8px_0_rgba(0,0,0,0.24),0_14px_24px_rgba(0,0,0,0.32)] dark:ring-white/[0.08]">
               <ThemeSwitcher />
             </div>
             {session ? (
@@ -167,7 +172,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
                 <button
                   type="button"
                   onClick={() => setProfileOpen((value) => !value)}
-                  className="flex size-12 items-center justify-center rounded-full bg-white/86 text-[#29445b] shadow-[0_8px_0_rgba(13,38,58,0.05),0_14px_24px_rgba(13,38,58,0.1)] ring-1 ring-black/[0.05] transition-transform duration-200 hover:-translate-y-0.5 dark:bg-[#f7f7f4]/90"
+                  className="flex size-12 items-center justify-center rounded-full bg-white/86 text-[#29445b] shadow-[0_8px_0_rgba(13,38,58,0.05),0_14px_24px_rgba(13,38,58,0.1)] ring-1 ring-black/[0.05] transition-transform duration-200 hover:-translate-y-0.5 dark:bg-[#181818] dark:text-[#f2f2f2] dark:shadow-[0_8px_0_rgba(0,0,0,0.24),0_14px_24px_rgba(0,0,0,0.32)] dark:ring-white/[0.08]"
                   aria-label="Open profile menu"
                   aria-expanded={profileOpen}
                 >
@@ -175,21 +180,21 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
                 </button>
 
                 {profileOpen ? (
-                  <div className="absolute right-0 mt-4 w-60 overflow-hidden rounded-[24px] bg-white p-2 text-[#29445b] shadow-[0_10px_0_rgba(13,38,58,0.06),0_20px_38px_rgba(13,38,58,0.14)] ring-1 ring-black/[0.05] dark:bg-[#f7f7f4]">
-                    <div className="rounded-[18px] bg-[#f8f8f6] px-4 py-3 ring-1 ring-black/[0.03]">
+                  <div className="absolute right-0 mt-4 w-60 overflow-hidden rounded-[24px] bg-white p-2 text-[#29445b] shadow-[0_10px_0_rgba(13,38,58,0.06),0_20px_38px_rgba(13,38,58,0.14)] ring-1 ring-black/[0.05] dark:bg-[#181818] dark:text-[#f2f2f2] dark:shadow-[0_10px_0_rgba(0,0,0,0.22),0_20px_38px_rgba(0,0,0,0.34)] dark:ring-white/[0.08]">
+                    <div className="rounded-[18px] bg-[#f8f8f6] px-4 py-3 ring-1 ring-black/[0.03] dark:bg-[#242424] dark:ring-white/[0.08]">
                       <p className="truncate text-sm font-medium">{session.email}</p>
-                      <p className="text-xs capitalize text-[#29445b]/45">{session.role}</p>
+                      <p className="text-xs capitalize text-[#29445b]/45 dark:text-[#a3a3a3]">{session.role}</p>
                     </div>
-                    <Link href={accountHref} className="mt-1 flex items-center gap-2 rounded-full px-4 py-2.5 text-sm text-[#29445b]/70 transition-colors hover:bg-[#f8f8f6] hover:text-[#29445b]" onClick={() => setProfileOpen(false)}>
+                    <Link href={accountHref} className="mt-1 flex items-center gap-2 rounded-full px-4 py-2.5 text-sm text-[#29445b]/70 transition-colors hover:bg-[#f8f8f6] hover:text-[#29445b] dark:text-[#f2f2f2]/70 dark:hover:bg-[#242424] dark:hover:text-[#f2f2f2]" onClick={() => setProfileOpen(false)}>
                       {session.role === "admin" ? <LayoutDashboard className="size-4" /> : <BookOpen className="size-4" />}
                       {session.role === "admin" ? "Dashboard" : "My learning"}
                     </Link>
-                    <Link href="/settings" className="flex items-center gap-2 rounded-full px-4 py-2.5 text-sm text-[#29445b]/70 transition-colors hover:bg-[#f8f8f6] hover:text-[#29445b]" onClick={() => setProfileOpen(false)}>
+                    <Link href="/settings" className="flex items-center gap-2 rounded-full px-4 py-2.5 text-sm text-[#29445b]/70 transition-colors hover:bg-[#f8f8f6] hover:text-[#29445b] dark:text-[#f2f2f2]/70 dark:hover:bg-[#242424] dark:hover:text-[#f2f2f2]" onClick={() => setProfileOpen(false)}>
                       <Settings className="size-4" />
                       Profile settings
                     </Link>
                     <form action={logoutAction}>
-                      <button type="submit" className="flex w-full items-center gap-2 rounded-full px-4 py-2.5 text-left text-sm text-[#29445b]/70 transition-colors hover:bg-[#f8f8f6] hover:text-[#29445b]">
+                      <button type="submit" className="flex w-full items-center gap-2 rounded-full px-4 py-2.5 text-left text-sm text-[#29445b]/70 transition-colors hover:bg-[#f8f8f6] hover:text-[#29445b] dark:text-[#f2f2f2]/70 dark:hover:bg-[#242424] dark:hover:text-[#f2f2f2]">
                         <LogOut className="size-4" />
                         Log out
                       </button>

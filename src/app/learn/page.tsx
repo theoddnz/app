@@ -4,11 +4,21 @@ import Image from "next/image";
 import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Learning Paths",
+  title: "Robotics, ROS2 and Software Learning Paths",
   description:
-    "Explore TheOddOnes learning paths: guided, build-first routes for people who learn by making things and sharing progress.",
+    "Explore TheOddOnes learning paths for robotics, ROS2, drone software, embedded systems, software engineering, testing, and build-first project learning.",
   path: "/learn",
-  keywords: ["learning paths", "guided learning paths", "build first learning", "project based learning"],
+  keywords: [
+    "robotics learning paths",
+    "ROS2 learning path",
+    "drone software learning path",
+    "aerial robotics course",
+    "embedded systems learning path",
+    "software engineering learning path",
+    "guided learning paths",
+    "build first learning",
+    "project based learning",
+  ],
 });
 
 import {
@@ -95,32 +105,25 @@ export default async function LearnPage() {
       {/* Paths grid */}
       <section className="px-6 py-16">
         {learningPaths.length === 0 ? (
-          <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-center">
-            <div>
-              <p className="font-heading text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c4622d]">
-                Under construction
-              </p>
-              <h2 className="mt-4 font-heading text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
-                Paths are being built.
-              </h2>
-              <p className="mt-5 max-w-xl font-space text-[15px] leading-8 text-foreground/60">
-                We are setting up the first learning paths. They will show up here as soon as they are ready to open.
-              </p>
-              <Link
-                href="/"
-                className="mt-7 inline-flex rounded-full bg-[#c4622d] px-5 py-3 font-heading text-sm font-semibold tracking-[0.02em] text-white shadow-[0_7px_0_rgba(120,49,17,0.18)] transition-transform hover:-translate-y-0.5"
-              >
-                Back home
-              </Link>
-            </div>
-
-            <div className="relative mx-auto w-full max-w-xl overflow-hidden rounded-[30px] bg-card p-5 shadow-[0_14px_0_rgba(13,38,58,0.07),0_24px_42px_rgba(13,38,58,0.12)] ring-1 ring-border/60 dark:bg-[#15110e] dark:shadow-[0_14px_0_rgba(0,0,0,0.24),0_24px_42px_rgba(0,0,0,0.35)] dark:ring-white/[0.08]">
+          <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+            <div className="w-full max-w-xl">
               <Image
                 src={underConstruction}
                 alt="Learning paths under construction"
                 className="h-auto w-full"
+                priority
               />
             </div>
+
+            <p className="mt-8 font-heading text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c4622d]">
+              Under construction
+            </p>
+            <h2 className="mt-3 font-heading text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
+              Paths are being built.
+            </h2>
+            <p className="mt-4 max-w-xl font-space text-[15px] leading-8 text-foreground/60">
+              We are setting up the first learning paths. They will show up here as soon as they are ready to open.
+            </p>
           </div>
         ) : (
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 md:grid-cols-2">

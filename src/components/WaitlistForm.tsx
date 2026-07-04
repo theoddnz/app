@@ -107,7 +107,7 @@ export default function WaitlistForm() {
   }
 
   return (
-    <section id="waitlist" className="relative scroll-mt-24 bg-background px-6 md:px-10 py-24 overflow-hidden text-foreground dark:bg-[#0a0806]">
+    <section id="waitlist" className="relative scroll-mt-24 bg-background px-6 md:px-10 py-24 overflow-hidden text-foreground dark:bg-[#131313]">
       {/* Ambient glow */}
       <div
         aria-hidden

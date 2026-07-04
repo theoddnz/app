@@ -10,6 +10,7 @@ const staticRouteEntries = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/mission", priority: 0.8, changeFrequency: "monthly" },
   { path: "/community", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/sponsors", priority: 0.7, changeFrequency: "monthly" },
   { path: "/blogs", priority: 0.9, changeFrequency: "weekly" },
   { path: "/learn", priority: 0.9, changeFrequency: "weekly" },
 ] as const;

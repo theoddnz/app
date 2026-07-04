@@ -44,9 +44,9 @@ const copy = {
 function OrDivider() {
   return (
     <div className="relative flex items-center gap-3">
-      <div className="h-px flex-1 bg-border" />
+      <div className="h-px flex-1 bg-border dark:bg-white/[0.08]" />
       <span className="font-space text-[11px] tracking-[0.18em] text-foreground/30">or</span>
-      <div className="h-px flex-1 bg-border" />
+      <div className="h-px flex-1 bg-border dark:bg-white/[0.08]" />
     </div>
   );
 }
@@ -89,7 +89,7 @@ function Field({
           type={inputType}
           placeholder={placeholder}
           className={cn(
-            "h-11 w-full rounded-xl border border-border bg-background px-4",
+            "h-11 w-full rounded-md border border-border bg-background px-4 dark:border-white/[0.08] dark:bg-[#181818]",
             "font-space text-[14px] text-foreground placeholder:text-foreground/25",
             "focus-visible:ring-1 focus-visible:ring-foreground/20 focus-visible:ring-offset-0",
             isPassword && "pr-10",
@@ -132,63 +132,65 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4, ease: typeof EASE === "function" ? EASE : undefined }}
-            className="w-full rounded-lg border border-border bg-card/75 px-5 py-7 shadow-sm backdrop-blur sm:px-8 sm:py-9"
+            className="w-full rounded-lg bg-card p-2.5 shadow-[0_12px_0_rgba(13,38,58,0.08),0_24px_50px_rgba(13,38,58,0.16)] ring-1 ring-black/[0.05] backdrop-blur dark:bg-[#181818] dark:shadow-[0_12px_0_rgba(0,0,0,0.28),0_24px_56px_rgba(0,0,0,0.46)] dark:ring-white/[0.08]"
           >
-            <Link href="/" className="mb-8 inline-flex items-center gap-2" aria-label="TheOddOnes home">
-              <Image
-                src="/assets/theoddones-white-logo.png"
-                alt="TheOddOnes"
-                width={54}
-                height={54}
-                priority
-                className="h-14 w-14 object-contain dark:hidden"
-              />
-              <Image
-                src="/assets/theoddones-black-logo.png"
-                alt="TheOddOnes"
-                width={54}
-                height={54}
-                priority
-                className="hidden h-14 w-14 object-contain dark:block"
-              />
-            </Link>
+            <div className="rounded-lg border border-black/[0.04] bg-background/86 px-5 py-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] dark:border-white/[0.08] dark:bg-[#242424]/92 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] sm:px-8 sm:py-9">
+              <Link href="/" className="mb-8 inline-flex items-center gap-2" aria-label="TheOddOnes home">
+                <Image
+                  src="/assets/theoddones-white-logo.png"
+                  alt="TheOddOnes"
+                  width={54}
+                  height={54}
+                  priority
+                  className="h-14 w-14 object-contain dark:hidden"
+                />
+                <Image
+                  src="/assets/theoddones-black-logo.png"
+                  alt="TheOddOnes"
+                  width={54}
+                  height={54}
+                  priority
+                  className="hidden h-14 w-14 object-contain dark:block"
+                />
+              </Link>
 
-            <div>
-              <h1 className="font-space text-[1.9rem] font-bold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-[2.15rem]">
-                {page.heading}
-              </h1>
-              <p className="mt-2.5 font-space text-[14px] leading-relaxed text-foreground/45 sm:text-[15px]">{page.sub}</p>
+              <div>
+                <h1 className="font-space text-[1.9rem] font-bold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-[2.15rem]">
+                  {page.heading}
+                </h1>
+                <p className="mt-2.5 font-space text-[14px] leading-relaxed text-foreground/45 sm:text-[15px]">{page.sub}</p>
+              </div>
+
+              <form action={isSignup ? signupFormAction : loginFormAction} className="mt-8 space-y-4">
+                <SocialAuthButtons />
+                <OrDivider />
+
+                {isSignup ? <Field id="name" label="Full name" placeholder="Your name" /> : null}
+                <Field id="email" label="Email" type="email" placeholder="Email" />
+                <Field
+                  id="password"
+                  label="Password"
+                  type="password"
+                  placeholder={isSignup ? "Min. 8 characters" : "Password"}
+                  action={isSignup ? undefined : "Forgot password?"}
+                  actionHref="/users/login"
+                />
+
+                {state.message ? <p className="text-sm text-destructive">{state.message}</p> : null}
+
+                <Button3D className="w-full" type="submit" disabled={pending}>
+                  {pending ? <Loader2 className="size-4 animate-spin" /> : null}
+                  {page.submit}
+                </Button3D>
+
+                <p className="text-center font-space text-[12.5px] leading-6 text-foreground/35">
+                  {page.switchText}{" "}
+                  <Link href={page.switchHref} className="text-foreground/55 transition-colors hover:text-foreground">
+                    {page.switchLabel}
+                  </Link>
+                </p>
+              </form>
             </div>
-
-            <form action={isSignup ? signupFormAction : loginFormAction} className="mt-8 space-y-4">
-              <SocialAuthButtons />
-              <OrDivider />
-
-              {isSignup ? <Field id="name" label="Full name" placeholder="Your name" /> : null}
-              <Field id="email" label="Email" type="email" placeholder="Email" />
-              <Field
-                id="password"
-                label="Password"
-                type="password"
-                placeholder={isSignup ? "Min. 8 characters" : "Password"}
-                action={isSignup ? undefined : "Forgot password?"}
-                actionHref="/users/login"
-              />
-
-              {state.message ? <p className="text-sm text-destructive">{state.message}</p> : null}
-
-              <Button3D className="w-full" type="submit" disabled={pending}>
-                {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-                {page.submit}
-              </Button3D>
-
-              <p className="text-center font-space text-[12.5px] leading-6 text-foreground/35">
-                {page.switchText}{" "}
-                <Link href={page.switchHref} className="text-foreground/55 transition-colors hover:text-foreground">
-                  {page.switchLabel}
-                </Link>
-              </p>
-            </form>
           </motion.div>
         </AnimatePresence>
       </div>

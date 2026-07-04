@@ -37,10 +37,10 @@ export function SocialAuthButtons() {
           href={href}
           className={[
             "group relative inline-flex h-11 items-center justify-center gap-2.5 overflow-hidden",
-            "rounded-xl border border-border bg-background",
+            "rounded-md border border-border bg-background dark:border-white/[0.08] dark:bg-[#181818]",
             "font-space text-[13px] font-medium text-foreground/60",
             "transition-all duration-200",
-            "hover:border-foreground/20 hover:bg-muted hover:text-foreground/90",
+            "hover:border-foreground/20 hover:bg-muted hover:text-foreground/90 dark:hover:bg-[#242424]",
             "active:scale-[0.98]",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20",
           ].join(" ")}

@@ -44,12 +44,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!path) return { title: "Learning path not found | TheOddOnes" };
   return pageMetadata({
     title: `${path.name} Learning Path`,
-    description: `${path.description} Learn ${path.name} with build-first lessons, articles, and practical project work on TheOddOnes.`,
+    description: `${path.description} Learn ${path.name} with build-first robotics, ROS2, software, embedded systems, project lessons, field notes, and practical engineering work on TheOddOnes.`,
     path: `/learn/${path.slug}`,
     images: path.thumbnailUrl ? [path.thumbnailUrl] : undefined,
     keywords: [
       ...keywordVariants(path.name, path.label),
       "TheOddOnes learning path",
+      "robotics learning path",
+      "ROS2 learning path",
+      "robotics software learning",
+      "drone robotics learning",
+      "embedded systems projects",
+      "robotics perception projects",
       "build first learning",
       "hands on course",
       "project based course",

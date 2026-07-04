@@ -5,7 +5,7 @@ import { ArrowLeft, Play, Clock3, Info, Lock } from "@/components/ui/tabler-icon
 
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { pageMetadata } from "@/lib/seo";
+import { keywordVariants, pageMetadata } from "@/lib/seo";
 import { studentHasSelectedPath } from "@/lib/student-learning";
 
 type Props = {
@@ -41,6 +41,13 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     description,
     path: `/learn/${slug}/watch?v=${safeIndex}`,
     images: activeVideo?.thumbnailUrl ? [activeVideo.thumbnailUrl] : undefined,
+    keywords: [
+      ...keywordVariants(activeVideo?.title, path.name),
+      "robotics video lesson",
+      "ROS2 video lesson",
+      "software project video",
+      "build first learning video",
+    ],
     noIndex: true,
   });
 }

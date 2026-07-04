@@ -9,7 +9,7 @@ export default function CTA() {
   return (
     <section
       id="contribute"
-      className="relative bg-background px-2 py-20 text-foreground dark:bg-[#0a0806] md:px-10 md:py-28"
+      className="relative bg-background px-2 py-20 text-foreground dark:bg-[#131313] md:px-10 md:py-28"
     >
       <div className="relative mx-auto max-w-6xl">
 

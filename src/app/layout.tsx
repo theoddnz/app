@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Footer from "@/components/Footer";
 import { FooterGate } from "@/components/FooterGate";
 import Navbar from "@/components/Navbar";
-import { absoluteUrl, jsonLd, siteConfig } from "@/lib/seo";
+import { absoluteUrl, jsonLd, roboticsKeywords, siteConfig } from "@/lib/seo";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -91,7 +91,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         url: siteConfig.url,
         description: siteConfig.description,
         logo: absoluteUrl("/assets/theoddones-white-logo.png"),
-        sameAs: [siteConfig.social.x, siteConfig.social.instagram],
+        sameAs: [siteConfig.social.x, siteConfig.social.instagram, siteConfig.social.linkedin, siteConfig.social.youtube]
+          .filter(Boolean),
+        knowsAbout: [...roboticsKeywords],
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "customer support",
@@ -109,6 +111,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           "@id": `${siteConfig.url}/#organization`,
         },
         inLanguage: "en-US",
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${siteConfig.url}/#site-navigation`,
+        name: "TheOddOnes important links",
+        itemListElement: [
+          { "@type": "SiteNavigationElement", position: 1, name: "Learning paths", url: absoluteUrl("/learn") },
+          { "@type": "SiteNavigationElement", position: 2, name: "Blogs", url: absoluteUrl("/blogs") },
+          { "@type": "SiteNavigationElement", position: 3, name: "Community", url: absoluteUrl("/community") },
+          { "@type": "SiteNavigationElement", position: 4, name: "Mission", url: absoluteUrl("/mission") },
+          { "@type": "SiteNavigationElement", position: 5, name: "Sponsors", url: absoluteUrl("/sponsors") },
+        ],
       },
     ],
   };

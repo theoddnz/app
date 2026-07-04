@@ -2,20 +2,18 @@ import Hero from "../components/Hero";
 import WhatWeProvoke from "../components/WhatWeProvoke";
 import WhyWeStarted from "../components/WhyWeStarted";
 import CTA from "../components/CTA";
-import WhatYouGet from "@/components/Whatyouget";
-import Collaborators from "@/components/Collaborators";
 import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
-import FAQ from "@/components/landing/FAQ";
-import WhyTheOddOnes from "@/components/landing/WhyTheOddOnes";
-import Pricing from "@/components/landing/Pricings";
 
 export const metadata = pageMetadata({
-  title: "TheOddOnes Learning Community",
+  title: "TheOddOnes - Robotics, ROS2, Drone and Software Learning",
   description: siteConfig.description,
   path: "/",
   keywords: [
     "TheOddOnes",
-    "learning community for builders",
+    "robotics learning community",
+    "ROS2 learning community",
+    "drone robotics learning",
+    "software learning community",
     "build first learning platform",
     "people who think differently about learning",
   ],

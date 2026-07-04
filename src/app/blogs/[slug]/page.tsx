@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "@/components/ui/tabler-icons";
@@ -6,8 +7,43 @@ import { AuthorCard } from "@/components/blog/AuthorCard";
 import { MarkdownPreview } from "@/components/blog/MarkdownPreview";
 import type { Block } from "@/lib/blog-data";
 import { getPublicBlogPost, getPublicBlogPosts } from "@/lib/public-blogs";
+import { absoluteUrl, jsonLd, keywordVariants, pageMetadata, siteConfig } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPublicBlogPost(slug);
+
+  if (!post) {
+    return pageMetadata({
+      title: "Blog post not found",
+      description: "The requested TheOddOnes field note could not be found.",
+      path: `/blogs/${slug}`,
+      noIndex: true,
+    });
+  }
+
+  return pageMetadata({
+    title: post.title,
+    description: post.excerpt,
+    path: `/blogs/${post.slug}`,
+    images: post.thumbnailUrl ? [post.thumbnailUrl] : undefined,
+    type: "article",
+    authors: [post.author],
+    keywords: [
+      ...keywordVariants(post.title, post.category),
+      "TheOddOnes blog",
+      "robotics field notes",
+      "software field notes",
+      "project based engineering",
+    ],
+  });
+}
 
 function renderBlock(block: Block, index: number) {
   switch (block.type) {
@@ -79,9 +115,7 @@ function renderBlock(block: Block, index: number) {
 
 export default async function BlogPostPage({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+}: Props) {
   const { slug } = await params;
   const post = await getPublicBlogPost(slug);
 
@@ -90,9 +124,37 @@ export default async function BlogPostPage({
   }
 
   const more = (await getPublicBlogPosts()).filter((p) => p.slug !== post.slug).slice(0, 3);
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": absoluteUrl(`/blogs/${post.slug}#article`),
+    headline: post.title,
+    description: post.excerpt,
+    url: absoluteUrl(`/blogs/${post.slug}`),
+    image: post.thumbnailUrl ? absoluteUrl(post.thumbnailUrl) : absoluteUrl("/opengraph-image"),
+    author: {
+      "@type": "Person",
+      name: post.author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/assets/theoddones-white-logo.png"),
+      },
+    },
+    articleSection: post.category,
+    inLanguage: "en-US",
+    mainEntityOfPage: absoluteUrl(`/blogs/${post.slug}`),
+  };
 
   return (
     <main className="min-h-screen bg-background px-5 pt-28 pb-24 text-foreground font-space sm:px-6 sm:pt-32">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
+      />
       <article className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between">
           <Link
@@ -156,23 +218,31 @@ export default async function BlogPostPage({
           </h2>
           <div className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {more.map((p) => (
-              <Link key={p.slug} href={`/blogs/${p.slug}`} className="group block">
-                <div
-                  className={`relative flex aspect-16/10 items-center justify-center overflow-hidden rounded-2xl border border-border bg-linear-to-br ${p.gradient}`}
-                >
-                  <span className="absolute left-4 top-4 rounded-md bg-black/30 px-2 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur">
-                    {p.category}
-                  </span>
-                  <span className="px-5 text-center font-heading text-lg font-bold leading-tight text-white/90 sm:px-6 sm:text-xl">
-                    {p.title}
-                  </span>
+              <Link
+                key={p.slug}
+                href={`/blogs/${p.slug}`}
+                className="group block rounded-xl bg-card p-2 shadow-[0_6px_0_rgba(13,38,58,0.05),0_12px_24px_rgba(13,38,58,0.085)] ring-1 ring-black/[0.04] transition-transform duration-300 hover:-translate-y-0.5 dark:bg-[#181818] dark:shadow-[0_6px_0_rgba(0,0,0,0.2),0_12px_26px_rgba(0,0,0,0.32)] dark:ring-white/[0.07]"
+              >
+                <div className="h-full rounded-lg bg-background/80 p-2 dark:bg-[#242424]">
+                  <div
+                    className={`relative flex aspect-16/10 items-center justify-center overflow-hidden rounded-lg border border-border bg-linear-to-br dark:border-white/[0.08] ${p.gradient}`}
+                  >
+                    <span className="absolute left-4 top-4 rounded-md bg-black/30 px-2 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur">
+                      {p.category}
+                    </span>
+                    <span className="px-5 text-center font-heading text-lg font-bold leading-tight text-white/90 sm:px-6 sm:text-xl">
+                      {p.title}
+                    </span>
+                  </div>
+                  <div className="px-2 pb-3 pt-4">
+                    <h3 className="text-base font-semibold leading-snug tracking-tight transition-colors group-hover:text-[#c4622d] sm:text-lg">
+                      {p.title}
+                    </h3>
+                    <span className="mt-2 inline-flex items-center gap-1 text-sm text-foreground/50 group-hover:text-foreground">
+                      Read <ArrowUpRight size={14} />
+                    </span>
+                  </div>
                 </div>
-                <h3 className="mt-4 text-base font-semibold leading-snug tracking-tight transition-colors group-hover:text-[#c4622d] sm:text-lg">
-                  {p.title}
-                </h3>
-                <span className="mt-2 inline-flex items-center gap-1 text-sm text-foreground/50 group-hover:text-foreground">
-                  Read <ArrowUpRight size={14} />
-                </span>
               </Link>
             ))}
           </div>

@@ -89,7 +89,7 @@ export default function FAQ() {
   const filtered = active === "All" ? faqs : faqs.filter((f) => f.badge === active);
 
   return (
-    <section className="bg-background px-2 py-20 md:px-10 md:py-28 dark:bg-[#0a0806]">
+    <section className="bg-background px-2 py-20 md:px-10 md:py-28 dark:bg-[#131313]">
       <div className="mx-auto max-w-4xl">
 
         {/* Header */}
@@ -140,9 +140,9 @@ export default function FAQ() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.6, delay: 0.15, ease: EASE }}
-          className="rounded-[30px] bg-card p-3 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-border/40 dark:bg-[#1a1612] dark:shadow-[0_14px_0_rgba(0,0,0,0.2),0_22px_38px_rgba(0,0,0,0.3)] dark:ring-white/[0.04]"
+          className="rounded-[30px] bg-card p-3 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-border/40 dark:bg-[#181818] dark:shadow-[0_14px_0_rgba(0,0,0,0.2),0_22px_38px_rgba(0,0,0,0.3)] dark:ring-white/[0.04]"
         >
-          <div className="overflow-hidden rounded-[22px] border border-border/30 bg-background shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] dark:bg-[#0d0b09] dark:border-white/[0.04]">
+          <div className="overflow-hidden rounded-[22px] border border-border/30 bg-background shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] dark:bg-[#242424] dark:border-white/[0.04]">
 
             <AnimatePresence mode="wait">
               <motion.div

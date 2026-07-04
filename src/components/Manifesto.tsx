@@ -103,7 +103,7 @@ function TraitCard({
   return (
     <motion.div
       ref={ref}
-      className="group flex flex-col gap-4 rounded-2xl border border-foreground/[0.08] bg-background p-7 transition-colors duration-300 hover:border-[rgba(196,98,45,0.3)] hover:bg-[rgba(196,98,45,0.03)] dark:bg-[#0d0b08]"
+      className="group flex flex-col gap-4 rounded-2xl border border-foreground/[0.08] bg-background p-7 transition-colors duration-300 hover:border-[rgba(196,98,45,0.3)] hover:bg-[rgba(196,98,45,0.03)] dark:bg-[#181818]"
       initial={{ opacity: 0, y: 18 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.65, delay, ease: EASE }}
@@ -125,7 +125,7 @@ function TraitCard({
 
 export default function Manifesto() {
   return (
-    <section className="bg-background px-6 py-28 text-foreground dark:bg-[#0a0806] md:px-10 md:py-36">
+    <section className="bg-background px-6 py-28 text-foreground dark:bg-[#131313] md:px-10 md:py-36">
       <div className="mx-auto max-w-6xl space-y-28">
 
         {/* ── BLOCK 1: MANIFESTO STATEMENT ── */}

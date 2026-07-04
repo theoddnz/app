@@ -55,7 +55,7 @@ export default function WhyWeStarted() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
-          className="group rounded-[30px] bg-card p-2.5 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-black/5 dark:bg-[#1b1915] dark:shadow-[0_14px_0_rgba(0,0,0,0.24),0_22px_42px_rgba(0,0,0,0.38)] dark:ring-white/8"
+          className="group rounded-[30px] bg-card p-2.5 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-black/5 dark:bg-[#181818] dark:shadow-[0_14px_0_rgba(0,0,0,0.24),0_22px_42px_rgba(0,0,0,0.38)] dark:ring-white/8"
         >
           <div className="aspect-video w-full overflow-hidden rounded-[24px] border border-black/4 bg-black shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/8 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
             <iframe

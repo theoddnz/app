@@ -59,7 +59,7 @@ function FeatureRow({ text, sub, locked = false }: { text: string; sub: string; 
 
 export default function Pricing() {
   return (
-    <section className="bg-background px-2 py-20 md:px-10 md:py-28 dark:bg-[#0a0806]">
+    <section className="bg-background px-2 py-20 md:px-10 md:py-28 dark:bg-[#131313]">
       <div className="mx-auto max-w-6xl">
 
         {/* header */}
@@ -112,9 +112,9 @@ export default function Pricing() {
             viewport={{ once: true, amount: 0.12 }}
             transition={{ duration: 0.65, delay: 0, ease: EASE }}
             whileHover={{ y: -4, transition: SPRING }}
-            className="rounded-[30px] bg-card p-3 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-border/40 dark:bg-[#1a1612] dark:shadow-[0_14px_0_rgba(0,0,0,0.2),0_22px_38px_rgba(0,0,0,0.3)] dark:ring-white/[0.04]"
+            className="rounded-[30px] bg-card p-3 shadow-[0_14px_0_rgba(13,38,58,0.07),0_22px_38px_rgba(13,38,58,0.12)] ring-1 ring-border/40 dark:bg-[#181818] dark:shadow-[0_14px_0_rgba(0,0,0,0.2),0_22px_38px_rgba(0,0,0,0.3)] dark:ring-white/[0.04]"
           >
-            <div className="flex h-full min-h-[480px] flex-col overflow-hidden rounded-[22px] border border-border/30 bg-muted/40 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/[0.04] dark:bg-[#0f0d0b] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] md:p-8">
+            <div className="flex h-full min-h-[480px] flex-col overflow-hidden rounded-[22px] border border-border/30 bg-muted/40 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-white/[0.04] dark:bg-[#242424] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] md:p-8">
 
               {/* top */}
               <div className="flex items-start justify-between">
@@ -150,7 +150,7 @@ export default function Pricing() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   transition={SPRING}
-                  className="w-full rounded-[14px] border border-border/40 bg-card py-3.5 font-space text-[13px] font-semibold text-foreground/60 shadow-[0_4px_0_rgba(13,38,58,0.06)] transition-colors hover:text-foreground dark:bg-[#1a1612] dark:hover:text-[#f0ebe5]"
+                  className="w-full rounded-[14px] border border-border/40 bg-card py-3.5 font-space text-[13px] font-semibold text-foreground/60 shadow-[0_4px_0_rgba(13,38,58,0.06)] transition-colors hover:text-foreground dark:bg-[#181818] dark:hover:text-[#f0ebe5]"
                 >
                   Start reading — it&apos;s free
                 </motion.button>

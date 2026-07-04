@@ -26,8 +26,8 @@ function Tag({ label, delay }: { label: string; delay: number }) {
       }}
       className="cursor-default"
     >
-      <div className="rounded-full bg-white p-[7px] md:p-[9px] shadow-[0_6px_0_rgba(13,38,58,0.10),0_10px_22px_rgba(13,38,58,0.14)] ring-1 ring-black/[0.05] dark:bg-[#1e1a16] dark:shadow-[0_6px_0_rgba(0,0,0,0.25),0_10px_20px_rgba(0,0,0,0.3)] dark:ring-white/[0.05] transition-shadow duration-200 hover:shadow-[0_8px_0_rgba(13,38,58,0.12),0_14px_28px_rgba(13,38,58,0.18)]">
-        <div className="flex items-center gap-1.5 rounded-full bg-[#f5f3f0] px-2.5 py-1 md:px-3 md:py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] dark:bg-[#161310] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+      <div className="rounded-full bg-white p-[7px] md:p-[9px] shadow-[0_6px_0_rgba(13,38,58,0.10),0_10px_22px_rgba(13,38,58,0.14)] ring-1 ring-black/[0.05] dark:bg-[#181818] dark:shadow-[0_6px_0_rgba(0,0,0,0.25),0_10px_20px_rgba(0,0,0,0.3)] dark:ring-white/[0.05] transition-shadow duration-200 hover:shadow-[0_8px_0_rgba(13,38,58,0.12),0_14px_28px_rgba(13,38,58,0.18)]">
+        <div className="flex items-center gap-1.5 rounded-full bg-[#f5f3f0] px-2.5 py-1 md:px-3 md:py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] dark:bg-[#242424] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
           <span className="h-1.5 w-1.5 rounded-full bg-[#c4622d] flex-shrink-0" />
           <span className="font-mono text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.14em] text-[#29445b] dark:text-[#c4a882] whitespace-nowrap">
             {label}
@@ -42,7 +42,7 @@ export default function Hero() {
   const router = useRouter();
 
   return (
-    <section className="relative flex h-[100svh] min-h-[620px] flex-col items-center justify-center bg-background pt-0 dark:bg-[#0a0806]">
+    <section className="relative flex h-[100svh] min-h-[620px] flex-col items-center justify-center bg-background pt-0 dark:bg-[#131313]">
       <Spotlight className="-top-8 left-0 md:-top-20 md:left-20" fill="#c4622d" filterId="hero-spotlight-primary" />
       <Spotlight className="-top-24 left-full hidden -scale-x-100 dark:block" fill="#ffffff" filterId="hero-spotlight-secondary" />
 
