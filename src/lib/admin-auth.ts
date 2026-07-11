@@ -75,7 +75,7 @@ export async function requireAdminSession() {
   const session = await getAppSession();
 
   if (!session || session.role !== "admin") {
-    redirect("/users/login");
+    redirect("/login");
   }
 
   return session;
@@ -85,7 +85,7 @@ export async function requireStudentSession() {
   const session = await getAppSession();
 
   if (!session) {
-    redirect("/users/login");
+    redirect("/login");
   }
 
   if (session.role === "admin") {
@@ -103,7 +103,7 @@ export async function requireAuthorSession() {
   const session = await getAppSession();
 
   if (!session) {
-    redirect("/users/login");
+    redirect("/login");
   }
 
   if (session.role === "admin") {

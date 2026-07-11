@@ -5,7 +5,6 @@ import { ArrowLeft, ArrowUpRight } from "@/components/ui/tabler-icons";
 import { ShareButton } from "@/components/blog/ShareButton";
 import { AuthorCard } from "@/components/blog/AuthorCard";
 import { MarkdownPreview } from "@/components/blog/MarkdownPreview";
-import type { Block } from "@/lib/blog-data";
 import { getPublicBlogPost, getPublicBlogPosts } from "@/lib/public-blogs";
 import { absoluteUrl, jsonLd, keywordVariants, pageMetadata, siteConfig } from "@/lib/seo";
 
@@ -43,74 +42,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "project based engineering",
     ],
   });
-}
-
-function renderBlock(block: Block, index: number) {
-  switch (block.type) {
-    case "h2":
-      return (
-        <h2
-          key={index}
-          className="mt-10 mb-3 font-heading text-xl font-bold tracking-tight sm:mt-12 sm:mb-4 sm:text-2xl"
-        >
-          {block.text}
-        </h2>
-      );
-    case "quote":
-      return (
-        <figure
-          key={index}
-          className="my-10 rounded-2xl border border-border bg-card px-6 py-8 text-center sm:my-12 sm:px-10 sm:py-10"
-        >
-          <span
-            aria-hidden
-            className="block font-heading text-5xl leading-none text-[#c4622d] sm:text-6xl"
-          >
-            &ldquo;
-          </span>
-          <blockquote className="mt-2 font-heading text-xl font-semibold leading-snug tracking-tight text-foreground/90 sm:text-2xl">
-            {block.text}
-          </blockquote>
-        </figure>
-      );
-    case "list":
-      return (
-        <ul key={index} className="my-6 space-y-3">
-          {block.items.map((item, i) => (
-            <li key={i} className="flex gap-3 text-base leading-7 text-foreground/70 sm:text-[17px] sm:leading-8">
-              <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-[#c4622d]" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      );
-    case "video":
-      return (
-        <figure key={index} className="my-10">
-          <div className="aspect-video overflow-hidden rounded-2xl border border-border bg-black">
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${block.youtubeId}`}
-              title={block.caption ?? "Video"}
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              className="size-full"
-            />
-          </div>
-          {block.caption ? (
-            <figcaption className="mt-3 text-center text-sm text-foreground/45">
-              {block.caption}
-            </figcaption>
-          ) : null}
-        </figure>
-      );
-    default:
-      return (
-        <p key={index} className="my-5 text-base leading-7 text-foreground/70 sm:text-[17px] sm:leading-8">
-          {block.text}
-        </p>
-      );
-  }
 }
 
 export default async function BlogPostPage({
@@ -182,7 +113,7 @@ export default async function BlogPostPage({
         <p className="mt-4 text-base leading-7 text-foreground/55 sm:mt-5 sm:text-lg">{post.excerpt}</p>
 
         <div className="mt-8 flex items-center gap-3 border-b border-border pb-8">
-          <AuthorCard name={post.author} />
+          <AuthorCard name={post.author} imageUrl={post.authorImageUrl} />
           <div className="min-w-0">
             <p className="truncate text-xs text-foreground/45">{post.role}</p>
           </div>
@@ -206,7 +137,7 @@ export default async function BlogPostPage({
         )}
 
         <div className="mt-10 sm:mt-12">
-          {post.content ? <MarkdownPreview content={post.content} empty="" /> : post.body?.map(renderBlock)}
+          <MarkdownPreview content={post.content ?? ""} empty="" />
         </div>
       </article>
 

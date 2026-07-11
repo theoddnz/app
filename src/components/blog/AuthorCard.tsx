@@ -18,22 +18,30 @@ function XIcon() {
 
 export function AuthorCard({
   name,
+  imageUrl,
   linkedin = "#",
   x = "#",
 }: {
   name: string;
+  imageUrl?: string;
   linkedin?: string;
   x?: string;
 }) {
+  const fallback = name.charAt(0);
+
   return (
     <div className="group/author relative inline-flex">
       <button
         type="button"
         className="flex items-center gap-3 rounded-xl text-left outline-none"
       >
-        <span className="inline-flex size-10 items-center justify-center rounded-full bg-[#c4622d]/15 text-sm font-bold text-[#c4622d]">
-          {name.charAt(0)}
-        </span>
+        {imageUrl ? (
+          <img src={imageUrl} alt="" className="size-10 rounded-full border border-border object-cover" />
+        ) : (
+          <span className="inline-flex size-10 items-center justify-center rounded-full bg-[#c4622d]/15 text-sm font-bold text-[#c4622d]">
+            {fallback}
+          </span>
+        )}
         <span className="text-sm">
           <span className="block font-semibold text-foreground/85">{name}</span>
         </span>
@@ -44,9 +52,13 @@ export function AuthorCard({
         className="pointer-events-none absolute left-0 top-full z-20 w-64 origin-top-left translate-y-1 scale-95 pt-3 opacity-0 transition-all duration-150 group-hover/author:pointer-events-auto group-hover/author:translate-y-0 group-hover/author:scale-100 group-hover/author:opacity-100"
       >
         <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-lg shadow-black/10">
-          <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-[#c4622d]/15 text-base font-bold text-[#c4622d]">
-            {name.charAt(0)}
-          </span>
+          {imageUrl ? (
+            <img src={imageUrl} alt="" className="size-11 shrink-0 rounded-full border border-border object-cover" />
+          ) : (
+            <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-[#c4622d]/15 text-base font-bold text-[#c4622d]">
+              {fallback}
+            </span>
+          )}
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-foreground/90">{name}</p>
           </div>

@@ -19,6 +19,7 @@ export const users = pgTable(
     passwordHash: text("password_hash"),
     role: varchar("role", { length: 24 }).notNull().default("student"),
     profileRole: varchar("profile_role", { length: 120 }).notNull().default(""),
+    profileImageUrl: text("profile_image_url"),
     authProvider: varchar("auth_provider", { length: 32 }).notNull().default("password"),
     providerAccountId: varchar("provider_account_id", { length: 120 }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -76,6 +77,22 @@ export const lessons = pgTable(
   ],
 );
 
+export const blogCategories = pgTable(
+  "blog_categories",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: varchar("name", { length: 120 }).notNull(),
+    slug: varchar("slug", { length: 140 }).notNull().unique(),
+    description: text("description").notNull().default(""),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("blog_categories_slug_idx").on(table.slug),
+    index("blog_categories_created_at_idx").on(table.createdAt),
+  ],
+);
+
 export const blogPosts = pgTable(
   "blog_posts",
   {
@@ -84,6 +101,7 @@ export const blogPosts = pgTable(
       .notNull()
       .references(() => learningPaths.id, { onDelete: "cascade" }),
     authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
+    categoryId: uuid("category_id").references(() => blogCategories.id, { onDelete: "set null" }),
     title: varchar("title", { length: 220 }).notNull(),
     slug: varchar("slug", { length: 240 }).notNull().unique(),
     excerpt: text("excerpt").notNull().default(""),
@@ -95,6 +113,7 @@ export const blogPosts = pgTable(
   (table) => [
     index("blog_posts_path_id_idx").on(table.pathId),
     index("blog_posts_author_id_idx").on(table.authorId),
+    index("blog_posts_category_id_idx").on(table.categoryId),
     index("blog_posts_slug_idx").on(table.slug),
     index("blog_posts_created_at_idx").on(table.createdAt),
     index("blog_posts_path_created_at_idx").on(table.pathId, table.createdAt),

@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import type { ActionState } from "@/types/admin";
 
-const EASE = [0.16, 1, 0.3, 1];
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 const initialState: ActionState = {
   ok: false,
@@ -24,19 +24,19 @@ const initialState: ActionState = {
 
 const copy = {
   login: {
-    heading: "Welcome back.",
-    sub: "Sign in as admin or student.",
+    heading: "Welcome back",
+    sub: "Sign in to continue learning, writing, or managing TheOddOnes.",
     submit: "Sign in",
     switchText: "Don't have an account?",
-    switchHref: "/users/signup",
+    switchHref: "/signup",
     switchLabel: "Sign up free",
   },
   signup: {
-    heading: "Join the odd ones.",
-    sub: "Create a student account and start learning.",
+    heading: "Create your account",
+    sub: "Join TheOddOnes and start learning with a project-first path.",
     submit: "Create account",
     switchText: "Already have an account?",
-    switchHref: "/users/login",
+    switchHref: "/login",
     switchLabel: "Sign in",
   },
 };
@@ -45,7 +45,7 @@ function OrDivider() {
   return (
     <div className="relative flex items-center gap-3">
       <div className="h-px flex-1 bg-border dark:bg-white/[0.08]" />
-      <span className="font-space text-[11px] tracking-[0.18em] text-foreground/30">or</span>
+      <span className="font-sans text-[11px] font-semibold uppercase text-foreground/35">or</span>
       <div className="h-px flex-1 bg-border dark:bg-white/[0.08]" />
     </div>
   );
@@ -73,11 +73,11 @@ function Field({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <Label htmlFor={id} className="font-space text-[11.5px] font-medium text-foreground/50">
+        <Label htmlFor={id} className="font-sans text-xs font-semibold text-foreground/55">
           {label}
         </Label>
         {action && actionHref ? (
-          <Link href={actionHref} className="font-space text-[11.5px] text-foreground/40 transition-colors hover:text-foreground/70">
+          <Link href={actionHref} className="font-sans text-xs font-medium text-foreground/40 transition-colors hover:text-foreground/70">
             {action}
           </Link>
         ) : null}
@@ -90,7 +90,7 @@ function Field({
           placeholder={placeholder}
           className={cn(
             "h-11 w-full rounded-md border border-border bg-background px-4 dark:border-white/[0.08] dark:bg-[#181818]",
-            "font-space text-[14px] text-foreground placeholder:text-foreground/25",
+            "font-sans text-sm text-foreground placeholder:text-foreground/25",
             "focus-visible:ring-1 focus-visible:ring-foreground/20 focus-visible:ring-offset-0",
             isPassword && "pr-10",
           )}
@@ -119,49 +119,49 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
   const pending = isSignup ? signupPending : loginPending;
 
   return (
-    <main className="relative min-h-[100svh] bg-background px-4 pt-24 text-foreground sm:px-6">
+    <main className="relative grid min-h-[100svh] overflow-hidden bg-background px-4 py-4 text-foreground sm:px-6">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-20 mx-auto h-64 max-w-xl rounded-full bg-secondary/10 blur-3xl"
+        className="pointer-events-none absolute inset-x-0 top-10 mx-auto h-56 max-w-xl rounded-full bg-secondary/10 blur-3xl"
       />
-      <div className="relative mx-auto flex min-h-[calc(100svh-96px)] w-full max-w-[440px] items-center py-8 sm:py-10">
+      <div className="relative mx-auto flex min-h-[calc(100svh-2rem)] w-full max-w-[430px] items-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={mode}
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4, ease: typeof EASE === "function" ? EASE : undefined }}
-            className="w-full rounded-lg bg-card p-2.5 shadow-[0_12px_0_rgba(13,38,58,0.08),0_24px_50px_rgba(13,38,58,0.16)] ring-1 ring-black/[0.05] backdrop-blur dark:bg-[#181818] dark:shadow-[0_12px_0_rgba(0,0,0,0.28),0_24px_56px_rgba(0,0,0,0.46)] dark:ring-white/[0.08]"
+            transition={{ duration: 0.34, ease: EASE }}
+            className="w-full rounded-lg bg-card p-2 shadow-[0_8px_0_rgba(13,38,58,0.07),0_18px_42px_rgba(13,38,58,0.14)] ring-1 ring-black/[0.05] backdrop-blur dark:bg-[#181818] dark:shadow-[0_8px_0_rgba(0,0,0,0.25),0_18px_46px_rgba(0,0,0,0.42)] dark:ring-white/[0.08]"
           >
-            <div className="rounded-lg border border-black/[0.04] bg-background/86 px-5 py-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] dark:border-white/[0.08] dark:bg-[#242424]/92 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] sm:px-8 sm:py-9">
-              <Link href="/" className="mb-8 inline-flex items-center gap-2" aria-label="TheOddOnes home">
+            <div className="rounded-lg border border-black/[0.04] bg-background/86 px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] dark:border-white/[0.08] dark:bg-[#242424]/92 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] sm:px-7 sm:py-6">
+              <Link href="/" className="mb-5 inline-flex items-center gap-2" aria-label="TheOddOnes home">
                 <Image
                   src="/assets/theoddones-white-logo.png"
                   alt="TheOddOnes"
-                  width={54}
-                  height={54}
+                  width={44}
+                  height={44}
                   priority
-                  className="h-14 w-14 object-contain dark:hidden"
+                  className="size-11 object-contain dark:hidden"
                 />
                 <Image
                   src="/assets/theoddones-black-logo.png"
                   alt="TheOddOnes"
-                  width={54}
-                  height={54}
+                  width={44}
+                  height={44}
                   priority
-                  className="hidden h-14 w-14 object-contain dark:block"
+                  className="hidden size-11 object-contain dark:block"
                 />
               </Link>
 
               <div>
-                <h1 className="font-space text-[1.9rem] font-bold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-[2.15rem]">
+                <h1 className="font-sans text-2xl font-extrabold leading-tight text-foreground sm:text-[1.85rem]">
                   {page.heading}
                 </h1>
-                <p className="mt-2.5 font-space text-[14px] leading-relaxed text-foreground/45 sm:text-[15px]">{page.sub}</p>
+                <p className="mt-2 font-sans text-sm leading-6 text-foreground/50">{page.sub}</p>
               </div>
 
-              <form action={isSignup ? signupFormAction : loginFormAction} className="mt-8 space-y-4">
+              <form action={isSignup ? signupFormAction : loginFormAction} className="mt-5 space-y-3.5">
                 <SocialAuthButtons />
                 <OrDivider />
 
@@ -173,7 +173,7 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
                   type="password"
                   placeholder={isSignup ? "Min. 8 characters" : "Password"}
                   action={isSignup ? undefined : "Forgot password?"}
-                  actionHref="/users/login"
+                  actionHref="/login"
                 />
 
                 {state.message ? <p className="text-sm text-destructive">{state.message}</p> : null}
@@ -183,9 +183,9 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
                   {page.submit}
                 </Button3D>
 
-                <p className="text-center font-space text-[12.5px] leading-6 text-foreground/35">
+                <p className="text-center font-sans text-xs leading-5 text-foreground/40">
                   {page.switchText}{" "}
-                  <Link href={page.switchHref} className="text-foreground/55 transition-colors hover:text-foreground">
+                  <Link href={page.switchHref} className="font-semibold text-foreground/65 transition-colors hover:text-foreground">
                     {page.switchLabel}
                   </Link>
                 </p>

@@ -27,6 +27,7 @@ export default async function EditAuthorProfilePage({
       name: true,
       email: true,
       profileRole: true,
+      profileImageUrl: true,
     },
   });
 

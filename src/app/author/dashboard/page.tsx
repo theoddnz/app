@@ -1,13 +1,13 @@
 import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
-import { ExternalLink, LogOut, PenLine, Trash2 } from "@/components/ui/tabler-icons";
+import { ExternalLink, PenLine, Trash2 } from "@/components/ui/tabler-icons";
 
-import { createAuthorBlogPostAction, deleteAuthorBlogPostAction, logoutAction, updateOwnAuthorProfileAction } from "@/app/admin-actions";
-import { AuthorProfileForm } from "@/components/admin/AuthorProfileForm";
-import { BlogForm } from "@/components/admin/BlogForm";
+import { createAuthorBlogPostAction, deleteAuthorBlogPostAction } from "@/app/admin-actions";
+import { AdminHeader } from "@/components/admin/AdminHeader";
+import { BlogCreateDialog } from "@/components/admin/BlogCreateDialog";
 import { Button } from "@/components/ui/button";
 import { getDb } from "@/db";
-import { blogPosts, learningPaths, users } from "@/db/schema";
+import { blogCategories, blogPosts, learningPaths } from "@/db/schema";
 import { requireAuthorSession } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
@@ -15,16 +15,7 @@ export const dynamic = "force-dynamic";
 export default async function AuthorDashboardPage() {
   const session = await requireAuthorSession();
 
-  const [author, paths, blogs] = await Promise.all([
-    getDb().query.users.findFirst({
-      where: eq(users.id, session.userId),
-      columns: {
-        id: true,
-        name: true,
-        email: true,
-        profileRole: true,
-      },
-    }),
+  const [paths, categories, blogs] = await Promise.all([
     getDb()
       .select({
         id: learningPaths.id,
@@ -34,62 +25,44 @@ export default async function AuthorDashboardPage() {
       .orderBy(desc(learningPaths.createdAt)),
     getDb()
       .select({
+        id: blogCategories.id,
+        name: blogCategories.name,
+      })
+      .from(blogCategories)
+      .orderBy(desc(blogCategories.createdAt)),
+    getDb()
+      .select({
         id: blogPosts.id,
         title: blogPosts.title,
         slug: blogPosts.slug,
         excerpt: blogPosts.excerpt,
         thumbnailUrl: blogPosts.thumbnailUrl,
         createdAt: blogPosts.createdAt,
+        categoryName: blogCategories.name,
       })
       .from(blogPosts)
+      .leftJoin(blogCategories, eq(blogPosts.categoryId, blogCategories.id))
       .where(eq(blogPosts.authorId, session.userId))
       .orderBy(desc(blogPosts.createdAt)),
   ]);
 
   return (
-    <main className="mt-20 min-h-[80svh] bg-background px-5 py-8 font-space text-foreground md:px-8">
-      <div className="mx-auto max-w-6xl space-y-8">
-        <header className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">Author dashboard</p>
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-              Welcome, {author?.name ?? session.email}
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {author?.profileRole || "Blog author"} <span aria-hidden>&middot;</span> {session.email}
-            </p>
-          </div>
-
-          <form action={logoutAction}>
-            <Button type="submit" variant="outline" className="h-9">
-              <LogOut className="size-4" />
-              Log out
-            </Button>
-          </form>
-        </header>
-
-        {author ? (
-          <AuthorProfileForm
-            action={updateOwnAuthorProfileAction}
-            initialValues={{
-              id: author.id,
-              name: author.name,
-              email: author.email,
-              profileRole: author.profileRole,
-            }}
-            heading="Your profile"
-            description="Update the name, role, email, and optional password shown on your public blog profile."
-            submitLabel="Save profile"
+    <div className="space-y-8">
+      <AdminHeader
+        title="Your blogs"
+        description="Create, edit, preview, and manage your public blog posts."
+      />
+        <div className="flex justify-start">
+          <BlogCreateDialog
+            paths={paths}
+            categories={categories}
+            action={createAuthorBlogPostAction}
+            buttonLabel="Add new blog"
+            heading="Write a blog"
+            description="Publish a blog with markdown. Upload images or videos to Bunny, then copy or insert the returned URL into your content."
+            submitLabel="Publish blog"
           />
-        ) : null}
-
-        <BlogForm
-          paths={paths}
-          action={createAuthorBlogPostAction}
-          heading="Write a blog"
-          description="Publish a blog to the public blog page using markdown and optional cover images."
-          submitLabel="Publish blog"
-        />
+        </div>
 
         <section className="space-y-4">
           <div className="flex items-center justify-between">
@@ -112,7 +85,7 @@ export default async function AuthorDashboardPage() {
 
                     <div className="min-w-0">
                       <p className="truncate font-medium">{blog.title}</p>
-                      <p className="mt-1 text-xs text-muted-foreground">/{blog.slug}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">/{blog.slug} {blog.categoryName ? `- ${blog.categoryName}` : ""}</p>
                       <p className="mt-2 line-clamp-1 text-sm text-muted-foreground">{blog.excerpt || "No description"}</p>
                     </div>
 
@@ -145,7 +118,6 @@ export default async function AuthorDashboardPage() {
             )}
           </div>
         </section>
-      </div>
-    </main>
+    </div>
   );
 }

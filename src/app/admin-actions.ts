@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { getDb } from "@/db";
-import { blogPosts, learningPaths, lessons, userPathSelections, users } from "@/db/schema";
+import { blogCategories, blogPosts, learningPaths, lessons, userPathSelections, users } from "@/db/schema";
 import { clearAppSession, createAppSession, getAppSession, requireAdminSession, requireAuthorSession, requireStudentSession } from "@/lib/admin-auth";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import type { ActionState } from "@/types/admin";
@@ -53,6 +53,21 @@ async function uniqueBlogSlug(input: string) {
     .select({ slug: blogPosts.slug })
     .from(blogPosts)
     .where(like(blogPosts.slug, `${baseSlug}%`));
+
+  return nextAvailableSlug(baseSlug, existingRows.map((row) => row.slug));
+}
+
+async function uniqueBlogCategorySlug(input: string) {
+  const baseSlug = slugify(input);
+
+  if (!baseSlug) {
+    return "";
+  }
+
+  const existingRows = await getDb()
+    .select({ slug: blogCategories.slug })
+    .from(blogCategories)
+    .where(like(blogCategories.slug, `${baseSlug}%`));
 
   return nextAvailableSlug(baseSlug, existingRows.map((row) => row.slug));
 }
@@ -165,7 +180,7 @@ export async function signupAction(state: ActionState = initialState, formData: 
 
 export async function logoutAction() {
   await clearAppSession();
-  redirect("/users/login");
+  redirect("/login");
 }
 
 export async function updateProfileAction(state: ActionState = initialState, formData: FormData) {
@@ -174,7 +189,7 @@ export async function updateProfileAction(state: ActionState = initialState, for
   const session = await getAppSession();
 
   if (!session) {
-    redirect("/users/login");
+    redirect("/login");
   }
 
   const name = value(formData, "name");
@@ -200,7 +215,7 @@ export async function selectLearningPathAction(formData: FormData) {
   const session = await getAppSession();
 
   if (!session) {
-    redirect("/users/signup");
+    redirect("/signup");
   }
 
   if (session.role === "admin") {
@@ -412,6 +427,7 @@ export async function createBlogPostAction(
   const excerpt = value(formData, "excerpt");
   const content = String(formData.get("content") ?? "").trim();
   const thumbnailUrl = value(formData, "thumbnailUrl");
+  const categoryId = value(formData, "categoryId") || null;
   const slug = await uniqueBlogSlug(requestedSlug || title);
 
   if (!pathId || !title || !slug) {
@@ -426,6 +442,7 @@ export async function createBlogPostAction(
     await getDb().insert(blogPosts).values({
       pathId,
       authorId: null,
+      categoryId,
       title,
       slug,
       excerpt,
@@ -455,6 +472,7 @@ export async function createAuthorBlogPostAction(
   const excerpt = value(formData, "excerpt");
   const content = String(formData.get("content") ?? "").trim();
   const thumbnailUrl = value(formData, "thumbnailUrl");
+  const categoryId = value(formData, "categoryId") || null;
   const slug = await uniqueBlogSlug(requestedSlug || title);
 
   if (!pathId || !title || !slug) {
@@ -469,6 +487,7 @@ export async function createAuthorBlogPostAction(
     await getDb().insert(blogPosts).values({
       pathId,
       authorId: session.userId,
+      categoryId,
       title,
       slug,
       excerpt,
@@ -499,6 +518,7 @@ export async function updateAuthorBlogPostAction(
   const excerpt = value(formData, "excerpt");
   const content = String(formData.get("content") ?? "").trim();
   const thumbnailUrl = value(formData, "thumbnailUrl");
+  const categoryId = value(formData, "categoryId") || null;
 
   if (!id || !pathId || !title) {
     return { ok: false, message: "Blog, path, and title are required." };
@@ -527,6 +547,7 @@ export async function updateAuthorBlogPostAction(
       .update(blogPosts)
       .set({
         pathId,
+        categoryId,
         title,
         slug,
         excerpt,
@@ -545,6 +566,58 @@ export async function updateAuthorBlogPostAction(
   revalidatePath(`/blogs/${existing.slug}`);
   revalidatePath(`/blogs/${slug}`);
   return { ok: true, message: `Blog updated at /blogs/${slug}.` };
+}
+
+export async function createBlogCategoryAction(
+  state: ActionState = initialState,
+  formData: FormData,
+) {
+  void state;
+  await requireAdminSession();
+
+  const name = value(formData, "name");
+  const description = value(formData, "description");
+  const slug = await uniqueBlogCategorySlug(value(formData, "slug") || name);
+
+  if (!name || !slug) {
+    return { ok: false, message: "Category name is required." };
+  }
+
+  try {
+    await getDb().insert(blogCategories).values({
+      name,
+      slug,
+      description,
+    });
+  } catch (error) {
+    const message = error instanceof Error && error.message.includes("duplicate")
+      ? "That category already exists."
+      : "Could not create category.";
+
+    return { ok: false, message };
+  }
+
+  revalidatePath("/dashboard/blogs");
+  revalidatePath("/dashboard/blogs/categories");
+  revalidatePath("/author/dashboard");
+  revalidatePath("/blogs");
+  return { ok: true, message: "Category created." };
+}
+
+export async function deleteBlogCategoryAction(formData: FormData) {
+  await requireAdminSession();
+
+  const id = value(formData, "id");
+
+  if (!id) {
+    return;
+  }
+
+  await getDb().delete(blogCategories).where(eq(blogCategories.id, id));
+  revalidatePath("/dashboard/blogs");
+  revalidatePath("/dashboard/blogs/categories");
+  revalidatePath("/author/dashboard");
+  revalidatePath("/blogs");
 }
 
 export async function deleteAuthorBlogPostAction(formData: FormData) {
@@ -600,6 +673,7 @@ export async function createAuthorProfileAction(
 
   const name = value(formData, "name");
   const profileRole = value(formData, "profileRole");
+  const profileImageUrl = value(formData, "profileImageUrl") || null;
   const email = value(formData, "email").toLowerCase();
   const password = value(formData, "password");
 
@@ -612,6 +686,7 @@ export async function createAuthorProfileAction(
       name,
       email,
       profileRole,
+      profileImageUrl,
       passwordHash: await hashPassword(password),
       role: "author",
     });
@@ -637,6 +712,7 @@ export async function updateAuthorProfileByAdminAction(
   const id = value(formData, "id");
   const name = value(formData, "name");
   const profileRole = value(formData, "profileRole");
+  const profileImageUrl = value(formData, "profileImageUrl") || null;
   const email = value(formData, "email").toLowerCase();
   const password = value(formData, "password");
 
@@ -651,12 +727,14 @@ export async function updateAuthorProfileByAdminAction(
   const updates: {
     name: string;
     profileRole: string;
+    profileImageUrl: string | null;
     email: string;
     passwordHash?: string;
     updatedAt: Date;
   } = {
     name,
     profileRole,
+    profileImageUrl,
     email,
     updatedAt: new Date(),
   };
@@ -693,6 +771,7 @@ export async function updateOwnAuthorProfileAction(
 
   const name = value(formData, "name");
   const profileRole = value(formData, "profileRole");
+  const profileImageUrl = value(formData, "profileImageUrl") || null;
   const email = value(formData, "email").toLowerCase();
   const password = value(formData, "password");
 
@@ -707,12 +786,14 @@ export async function updateOwnAuthorProfileAction(
   const updates: {
     name: string;
     profileRole: string;
+    profileImageUrl: string | null;
     email: string;
     passwordHash?: string;
     updatedAt: Date;
   } = {
     name,
     profileRole,
+    profileImageUrl,
     email,
     updatedAt: new Date(),
   };

@@ -36,7 +36,13 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
   const profileRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
-  const hideNavbar = pathname === "/dashboard" || pathname.startsWith("/dashboard/");
+  const hideNavbar =
+    pathname === "/dashboard" ||
+    pathname.startsWith("/dashboard/") ||
+    pathname === "/author/dashboard" ||
+    pathname.startsWith("/author/dashboard/") ||
+    pathname === "/login" ||
+    pathname === "/signup";
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -203,7 +209,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
                 ) : null}
               </div>
             ) : (
-              <Button3D onClick={() => router.push("/users/signup")}>
+              <Button3D onClick={() => router.push("/signup")}>
                 Join now <ArrowRightIcon size={15} strokeWidth={2} />
               </Button3D>
             )}
@@ -263,7 +269,7 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
               className="flex-1"
               onClick={() => {
                 setMobileOpen(false);
-                router.push("/users/signup");
+                router.push("/signup");
               }}
             >
               Join now <ArrowRightIcon size={15} strokeWidth={2} />

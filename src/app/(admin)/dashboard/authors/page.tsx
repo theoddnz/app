@@ -29,6 +29,7 @@ export default async function AuthorsAdminPage() {
       name: users.name,
       email: users.email,
       profileRole: users.profileRole,
+      profileImageUrl: users.profileImageUrl,
       createdAt: users.createdAt,
     })
     .from(users)
@@ -83,9 +84,13 @@ export default async function AuthorsAdminPage() {
                       <tr key={author.id} className="transition-colors hover:bg-muted/45">
                         <td className="max-w-[220px] px-4 py-4 align-middle">
                           <div className="flex items-center gap-3">
-                            <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-semibold uppercase text-muted-foreground">
-                              {(author.name || author.email).slice(0, 1)}
-                            </span>
+                            {author.profileImageUrl ? (
+                              <img src={author.profileImageUrl} alt="" className="size-9 shrink-0 rounded-md border border-border object-cover" />
+                            ) : (
+                              <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-semibold uppercase text-muted-foreground">
+                                {(author.name || author.email).slice(0, 1)}
+                              </span>
+                            )}
                             <span className="truncate font-medium">{author.name || "Unnamed author"}</span>
                           </div>
                         </td>

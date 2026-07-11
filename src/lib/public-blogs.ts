@@ -1,8 +1,7 @@
 import { desc, eq } from "drizzle-orm";
 
 import { getDb } from "@/db";
-import { blogPosts, learningPaths, users } from "@/db/schema";
-import { POSTS, type Block } from "@/lib/blog-data";
+import { blogCategories, blogPosts, learningPaths, users } from "@/db/schema";
 
 const gradients = [
   "from-[#d96e3a] via-[#95431d] to-[#2a1109]",
@@ -19,13 +18,13 @@ export type PublicBlogPost = {
   category: string;
   author: string;
   role: string;
+  authorImageUrl?: string;
   date: string;
   readingTime: string;
   gradient: string;
   featured?: boolean;
   thumbnailUrl?: string;
   content?: string;
-  body?: Block[];
 };
 
 function formatDate(date: Date | string) {
@@ -46,23 +45,6 @@ function gradientFor(slug: string) {
   return gradients[total % gradients.length];
 }
 
-function staticPosts(): PublicBlogPost[] {
-  return POSTS.map((post) => ({
-    source: "static",
-    slug: post.slug,
-    title: post.title,
-    excerpt: post.excerpt,
-    category: post.category,
-    author: post.author,
-    role: post.role,
-    date: post.date,
-    readingTime: post.readingTime,
-    gradient: post.gradient,
-    featured: post.featured,
-    body: post.body,
-  }));
-}
-
 export async function getPublicBlogPosts(): Promise<PublicBlogPost[]> {
   const rows = await getDb()
     .select({
@@ -73,11 +55,14 @@ export async function getPublicBlogPosts(): Promise<PublicBlogPost[]> {
       thumbnailUrl: blogPosts.thumbnailUrl,
       createdAt: blogPosts.createdAt,
       pathName: learningPaths.name,
+      categoryName: blogCategories.name,
       authorName: users.name,
       authorRole: users.profileRole,
+      authorImageUrl: users.profileImageUrl,
     })
     .from(blogPosts)
     .leftJoin(learningPaths, eq(blogPosts.pathId, learningPaths.id))
+    .leftJoin(blogCategories, eq(blogPosts.categoryId, blogCategories.id))
     .leftJoin(users, eq(blogPosts.authorId, users.id))
     .orderBy(desc(blogPosts.createdAt));
 
@@ -86,9 +71,10 @@ export async function getPublicBlogPosts(): Promise<PublicBlogPost[]> {
     slug: post.slug,
     title: post.title,
     excerpt: post.excerpt,
-    category: post.pathName ?? "Blog",
+    category: post.categoryName ?? post.pathName ?? "Blog",
     author: post.authorName || "TheOddOnes",
     role: post.authorRole || "TheOddOnes team",
+    authorImageUrl: post.authorImageUrl || undefined,
     date: formatDate(post.createdAt),
     readingTime: readingTime(post.content),
     gradient: gradientFor(post.slug),
@@ -97,7 +83,7 @@ export async function getPublicBlogPosts(): Promise<PublicBlogPost[]> {
     content: post.content,
   }));
 
-  return [...databasePosts, ...staticPosts()];
+  return databasePosts;
 }
 
 export async function getPublicBlogPost(slug: string) {

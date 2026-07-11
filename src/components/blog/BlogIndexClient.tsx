@@ -10,9 +10,13 @@ const categories = ["All", "Guides", "Engineering", "Product", "Community"] as c
 function PostMeta({ post }: { post: PublicBlogPost }) {
   return (
     <div className="mt-3 flex items-center gap-2 text-sm text-foreground/55">
-      <span className="inline-flex size-6 items-center justify-center rounded-full bg-[#c4622d]/15 text-[11px] font-bold text-[#c4622d]">
-        {post.author.charAt(0)}
-      </span>
+      {post.authorImageUrl ? (
+        <img src={post.authorImageUrl} alt="" className="size-6 rounded-full border border-border object-cover" />
+      ) : (
+        <span className="inline-flex size-6 items-center justify-center rounded-full bg-[#c4622d]/15 text-[11px] font-bold text-[#c4622d]">
+          {post.author.charAt(0)}
+        </span>
+      )}
       <span className="font-medium text-foreground/70">{post.author}</span>
       <span className="opacity-40">&middot;</span>
       <span>{post.date}</span>

@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { requireAdminSession } from "@/lib/admin-auth";
+import { getAppSession } from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024;
-const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+const MAX_IMAGE_SIZE = 8 * 1024 * 1024;
+const MAX_VIDEO_SIZE = 100 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+const ALLOWED_VIDEO_TYPES = new Set(["video/mp4", "video/webm", "video/quicktime"]);
 
 function bunnyStorageHost() {
   const region = process.env.BUNNY_STORAGE_REGION?.trim();
@@ -28,14 +30,22 @@ function uploadFolder(value: FormDataEntryValue | null) {
   }
 
   if (value === "blog") {
-    return "blog-images";
+    return "blog-media";
+  }
+
+  if (value === "author-profile") {
+    return "author-profiles";
   }
 
   return "path-thumbnails";
 }
 
 export async function POST(request: Request) {
-  await requireAdminSession();
+  const session = await getAppSession();
+
+  if (!session || (session.role !== "admin" && session.role !== "author")) {
+    return NextResponse.json({ error: "You must be signed in as an admin or author." }, { status: 401 });
+  }
 
   const zoneName = process.env.BUNNY_STORAGE_ZONE_NAME;
   const accessKey = process.env.BUNNY_STORAGE_ACCESS_KEY;
@@ -48,19 +58,27 @@ export async function POST(request: Request) {
   const file = formData.get("file");
 
   if (!(file instanceof File)) {
-    return NextResponse.json({ error: "Thumbnail file is required." }, { status: 400 });
+    return NextResponse.json({ error: "A media file is required." }, { status: 400 });
   }
 
-  if (!ALLOWED_TYPES.has(file.type)) {
-    return NextResponse.json({ error: "Use a JPG, PNG, WebP, or GIF image." }, { status: 400 });
+  const folder = formData.get("folder");
+  const isImage = ALLOWED_IMAGE_TYPES.has(file.type);
+  const isVideo = folder === "blog" && ALLOWED_VIDEO_TYPES.has(file.type);
+
+  if (!isImage && !isVideo) {
+    return NextResponse.json({ error: "Use a JPG, PNG, WebP, GIF, MP4, WebM, or MOV file." }, { status: 400 });
   }
 
-  if (file.size > MAX_FILE_SIZE) {
-    return NextResponse.json({ error: "Thumbnail must be 4 MB or smaller." }, { status: 400 });
+  if (isImage && file.size > MAX_IMAGE_SIZE) {
+    return NextResponse.json({ error: "Images must be 8 MB or smaller." }, { status: 400 });
+  }
+
+  if (isVideo && file.size > MAX_VIDEO_SIZE) {
+    return NextResponse.json({ error: "Videos must be 100 MB or smaller." }, { status: 400 });
   }
 
   const extension = file.name.split(".").pop()?.toLowerCase() || "webp";
-  const path = `${uploadFolder(formData.get("folder"))}/${crypto.randomUUID()}.${extension}`;
+  const path = `${uploadFolder(folder)}/${crypto.randomUUID()}.${extension}`;
   const uploadUrl = `https://${bunnyStorageHost()}/${zoneName}/${path}`;
   const response = await fetch(uploadUrl, {
     method: "PUT",
@@ -91,5 +109,5 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ url: publicUrlFor(path) });
+  return NextResponse.json({ url: publicUrlFor(path), type: isVideo ? "video" : "image" });
 }

@@ -5,11 +5,12 @@ import { useActionState } from "react";
 import { Bold, Eye, Heading2, ImageUp, Italic, LinkIcon, Loader2, Plus, Save } from "@/components/ui/tabler-icons";
 
 import { createBlogPostAction } from "@/app/admin-actions";
+import { BlogMediaUploader } from "@/components/admin/BlogMediaUploader";
 import { MarkdownPreview } from "@/components/blog/MarkdownPreview";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { ActionState, LearningPath } from "@/types/admin";
+import type { ActionState, BlogCategory, LearningPath } from "@/types/admin";
 
 const initialState: ActionState = {
   ok: false,
@@ -18,6 +19,7 @@ const initialState: ActionState = {
 
 type BlogFormProps = {
   paths: Pick<LearningPath, "id" | "name">[];
+  categories?: Pick<BlogCategory, "id" | "name">[];
   action?: (
     state: ActionState,
     formData: FormData,
@@ -25,6 +27,7 @@ type BlogFormProps = {
   initialValues?: {
     id?: string;
     pathId?: string;
+    categoryId?: string | null;
     title?: string;
     slug?: string;
     excerpt?: string;
@@ -38,6 +41,7 @@ type BlogFormProps = {
 
 export function BlogForm({
   paths,
+  categories = [],
   action: createAction = createBlogPostAction,
   initialValues,
   heading = "Add blog",
@@ -48,7 +52,6 @@ export function BlogForm({
   const [content, setContent] = React.useState(initialValues?.content ?? "");
   const [thumbnailUrl, setThumbnailUrl] = React.useState(initialValues?.thumbnailUrl ?? "");
   const [uploading, setUploading] = React.useState(false);
-  const [uploadError, setUploadError] = React.useState("");
   const editorRef = React.useRef<HTMLTextAreaElement>(null);
 
   function insertSnippet(before: string, after = "", placeholder = "text") {
@@ -70,34 +73,22 @@ export function BlogForm({
     });
   }
 
-  async function uploadImage(insertIntoContent: boolean, file?: File) {
-    if (!file) {
+  function insertRawSnippet(snippet: string) {
+    const editor = editorRef.current;
+    if (!editor) {
+      setContent((value) => `${value}${snippet}`);
       return;
     }
 
-    setUploading(true);
-    setUploadError("");
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    const next = `${content.slice(0, start)}${snippet}${content.slice(end)}`;
 
-    const body = new FormData();
-    body.append("file", file);
-    body.append("folder", "blog");
-
-    const response = await fetch("/api/admin/upload-thumbnail", {
-      method: "POST",
-      body,
+    setContent(next);
+    requestAnimationFrame(() => {
+      editor.focus();
+      editor.setSelectionRange(start + snippet.length, start + snippet.length);
     });
-
-    const result = (await response.json()) as { url?: string; error?: string };
-
-    if (!response.ok || !result.url) {
-      setUploadError(result.error ?? "Upload failed.");
-    } else if (insertIntoContent) {
-      insertSnippet(`\n![Blog image](${result.url})\n`, "", "");
-    } else {
-      setThumbnailUrl(result.url);
-    }
-
-    setUploading(false);
   }
 
   return (
@@ -130,6 +121,23 @@ export function BlogForm({
         </div>
 
         <div className="space-y-2">
+          <Label htmlFor="categoryId">Category</Label>
+          <select
+            id="categoryId"
+            name="categoryId"
+            className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            defaultValue={initialValues?.categoryId ?? ""}
+          >
+            <option value="">No category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="title">Blog name</Label>
           <Input id="title" name="title" required defaultValue={initialValues?.title} placeholder="How builders learn faster" className="h-10" />
         </div>
@@ -145,24 +153,19 @@ export function BlogForm({
         <Input id="excerpt" name="excerpt" defaultValue={initialValues?.excerpt} placeholder="A short summary shown in blog cards." className="h-10" />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
-        <div className="space-y-2">
-          <Label htmlFor="thumbnailUrl">Blog thumbnail</Label>
-          <Input
-            id="thumbnailUrl"
-            name="thumbnailUrl"
-            value={thumbnailUrl}
-            onChange={(event) => setThumbnailUrl(event.target.value)}
-            placeholder="Upload or paste URL"
-            className="h-10"
-          />
-        </div>
-        <label className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border px-3 text-sm font-medium transition-colors hover:bg-muted">
-          {uploading ? <Loader2 className="size-4 animate-spin" /> : <ImageUp className="size-4" />}
-          Upload cover
-          <input type="file" accept="image/*" className="hidden" onChange={(event) => uploadImage(false, event.target.files?.[0])} disabled={uploading} />
-        </label>
+      <div className="space-y-2">
+        <Label htmlFor="thumbnailUrl">Blog thumbnail</Label>
+        <Input
+          id="thumbnailUrl"
+          name="thumbnailUrl"
+          value={thumbnailUrl}
+          onChange={(event) => setThumbnailUrl(event.target.value)}
+          placeholder="Upload media below or paste a cover URL"
+          className="h-10"
+        />
       </div>
+
+      <BlogMediaUploader onInsertSnippet={insertRawSnippet} onSetCover={setThumbnailUrl} onUploadingChange={setUploading} />
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-2">
@@ -181,10 +184,9 @@ export function BlogForm({
               <Button type="button" variant="outline" size="icon-sm" onClick={() => insertSnippet("[", "](https://)", "link")}>
                 <LinkIcon className="size-4" />
               </Button>
-              <label className="inline-flex size-7 cursor-pointer items-center justify-center rounded-lg border border-border hover:bg-muted">
+              <Button type="button" variant="outline" size="icon-sm" onClick={() => insertRawSnippet("\n![Blog image](https://)\n")} aria-label="Insert image markdown">
                 <ImageUp className="size-4" />
-                <input type="file" accept="image/*" className="hidden" onChange={(event) => uploadImage(true, event.target.files?.[0])} disabled={uploading} />
-              </label>
+              </Button>
             </div>
           </div>
           <textarea
@@ -210,7 +212,6 @@ export function BlogForm({
         </div>
       </div>
 
-      {uploadError ? <p className="text-sm text-destructive">{uploadError}</p> : null}
       {state.message ? (
         <p className={state.ok ? "text-sm text-foreground" : "text-sm text-destructive"}>{state.message}</p>
       ) : null}

@@ -4,12 +4,12 @@ import { UserAuthCard } from "@/components/auth/UserAuthCard";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Sign in",
-  description: "Sign in to your TheOddOnes account.",
-  path: "/users/login",
+  title: "Sign up",
+  description: "Create your TheOddOnes account.",
+  path: "/signup",
   noIndex: true,
 });
 
-export default function UserLoginPage() {
-  return <UserAuthCard mode="login" />;
+export default function SignupPage() {
+  return <UserAuthCard mode="signup" />;
 }

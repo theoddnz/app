@@ -30,15 +30,15 @@ const providers = [
 
 export function SocialAuthButtons() {
   return (
-    <div className="grid grid-cols-2 gap-2.5">
+    <div className="grid grid-cols-2 gap-2">
       {providers.map(({ label, Icon, href }) => (
         <a
           key={label}
           href={href}
           className={[
-            "group relative inline-flex h-11 items-center justify-center gap-2.5 overflow-hidden",
+            "group relative inline-flex h-10 items-center justify-center gap-2 overflow-hidden",
             "rounded-md border border-border bg-background dark:border-white/[0.08] dark:bg-[#181818]",
-            "font-space text-[13px] font-medium text-foreground/60",
+            "font-sans text-[13px] font-semibold text-foreground/60",
             "transition-all duration-200",
             "hover:border-foreground/20 hover:bg-muted hover:text-foreground/90 dark:hover:bg-[#242424]",
             "active:scale-[0.98]",

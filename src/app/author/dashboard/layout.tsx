@@ -1,40 +1,27 @@
 import type { Metadata } from "next";
-import { Fragment } from "react";
 import Link from "next/link";
-import { BookOpen, FileText, Home, LayoutDashboard, LogOut, Route, Shapes, User, Users } from "@/components/ui/tabler-icons";
+import { FileText, Home, LogOut, PenLine, User } from "@/components/ui/tabler-icons";
 
 import { logoutAction } from "@/app/admin-actions";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { Button } from "@/components/ui/button";
-import { requireAdminSession } from "@/lib/admin-auth";
+import { requireAuthorSession } from "@/lib/admin-auth";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Admin Dashboard",
-  description: "Private TheOddOnes admin dashboard.",
-  path: "/dashboard",
+  title: "Author Dashboard",
+  description: "Private TheOddOnes author dashboard.",
+  path: "/author/dashboard",
   noIndex: true,
 });
 
 const navItems = [
-  { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/dashboard/paths", label: "Paths", icon: Route },
-  { href: "/dashboard/lessons", label: "Lessons", icon: BookOpen },
-  {
-    href: "/dashboard/blogs",
-    label: "Blogs",
-    icon: FileText,
-    children: [
-      { href: "/dashboard/blogs", label: "All blogs", icon: FileText },
-      { href: "/dashboard/blogs/categories", label: "Categories", icon: Shapes },
-    ],
-  },
-  { href: "/dashboard/users", label: "Users", icon: Users },
-  { href: "/dashboard/authors", label: "Authors", icon: User },
+  { href: "/author/dashboard", label: "Blogs", icon: FileText },
+  { href: "/author/dashboard/profile", label: "Profile", icon: User },
 ];
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await requireAdminSession();
+export default async function AuthorDashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await requireAuthorSession();
 
   return (
     <main className="min-h-screen bg-muted/25 font-space text-foreground dark:bg-[#131313]">
@@ -42,12 +29,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <aside className="fixed left-6 top-4 z-30 hidden h-[calc(100svh-2rem)] w-64 flex-col rounded-lg border border-border bg-background p-4 shadow-sm dark:bg-[#181818] lg:flex">
           <div className="border-b border-border pb-4">
             <div className="flex items-center justify-between gap-3">
-              <Link href="/dashboard" className="block text-xl font-bold leading-none">
+              <Link href="/author/dashboard" className="block text-xl font-bold leading-none">
                 The<span className="text-[#c4622d]">Odd</span>Ones
               </Link>
               <ThemeSwitcher />
             </div>
-            <p className="mt-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Admin console</p>
+            <p className="mt-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Author console</p>
           </div>
 
           <div className="mt-4 rounded-lg bg-muted/60 p-3">
@@ -56,7 +43,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 {session.email.slice(0, 1)}
               </span>
               <div className="min-w-0">
-                <p className="truncate text-sm">Admin</p>
+                <p className="truncate text-sm">Author</p>
                 <p className="truncate text-xs text-muted-foreground">{session.email}</p>
               </div>
             </div>
@@ -67,26 +54,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
               const Icon = item.icon;
 
               return (
-                <Fragment key={item.href}>
-                  <Link href={item.href} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 transition-colors hover:bg-muted hover:text-foreground">
-                    <Icon className="size-4" />
-                    {item.label}
-                  </Link>
-                {item.children ? (
-                  <div className="ml-5 mt-0.5 space-y-0.5 border-l border-border pl-3">
-                    {item.children.map((child) => {
-                      const ChildIcon = child.icon;
-
-                      return (
-                        <Link key={child.href} href={child.href} className="flex items-center gap-2 rounded-md px-3 py-2 text-xs font-medium text-foreground/60 transition-colors hover:bg-muted hover:text-foreground">
-                          <ChildIcon className="size-3.5" />
-                          {child.label}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                ) : null}
-                </Fragment>
+                <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 transition-colors hover:bg-muted hover:text-foreground">
+                  <Icon className="size-4" />
+                  {item.label}
+                </Link>
               );
             })}
           </nav>
@@ -108,7 +79,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="min-w-0 lg:pl-[17.25rem]">
           <div className="mb-4 space-y-3 rounded-lg border border-border bg-background p-3 shadow-sm dark:bg-[#181818] lg:hidden">
             <div className="flex items-center justify-between gap-3">
-              <Link href="/dashboard" className="text-lg font-bold">
+              <Link href="/author/dashboard" className="text-lg font-bold">
                 The<span className="text-[#c4622d]">Odd</span>Ones
               </Link>
               <div className="flex items-center gap-2">
@@ -122,7 +93,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               </div>
             </div>
             <div className="flex gap-2 overflow-x-auto">
-              {navItems.flatMap((item) => item.children ?? [item]).map((item) => {
+              {navItems.map((item) => {
                 const Icon = item.icon;
 
                 return (
@@ -134,6 +105,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
                   </Button>
                 );
               })}
+              <Button asChild variant="outline" className="h-9 shrink-0">
+                <Link href="/author/dashboard">
+                  <PenLine className="size-4" />
+                  Write
+                </Link>
+              </Button>
             </div>
           </div>
 

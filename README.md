@@ -78,13 +78,12 @@ Run the app:
 npm run dev
 ```
 
-Open `http://localhost:3000/users/login`, sign in with the admin account you created in Neon, then manage admin content from `/dashboard`. Student signup uses `/users/signup` and creates a `student` user.
+Open `http://localhost:3000/login`, sign in with the admin account you created in Neon, then manage admin content from `/dashboard`. Student signup uses `/signup` and creates a `student` user.
 
 Auth routes:
 
-- `/users/login`: student/admin sign in.
-- `/users/signup`: student account creation.
-- `/login`: redirects to `/users/login` for old links.
+- `/login`: student/admin sign in.
+- `/signup`: student account creation.
 
 Redirects:
 

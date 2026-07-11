@@ -32,7 +32,7 @@ export default async function SettingsPage() {
   const session = await getAppSession();
 
   if (!session) {
-    redirect("/users/login");
+    redirect("/login");
   }
 
   const [user, selection] = await Promise.all([
@@ -45,7 +45,7 @@ export default async function SettingsPage() {
   ]);
 
   if (!user) {
-    redirect("/users/login");
+    redirect("/login");
   }
 
   const selectedPath = selection

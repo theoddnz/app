@@ -66,7 +66,7 @@ const communityLinks = [
 ];
 
 const importantLinks = [
-  { label: "Log in",      href: "/users/login" },
+  { label: "Log in",      href: "/login" },
   { label: "My learning", href: "/my-learning" },
   { label: "Sitemap",     href: "/sitemap.xml" },
 ];

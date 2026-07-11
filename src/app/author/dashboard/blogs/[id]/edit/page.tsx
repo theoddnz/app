@@ -7,7 +7,7 @@ import { updateAuthorBlogPostAction } from "@/app/admin-actions";
 import { BlogForm } from "@/components/admin/BlogForm";
 import { Button } from "@/components/ui/button";
 import { getDb } from "@/db";
-import { blogPosts, learningPaths } from "@/db/schema";
+import { blogCategories, blogPosts, learningPaths } from "@/db/schema";
 import { requireAuthorSession } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ export default async function EditAuthorBlogPage({
   const session = await requireAuthorSession();
   const { id } = await params;
 
-  const [blog, paths] = await Promise.all([
+  const [blog, paths, categories] = await Promise.all([
     getDb().query.blogPosts.findFirst({
       where: and(eq(blogPosts.id, id), eq(blogPosts.authorId, session.userId)),
     }),
@@ -31,6 +31,13 @@ export default async function EditAuthorBlogPage({
       })
       .from(learningPaths)
       .orderBy(desc(learningPaths.createdAt)),
+    getDb()
+      .select({
+        id: blogCategories.id,
+        name: blogCategories.name,
+      })
+      .from(blogCategories)
+      .orderBy(desc(blogCategories.createdAt)),
   ]);
 
   if (!blog) {
@@ -38,8 +45,7 @@ export default async function EditAuthorBlogPage({
   }
 
   return (
-    <main className="mt-20 min-h-[80svh] bg-background px-5 py-8 font-space text-foreground md:px-8">
-      <div className="mx-auto max-w-6xl space-y-6">
+    <div className="space-y-6">
         <Button asChild variant="outline" className="h-9">
           <Link href="/author/dashboard">
             <ArrowLeft className="size-4" />
@@ -49,10 +55,12 @@ export default async function EditAuthorBlogPage({
 
         <BlogForm
           paths={paths}
+          categories={categories}
           action={updateAuthorBlogPostAction}
           initialValues={{
             id: blog.id,
             pathId: blog.pathId,
+            categoryId: blog.categoryId,
             title: blog.title,
             slug: blog.slug,
             excerpt: blog.excerpt,
@@ -63,7 +71,6 @@ export default async function EditAuthorBlogPage({
           description="Update your public blog post. Slugs are kept unique automatically."
           submitLabel="Save changes"
         />
-      </div>
-    </main>
+    </div>
   );
 }

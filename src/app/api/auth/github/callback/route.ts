@@ -92,7 +92,7 @@ export async function GET(request: Request) {
   cookieStore.delete(STATE_COOKIE);
 
   if (!code || !state || !expectedState || state !== expectedState) {
-    return NextResponse.redirect(new URL("/users/login?error=github", request.url));
+    return NextResponse.redirect(new URL("/login?error=github", request.url));
   }
 
   try {
@@ -127,6 +127,6 @@ export async function GET(request: Request) {
     await createAppSession({ id: user.id, email: user.email, role });
     return NextResponse.redirect(new URL(role === "admin" ? "/dashboard" : "/learn", request.url));
   } catch {
-    return NextResponse.redirect(new URL("/users/login?error=github", request.url));
+    return NextResponse.redirect(new URL("/login?error=github", request.url));
   }
 }
