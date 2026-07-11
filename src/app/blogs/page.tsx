@@ -13,7 +13,7 @@ export const metadata: Metadata = pageMetadata({
   keywords: [
     "robotics blog",
     "ROS2 blog",
-    "drone software blog",
+    "drone software blogs",
     "robotics field notes",
     "software engineering blog",
     "embedded systems blog",
