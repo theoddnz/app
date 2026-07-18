@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 
 export const siteConfig = {
   name: "TheOddOnes",
-  domain: "theodd1s.com",
-  url: "https://theodd1s.com",
-  title: "TheOddOnes - Robotics, ROS2, Drone and Software Learning Paths",
-  tagline: "A place for people who think differently about learning.",
+  domain: "www.theodd1s.com",
+  url: "https://www.theodd1s.com",
+  title: "TheOddOnes | ROS 2 and Robotics Learning Community",
+  tagline: "Build-first ROS 2 and robotics learning for curious engineers.",
   description:
-    "TheOddOnes is a build-first learning community for robotics, ROS2, drones, aerial robotics, software, embedded systems, perception, and project-based engineering.",
+    "TheOddOnes is a build-first community for learning ROS 2, robotics, drones, robot perception, embedded systems, and software through practical projects.",
   keywords: [
     "TheOddOnes",
     "The Odd Ones",
@@ -84,7 +84,8 @@ export const siteConfig = {
     instagram: "https://www.instagram.com/theoddoneshub",
     linkedin:"",
     youtube:"",
-    discord:""
+    discord:"",
+    reddit:""
   },
 } as const;
 

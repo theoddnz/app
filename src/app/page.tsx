@@ -5,7 +5,7 @@ import CTA from "../components/CTA";
 import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "TheOddOnes - Robotics, ROS2, Drone and Software Learning",
+  title: siteConfig.title,
   description: siteConfig.description,
   path: "/",
   keywords: [

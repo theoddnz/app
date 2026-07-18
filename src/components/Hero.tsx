@@ -4,10 +4,10 @@ import { Button3D } from "@/components/ui/button-3d";
 import { Spotlight } from "@/components/ui/spotlight";
 import { useRouter } from "next/navigation";
 
-const SUBTITLE = "A place for people who think differently about learning.";
+const SUBTITLE = "Build-first learning for ROS 2, robotics, drones, and robot perception.";
 
 const allTags = [
-  { label: "ROS2", delay: 1.2 },
+  { label: "ROS 2", delay: 1.2 },
   { label: "Build in public", delay: 1.35 },
   { label: "Community", delay: 1.5 },
 ];
@@ -79,14 +79,14 @@ export default function Hero() {
 
         {/* MEET line — desktop has "Build in public" top-right */}
         <div className="relative overflow-visible leading-none mb-1">
-          <motion.h1
+          <motion.div
             className="font-space text-[clamp(3.6rem,10vw,7rem)] font-extrabold tracking-tight text-foreground leading-none dark:text-white"
             initial={{ y: "110%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
             Meet
-          </motion.h1>
+          </motion.div>
 
           {/* Build in public — top-right of MEET, desktop only */}
           <div
@@ -98,7 +98,7 @@ export default function Hero() {
         </div>
 
         {/* Desktop: TheOddOnes line with ROS2 + Community tags */}
-        <div className="relative overflow-visible leading-none hidden md:block mb-6">
+        <div className="relative mb-6 overflow-visible leading-none">
           <motion.h1
             className="font-space text-[clamp(3.6rem,10vw,7rem)] font-extrabold tracking-tight text-foreground leading-none dark:text-white"
             initial={{ y: "110%", opacity: 0 }}
@@ -117,35 +117,18 @@ export default function Hero() {
           </motion.h1>
 
           {/* ROS2 — top-left */}
-          <div className="absolute" style={{ top: "-24px", left: "4%", rotate: "-4deg", zIndex: 20 }}>
-            <Tag label="ROS2" delay={1.2} />
+          <div className="absolute hidden md:block" style={{ top: "-24px", left: "4%", rotate: "-4deg", zIndex: 20 }}>
+            <Tag label="ROS 2" delay={1.2} />
           </div>
 
           {/* Community — bottom-right */}
-          <div className="absolute" style={{ top: "72px", left: "58%", rotate: "-3deg", zIndex: 20 }}>
+          <div className="absolute hidden md:block" style={{ top: "72px", left: "58%", rotate: "-3deg", zIndex: 20 }}>
             <Tag label="Community" delay={1.5} />
           </div>
         </div>
 
         {/* Mobile: TheOddOnes + all tags in a row below */}
-        <div className="md:hidden leading-none mb-6">
-          <motion.h1
-            className="font-space text-[clamp(3.6rem,10vw,7rem)] font-extrabold tracking-tight text-foreground leading-none dark:text-white"
-            initial={{ y: "110%", opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.9, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
-          >
-            The<span className="text-[#c4622d]">Odd</span>Ones
-            <motion.span
-              className="text-[#c4622d]"
-              initial={{ scale: 0.3, rotate: -20, opacity: 0 }}
-              animate={{ scale: 1, rotate: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1.5, type: "spring", bounce: 0.5 }}
-            >
-              .
-            </motion.span>
-          </motion.h1>
-
+        <div className="mb-6 md:hidden">
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             {allTags.map((tag, i) => (
               <div key={tag.label} style={{ rotate: `${[-4, 2, -3][i]}deg` }}>

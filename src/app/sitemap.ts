@@ -4,7 +4,6 @@ import { getDb } from "@/db";
 import { blogPosts, learningPaths as learningPathRows } from "@/db/schema";
 import { absoluteUrl } from "@/lib/seo";
 
-const now = new Date();
 export const dynamic = "force-dynamic";
 const staticRouteEntries = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
@@ -18,7 +17,6 @@ const staticRouteEntries = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = staticRouteEntries.map(({ path, priority, changeFrequency }) => ({
     url: absoluteUrl(path),
-    lastModified: now,
     changeFrequency,
     priority,
   }));

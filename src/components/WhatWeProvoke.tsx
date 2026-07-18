@@ -62,8 +62,8 @@ export default function WhatWeProvide() {
             transition={{ duration: 0.7, delay: 0.08, ease: EASE }}
             className="mx-auto mt-6 max-w-2xl font-space text-[15px] leading-relaxed text-muted-foreground"
           >
-            Start with the basics, build working projects, and learn ROS2,
-            simulation, navigation, and debugging only when the build needs it.
+            Start with the basics, build working projects, and learn ROS 2,
+            simulation, navigation, perception, and debugging when the build needs it.
           </motion.p>
         </div>
 

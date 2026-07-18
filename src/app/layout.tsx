@@ -88,8 +88,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         "@type": ["Organization", "EducationalOrganization"],
         "@id": `${siteConfig.url}/#organization`,
         name: siteConfig.name,
+        alternateName: ["The Odd Ones", "TheOddOnes Robotics"],
         url: siteConfig.url,
         description: siteConfig.description,
+        slogan: siteConfig.tagline,
         logo: absoluteUrl("/assets/theoddones-white-logo.png"),
         sameAs: [siteConfig.social.x, siteConfig.social.instagram, siteConfig.social.linkedin, siteConfig.social.youtube]
           .filter(Boolean),
@@ -105,7 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         "@id": `${siteConfig.url}/#website`,
         url: siteConfig.url,
         name: siteConfig.name,
-        alternateName: siteConfig.tagline,
+        alternateName: ["The Odd Ones", "TheOddOnes Robotics"],
         description: siteConfig.description,
         publisher: {
           "@id": `${siteConfig.url}/#organization`,
