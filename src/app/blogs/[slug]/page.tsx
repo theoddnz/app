@@ -55,14 +55,17 @@ export default async function BlogPostPage({
   }
 
   const more = (await getPublicBlogPosts()).filter((p) => p.slug !== post.slug).slice(0, 3);
+  const wordCount = (post.content ?? "").trim().split(/\s+/).filter(Boolean).length;
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     "@id": absoluteUrl(`/blogs/${post.slug}#article`),
     headline: post.title,
     description: post.excerpt,
     url: absoluteUrl(`/blogs/${post.slug}`),
     image: post.thumbnailUrl ? absoluteUrl(post.thumbnailUrl) : absoluteUrl("/opengraph-image"),
+    datePublished: post.publishedISO,
+    dateModified: post.modifiedISO ?? post.publishedISO,
     author: {
       "@type": "Person",
       name: post.author,
@@ -76,7 +79,15 @@ export default async function BlogPostPage({
       },
     },
     articleSection: post.category,
+    keywords: keywordVariants(post.title, post.category).slice(0, 15).join(", "),
+    wordCount: wordCount || undefined,
     inLanguage: "en-US",
+    isPartOf: {
+      "@type": "Blog",
+      "@id": absoluteUrl("/blogs#blog"),
+      name: `${siteConfig.name} Blog`,
+      url: absoluteUrl("/blogs"),
+    },
     mainEntityOfPage: absoluteUrl(`/blogs/${post.slug}`),
   };
 

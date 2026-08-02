@@ -20,6 +20,8 @@ export type PublicBlogPost = {
   role: string;
   authorImageUrl?: string;
   date: string;
+  publishedISO?: string;
+  modifiedISO?: string;
   readingTime: string;
   gradient: string;
   featured?: boolean;
@@ -54,6 +56,7 @@ export async function getPublicBlogPosts(): Promise<PublicBlogPost[]> {
       content: blogPosts.content,
       thumbnailUrl: blogPosts.thumbnailUrl,
       createdAt: blogPosts.createdAt,
+      updatedAt: blogPosts.updatedAt,
       pathName: learningPaths.name,
       categoryName: blogCategories.name,
       authorName: users.name,
@@ -76,6 +79,8 @@ export async function getPublicBlogPosts(): Promise<PublicBlogPost[]> {
     role: post.authorRole || "TheOddOnes team",
     authorImageUrl: post.authorImageUrl || undefined,
     date: formatDate(post.createdAt),
+    publishedISO: new Date(post.createdAt).toISOString(),
+    modifiedISO: new Date(post.updatedAt).toISOString(),
     readingTime: readingTime(post.content),
     gradient: gradientFor(post.slug),
     featured: index === 0,

@@ -13,6 +13,24 @@ export default function robots(): MetadataRoute.Robots {
     "/my-learning",
   ];
 
+  const aiCrawlers = [
+    "GPTBot",
+    "ChatGPT-User",
+    "OAI-SearchBot",
+    "PerplexityBot",
+    "Perplexity-User",
+    "ClaudeBot",
+    "Claude-Web",
+    "anthropic-ai",
+    "Google-Extended",
+    "Applebot-Extended",
+    "CCBot",
+    "Bingbot",
+    "Amazonbot",
+    "Meta-ExternalAgent",
+    "cohere-ai",
+  ];
+
   return {
     rules: [
       {
@@ -20,11 +38,11 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: privatePaths,
       },
-      {
-        userAgent: "OAI-SearchBot",
+      ...aiCrawlers.map((userAgent) => ({
+        userAgent,
         allow: "/",
         disallow: privatePaths,
-      },
+      })),
     ],
     sitemap: `${siteConfig.url}/sitemap.xml`,
     host: siteConfig.url,
