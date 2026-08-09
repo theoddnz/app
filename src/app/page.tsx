@@ -1,6 +1,7 @@
 import Hero from "../components/Hero";
 import WhatWeProvoke from "../components/WhatWeProvoke";
 import WhyWeStarted from "../components/WhyWeStarted";
+import YouTubeShorts from "../components/YouTubeShorts";
 import CTA from "../components/CTA";
 import { absoluteUrl, jsonLd, pageMetadata, siteConfig } from "@/lib/seo";
 
@@ -53,6 +54,7 @@ export default function Home() {
 
       {/* <Collaborators /> */}
       <WhyWeStarted />
+      <YouTubeShorts />
       <CTA />
 
     </main>
