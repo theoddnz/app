@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -320,4 +322,82 @@ button.font-inter,
 
 .company-marquee-track:hover {
   animation-play-state: paused;
+}
+
+/* Article body (react-markdown + prose) */
+.blog-prose :where(pre):not(:where([class~="not-prose"] *)) {
+  background: #0d1117;
+  color: #e6edf3;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 0.75rem;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  font-size: 0.9em;
+  line-height: 1.7;
+}
+
+.blog-prose :where(pre code):not(:where([class~="not-prose"] *)) {
+  background: transparent;
+  padding: 0;
+  font-weight: 400;
+  color: inherit;
+}
+
+/* highlight.js - GitHub Dark palette (code blocks are always dark) */
+.hljs {
+  color: #e6edf3;
+  background: transparent;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8b949e;
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type,
+.hljs-doctag {
+  color: #ff7b72;
+}
+.hljs-string,
+.hljs-addition,
+.hljs-attr,
+.hljs-meta .hljs-string {
+  color: #a5d6ff;
+}
+.hljs-number,
+.hljs-built_in,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-meta {
+  color: #79c0ff;
+}
+.hljs-title,
+.hljs-section,
+.hljs-title.function_,
+.hljs-title.class_ {
+  color: #d2a8ff;
+}
+.hljs-name,
+.hljs-tag,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #7ee787;
+}
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-regexp,
+.hljs-link {
+  color: #ffa657;
+}
+.hljs-deletion {
+  color: #ffa198;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: 700;
 }

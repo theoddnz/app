@@ -1,9 +1,10 @@
 import { desc, eq } from "drizzle-orm";
-import { ExternalLink, Trash2 } from "@/components/ui/tabler-icons";
+import { ExternalLink, FileText, Trash2 } from "@/components/ui/tabler-icons";
 import Link from "next/link";
 
 import { deleteBlogPostAction } from "@/app/admin-actions";
 import { AdminHeader } from "@/components/admin/AdminHeader";
+import { EmptyState } from "@/components/admin/DashboardCards";
 import { BlogCreateDialog } from "@/components/admin/BlogCreateDialog";
 import { Button } from "@/components/ui/button";
 import { getDb } from "@/db";
@@ -53,13 +54,14 @@ export default async function BlogsAdminPage() {
 
   return (
     <div className="space-y-8">
-      <div className="space-y-4">
-        <BlogCreateDialog paths={paths.map((path) => ({ id: path.id, name: path.name }))} categories={categories} />
-        <AdminHeader
-          title="Blogs"
-          description="All published blog posts. Use the top button to add a new post with Bunny media uploads."
-        />
-      </div>
+      <AdminHeader
+        eyebrow="Content"
+        title="Blogs"
+        description="All published blog posts. Use the button to add a new post with Bunny media uploads."
+        actions={
+          <BlogCreateDialog paths={paths.map((path) => ({ id: path.id, name: path.name }))} categories={categories} />
+        }
+      />
 
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3">
@@ -70,9 +72,9 @@ export default async function BlogsAdminPage() {
           <span className="rounded-md bg-muted px-3 py-1 text-sm text-muted-foreground">{blogs.length} total</span>
         </div>
 
-        <div className="overflow-hidden rounded-lg border border-border bg-card">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
           {blogs.length === 0 ? (
-            <div className="p-6 text-sm text-muted-foreground">No blogs yet.</div>
+            <EmptyState icon={FileText} title="No blogs yet" description="Publish your first post using the Add new blog button above." />
           ) : (
             <div className="max-h-[calc(100svh-18rem)] overflow-auto">
               <table className="w-full min-w-[980px] border-collapse text-left text-sm">

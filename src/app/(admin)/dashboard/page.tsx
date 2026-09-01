@@ -1,11 +1,27 @@
 import Link from "next/link";
-import { BookOpen, FileText, Route, Users } from "@/components/ui/tabler-icons";
+import {
+  ArrowUpRight,
+  BookOpen,
+  FileText,
+  Route,
+  Users,
+} from "@/components/ui/tabler-icons";
 
 import { AdminHeader } from "@/components/admin/AdminHeader";
+import { StatCard } from "@/components/admin/DashboardCards";
+import { UsersChart } from "@/components/admin/UsersChart";
 import { getDb } from "@/db";
 import { blogPosts, learningPaths, lessons, users } from "@/db/schema";
 
 export const dynamic = "force-dynamic";
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("en", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
 
 export default async function DashboardPage() {
   const [paths, allLessons, allBlogs, allUsers] = await Promise.all([
@@ -19,90 +35,115 @@ export default async function DashboardPage() {
   const heldLessons = allLessons.filter((lesson) => lesson.isHold).length;
   const displayedUsers = allUsers.filter((user) => user.role !== "admin");
   const students = displayedUsers.filter((user) => user.role === "student").length;
-  const adminLinks = [
-    {
-      href: "/dashboard/users",
-      title: "Users",
-      description: "Review registered users, roles, sign-in method, and profile details.",
-      total: displayedUsers.length,
-      icon: Users,
-    },
-    {
-      href: "/dashboard/paths",
-      title: "Paths",
-      description: "Create and manage course details, thumbnails, visibility, and launch state.",
-      total: paths.length,
-      icon: Route,
-    },
-    {
-      href: "/dashboard/lessons",
-      title: "Lessons",
-      description: "Add lessons under paths, store video links, thumbnails, duration, and hold state.",
-      total: allLessons.length,
-      icon: BookOpen,
-    },
-    {
-      href: "/dashboard/blogs",
-      title: "Blogs",
-      description: "Write path-specific blogs with markdown, preview, thumbnails, and inline images.",
-      total: allBlogs.length,
-      icon: FileText,
-    },
+  const authors = displayedUsers.filter((user) => user.role === "author").length;
+
+  const recentUsers = [...displayedUsers]
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .slice(0, 5);
+  const recentBlogs = [...allBlogs]
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .slice(0, 5);
+
+  const now = new Date();
+  const usersPerMonth = Array.from({ length: 6 }, (_, index) => {
+    const monthDate = new Date(now.getFullYear(), now.getMonth() - (5 - index), 1);
+    const count = displayedUsers.filter((user) => {
+      const created = user.createdAt;
+      return (
+        created.getFullYear() === monthDate.getFullYear() &&
+        created.getMonth() === monthDate.getMonth()
+      );
+    }).length;
+
+    return {
+      label: monthDate.toLocaleString("en", { month: "short" }),
+      count,
+    };
+  });
+
+  const stats = [
+    { label: "Users", value: displayedUsers.length, hint: `${students} students, ${authors} authors`, icon: Users, accent: true },
+    { label: "Paths", value: paths.length, hint: `${visiblePaths} visible, ${launchedPaths} launched`, icon: Route },
+    { label: "Lessons", value: allLessons.length, hint: `${heldLessons} on hold`, icon: BookOpen },
+    { label: "Blogs", value: allBlogs.length, hint: "Path-specific posts", icon: FileText },
   ];
 
   return (
     <div className="space-y-8">
       <AdminHeader
+        eyebrow="Overview"
         title="Admin dashboard"
-        description="A simple overview of users, paths, lessons, and blogs."
+        description="A snapshot of your platform - users, paths, lessons, and blogs at a glance."
       />
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          { label: "Users", value: displayedUsers.length, sub: `${students} students`, icon: Users },
-          { label: "Paths", value: paths.length, sub: `${visiblePaths} visible, ${launchedPaths} launched`, icon: Route },
-          { label: "Lessons", value: allLessons.length, sub: `${heldLessons} on hold`, icon: BookOpen },
-          { label: "Blogs", value: allBlogs.length, sub: "Path-specific posts", icon: FileText },
-        ].map((item) => {
-          const Icon = item.icon;
-
-          return (
-            <div key={item.label} className="rounded-lg border border-border bg-card p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">{item.label}</p>
-                <Icon className="size-5 text-muted-foreground" />
-              </div>
-              <p className="mt-3 text-2xl font-semibold">{item.value}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{item.sub}</p>
-            </div>
-          );
-        })}
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map((item) => (
+          <StatCard
+            key={item.label}
+            label={item.label}
+            value={item.value}
+            hint={item.hint}
+            icon={item.icon}
+            accent={item.accent}
+          />
+        ))}
       </section>
 
-      <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3">
-          <div>
-            <h2 className="text-xl font-semibold">Manage</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Open the section you want to update.</p>
+      <UsersChart data={usersPerMonth} />
+
+      <section className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-border bg-card">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4">
+            <h2 className="text-base font-semibold">Recent members</h2>
+            <Link href="/dashboard/users" className="inline-flex items-center gap-1 text-xs font-medium text-[#c4622d] hover:underline">
+              View all <ArrowUpRight className="size-3.5" />
+            </Link>
           </div>
-          <span className="rounded-md bg-muted px-3 py-1 text-sm text-muted-foreground">4 sections</span>
+          {recentUsers.length === 0 ? (
+            <p className="px-5 py-8 text-center text-sm text-muted-foreground">No members yet.</p>
+          ) : (
+            <ul className="divide-y divide-border">
+              {recentUsers.map((user) => (
+                <li key={user.id} className="flex items-center gap-3 px-5 py-3">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-xs font-semibold uppercase text-muted-foreground">
+                    {(user.name || user.email).slice(0, 1)}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{user.name || "Unnamed user"}</p>
+                    <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                  </div>
+                  <span className="shrink-0 text-xs capitalize text-muted-foreground">{user.role}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          {adminLinks.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <Link key={item.href} href={item.href} className="rounded-lg border border-border bg-card p-4 transition-colors hover:bg-muted/45">
-                <div className="flex items-center justify-between">
-                  <Icon className="size-5 text-muted-foreground" />
-                  <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">{item.total} total</span>
-                </div>
-                <h2 className="mt-4 text-lg font-semibold">{item.title}</h2>
-                <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{item.description}</p>
-              </Link>
-            );
-          })}
+        <div className="rounded-2xl border border-border bg-card">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4">
+            <h2 className="text-base font-semibold">Recent blogs</h2>
+            <Link href="/dashboard/blogs" className="inline-flex items-center gap-1 text-xs font-medium text-[#c4622d] hover:underline">
+              View all <ArrowUpRight className="size-3.5" />
+            </Link>
+          </div>
+          {recentBlogs.length === 0 ? (
+            <p className="px-5 py-8 text-center text-sm text-muted-foreground">No blogs yet.</p>
+          ) : (
+            <ul className="divide-y divide-border">
+              {recentBlogs.map((blog) => (
+                <li key={blog.id} className="flex items-center gap-3 px-5 py-3">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#c4622d]/10 text-[#c4622d]">
+                    <FileText className="size-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{blog.title}</p>
+                    <p className="truncate text-xs text-muted-foreground">/{blog.slug}</p>
+                  </div>
+                  <span className="shrink-0 text-xs text-muted-foreground">{formatDate(blog.createdAt)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
     </div>

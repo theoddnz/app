@@ -2,9 +2,10 @@ import { desc } from "drizzle-orm";
 
 import { deleteBlogCategoryAction } from "@/app/admin-actions";
 import { AdminHeader } from "@/components/admin/AdminHeader";
+import { EmptyState } from "@/components/admin/DashboardCards";
 import { BlogCategoryForm } from "@/components/admin/BlogCategoryForm";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "@/components/ui/tabler-icons";
+import { Shapes, Trash2 } from "@/components/ui/tabler-icons";
 import { getDb } from "@/db";
 import { blogCategories } from "@/db/schema";
 import { requireAdminSession } from "@/lib/admin-auth";
@@ -30,6 +31,7 @@ export default async function BlogCategoriesPage() {
   return (
     <div className="space-y-8">
       <AdminHeader
+        eyebrow="Content"
         title="Blog categories"
         description="Create categories for blog posts. These show in the blog editor dropdown and public blog filters."
       />
@@ -45,9 +47,9 @@ export default async function BlogCategoriesPage() {
           <span className="rounded-md bg-muted px-3 py-1 text-sm text-muted-foreground">{categories.length} total</span>
         </div>
 
-        <div className="overflow-hidden rounded-lg border border-border bg-card">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
           {categories.length === 0 ? (
-            <div className="p-6 text-sm text-muted-foreground">No categories yet.</div>
+            <EmptyState icon={Shapes} title="No categories yet" description="Add a category above to group your blog posts." />
           ) : (
             <div className="divide-y divide-border">
               {categories.map((category) => (

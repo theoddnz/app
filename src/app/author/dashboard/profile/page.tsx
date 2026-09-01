@@ -26,6 +26,7 @@ export default async function AuthorProfilePage() {
   return (
     <div className="space-y-8">
       <AdminHeader
+        eyebrow="Author"
         title="Profile"
         description="Update the name, role, email, and optional password shown on your public blog profile."
       />

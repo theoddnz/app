@@ -2,6 +2,7 @@ import { and, count, desc, eq, ilike, ne, or, type SQL } from "drizzle-orm";
 import Link from "next/link";
 
 import { AdminHeader } from "@/components/admin/AdminHeader";
+import { EmptyState } from "@/components/admin/DashboardCards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, ArrowRight, Search, Users } from "@/components/ui/tabler-icons";
@@ -146,6 +147,7 @@ export default async function UsersAdminPage({ searchParams }: UsersPageProps) {
   return (
     <div className="space-y-8">
       <AdminHeader
+        eyebrow="People"
         title="Users"
         description="View registered users, roles, authentication methods, and profile details."
       />
@@ -220,9 +222,9 @@ export default async function UsersAdminPage({ searchParams }: UsersPageProps) {
           </div>
         </form>
 
-        <div className="overflow-hidden rounded-lg border border-border bg-card">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
           {paginatedUsers.length === 0 ? (
-            <div className="p-6 text-sm text-muted-foreground">No users found.</div>
+            <EmptyState icon={Users} title="No users found" description="Try adjusting your search or filters." />
           ) : (
             <div className="max-h-[calc(100svh-18rem)] overflow-auto">
               <table className="min-w-[940px] w-full border-collapse text-left text-sm">

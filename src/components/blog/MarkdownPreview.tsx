@@ -1,4 +1,9 @@
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import ReactMarkdown, { type Components } from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import rehypeHighlight from "rehype-highlight";
 
 type LegacyBlock =
   | { type: "p" | "h2" | "quote"; text: string }
@@ -104,18 +109,6 @@ function renderInline(text: string) {
   });
 }
 
-function renderImage(src: string, alt: string, key: number | string) {
-  return (
-    <figure key={key} className="my-6 overflow-hidden rounded-lg border border-border bg-muted">
-      <img
-        src={safeUrl(src)}
-        alt={alt}
-        className="aspect-video w-full object-cover"
-      />
-    </figure>
-  );
-}
-
 function renderYoutube(youtubeId: string, caption: string | undefined, key: number | string) {
   return (
     <figure key={key} className="my-6">
@@ -164,118 +157,110 @@ function renderLegacyBlock(block: LegacyBlock, index: number) {
   return <p key={index} className="leading-8 text-foreground/70">{renderInline(block.text)}</p>;
 }
 
-function blockFor(block: string, index: number): ReactNode {
-  const value = block.trim();
+// Converts legacy custom tags into standard HTML so react-markdown + rehype-raw can render them.
+function normalizeMarkdown(content: string) {
+  let out = content;
 
-  if (!value) {
-    return null;
+  if (!out.includes("\n") && out.includes("\\n")) {
+    out = out.replace(/\\n/g, "\n");
   }
 
-  const video = value.match(/^<video\b[^>]*\bsrc=["']([^"']+)["'][^>]*\/?>$/);
-  if (video) {
-    return (
-      <video
-        key={index}
-        controls
-        src={safeUrl(video[1])}
-        className="my-6 aspect-video w-full rounded-lg border border-border bg-black object-contain"
-      />
-    );
-  }
+  out = out.replace(
+    /<\s*(?:YouTube|Youtube)\b[^>]*?(?:youtubeId|id)\s*=\s*["']([^"']+)["'][^>]*?\/?>/gi,
+    (_match, id: string) =>
+      `\n<iframe src="https://www.youtube-nocookie.com/embed/${id}" title="Embedded video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n`,
+  );
 
-  const markdownImage = value.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
-  if (markdownImage) {
-    return renderImage(markdownImage[2], markdownImage[1], index);
-  }
+  out = out.replace(/<\s*Image\b/gi, "<img").replace(/<\/\s*Image\s*>/gi, "");
 
-  const image = value.match(/^<(?:img|Image)\b[^>]*\bsrc=["']([^"']+)["'][^>]*(?:\balt=["']([^"']*)["'])?[^>]*\/?>$/);
-  if (image) {
-    return renderImage(image[1], image[2] ?? "", index);
-  }
-
-  const youtube = value.match(/^<(?:YouTube|Youtube)\b[^>]*(?:\bid|youtubeId)=["']([^"']+)["'][^>]*(?:\bcaption=["']([^"']*)["'])?[^>]*\/?>$/);
-  if (youtube) {
-    return renderYoutube(youtube[1], youtube[2], index);
-  }
-
-  if (value.startsWith("### ")) {
-    return <h3 key={index} className="mt-8 text-xl font-semibold">{renderInline(value.slice(4))}</h3>;
-  }
-
-  if (value.startsWith("## ")) {
-    return <h2 key={index} className="mt-10 text-2xl font-semibold">{renderInline(value.slice(3))}</h2>;
-  }
-
-  if (value.startsWith("# ")) {
-    return <h1 key={index} className="mt-10 text-3xl font-bold">{renderInline(value.slice(2))}</h1>;
-  }
-
-  if (value.startsWith("> ")) {
-    return (
-      <blockquote key={index} className="my-5 border-l-2 border-foreground/30 pl-4 text-foreground/65">
-        {renderInline(value.slice(2))}
-      </blockquote>
-    );
-  }
-
-  if (value.startsWith("- ")) {
-    return (
-      <ul key={index} className="my-5 space-y-2">
-        {value.split("\n").map((item, itemIndex) => (
-          <li key={itemIndex} className="ml-5 list-disc leading-7 text-foreground/70">{renderInline(item.replace(/^- /, ""))}</li>
-        ))}
-      </ul>
-    );
-  }
-
-  return <p key={index} className="leading-8 text-foreground/70">{renderInline(value.replace(/\n+/g, " "))}</p>;
+  return out;
 }
 
-function markdownBlocks(content: string) {
-  const blocks: string[] = [];
-  let paragraph: string[] = [];
+const sanitizeSchema = {
+  ...defaultSchema,
+  tagNames: [...(defaultSchema.tagNames ?? []), "iframe", "video", "source", "figure", "figcaption"],
+  attributes: {
+    ...defaultSchema.attributes,
+    "*": [...(defaultSchema.attributes?.["*"] ?? []), "className"],
+    iframe: ["src", "title", "loading", "allow", "allowfullscreen", "frameborder"],
+    video: ["src", "controls", "poster"],
+    source: ["src", "type"],
+    a: [...(defaultSchema.attributes?.a ?? []), "target", "rel"],
+    code: [...(defaultSchema.attributes?.code ?? []), "className"],
+    span: [...(defaultSchema.attributes?.span ?? []), "className"],
+  },
+};
 
-  function flushParagraph() {
-    if (paragraph.length > 0) {
-      blocks.push(paragraph.join("\n"));
-      paragraph = [];
-    }
-  }
+const markdownComponents: Components = {
+  a({ href, children, ...props }) {
+    const url = safeUrl(typeof href === "string" ? href : "#");
+    const external = url.startsWith("http");
+    return (
+      <a href={url} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} {...props}>
+        {children}
+      </a>
+    );
+  },
+  img({ src, alt }) {
+    const url = safeUrl(typeof src === "string" ? src : "");
+    return (
+      <figure className="not-prose my-8">
+        <img src={url} alt={alt ?? ""} loading="lazy" className="w-full rounded-xl border border-border object-cover" />
+        {alt ? <figcaption className="mt-2.5 text-center text-sm text-muted-foreground">{alt}</figcaption> : null}
+      </figure>
+    );
+  },
+  iframe(props: ComponentPropsWithoutRef<"iframe">) {
+    return (
+      <div className="not-prose my-8 aspect-video overflow-hidden rounded-xl border border-border bg-black">
+        <iframe {...props} className="size-full" />
+      </div>
+    );
+  },
+  video(props: ComponentPropsWithoutRef<"video">) {
+    return <video controls {...props} className="not-prose my-8 w-full rounded-xl border border-border bg-black" />;
+  },
+};
 
-  for (const line of content.split("\n")) {
-    const value = line.trim();
+const proseClassName = [
+  "blog-prose prose prose-lg prose-neutral max-w-none dark:prose-invert",
+  "prose-headings:font-heading prose-headings:font-semibold prose-headings:tracking-tight",
+  "prose-h2:mt-12 prose-h2:text-2xl prose-h3:text-xl",
+  "prose-p:text-foreground/80 prose-li:text-foreground/80",
+  "prose-a:text-[#c4622d] prose-a:font-medium prose-a:no-underline hover:prose-a:underline",
+  "prose-strong:text-foreground",
+  "prose-blockquote:border-l-2 prose-blockquote:border-[#c4622d] prose-blockquote:not-italic prose-blockquote:text-foreground/70",
+  "prose-li:marker:text-[#c4622d]",
+  "prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[0.85em] prose-code:font-normal prose-code:before:content-[''] prose-code:after:content-['']",
+  "prose-img:rounded-xl prose-hr:border-border",
+].join(" ");
 
-    if (!value) {
-      flushParagraph();
-      continue;
-    }
-
-    if (
-      /^!\[[^\]]*\]\([^)]+\)$/.test(value) ||
-      /^<(?:video|img|Image|YouTube|Youtube)\b/.test(value) ||
-      /^(#{1,3} |> |- )/.test(value)
-    ) {
-      flushParagraph();
-      blocks.push(value);
-      continue;
-    }
-
-    paragraph.push(value);
-  }
-
-  flushParagraph();
-  return blocks;
-}
-
-export function MarkdownPreview({ content, empty = "Preview will appear here." }: { content: string; empty?: string }) {
+export function MarkdownPreview({
+  content,
+  empty = "Preview will appear here.",
+}: {
+  content: string;
+  empty?: string;
+}): ReactNode {
   const legacyBlocks = parseLegacyBlocks(content);
-  const blocks = legacyBlocks
-    ? legacyBlocks.map(renderLegacyBlock)
-    : markdownBlocks(content).map(blockFor).filter(Boolean);
 
-  if (blocks.length === 0) {
-    return <p className="text-sm text-muted-foreground">{empty}</p>;
+  if (legacyBlocks) {
+    return <div className="space-y-4">{legacyBlocks.map(renderLegacyBlock)}</div>;
   }
 
-  return <div className="space-y-4">{blocks}</div>;
+  if (!content.trim()) {
+    return empty ? <p className="text-sm text-muted-foreground">{empty}</p> : null;
+  }
+
+  return (
+    <div className={proseClassName}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema], rehypeHighlight]}
+        components={markdownComponents}
+      >
+        {normalizeMarkdown(content)}
+      </ReactMarkdown>
+    </div>
+  );
 }
