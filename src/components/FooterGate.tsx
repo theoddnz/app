@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-const hiddenFooterRoutes = ["/dashboard", "/author/dashboard", "/login", "/signup"];
+const hiddenFooterRoutes = ["/dashboard", "/author/dashboard", "/login", "/signup", "/mini-course"];
 
 export function FooterGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

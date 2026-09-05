@@ -42,7 +42,9 @@ export function NavbarClient({ session }: { session: AppSession | null }) {
     pathname === "/author/dashboard" ||
     pathname.startsWith("/author/dashboard/") ||
     pathname === "/login" ||
-    pathname === "/signup";
+    pathname === "/signup" ||
+    pathname === "/mini-course" ||
+    pathname.startsWith("/mini-course/");
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
