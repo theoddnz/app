@@ -95,14 +95,19 @@ export function VideoSlideView({
     <SlideShell className="bg-black">
       <div className="relative h-full w-full max-w-[min(100vw,calc(100dvh*9/16))]">
         {active ? (
-          <iframe
-            key={short.id}
-            src={`https://www.youtube-nocookie.com/embed/${short.id}?autoplay=1&mute=1&loop=1&playlist=${short.id}&controls=0&modestbranding=1&playsinline=1&rel=0`}
-            title={short.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="h-full w-full"
-          />
+          <>
+            <iframe
+              key={short.id}
+              src={`https://www.youtube-nocookie.com/embed/${short.id}?autoplay=1&mute=1&loop=1&playlist=${short.id}&controls=0&modestbranding=1&playsinline=1&rel=0`}
+              title={short.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="h-full w-full"
+            />
+            {/* Transparent layer so vertical swipes reach the deck instead of
+                being captured by the iframe (breaks paging on touch devices). */}
+            <div aria-hidden className="absolute inset-0 z-10" />
+          </>
         ) : short.thumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
