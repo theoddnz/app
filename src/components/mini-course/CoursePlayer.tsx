@@ -13,7 +13,7 @@ import {
   VideoSlideView,
 } from "./Slides";
 
-const SPRING = { type: "spring" as const, stiffness: 320, damping: 40, mass: 0.9 };
+const SPRING = { type: "spring" as const, stiffness: 260, damping: 34, mass: 0.8 };
 
 export function CoursePlayer({
   slides,
@@ -160,7 +160,7 @@ export function CoursePlayer({
             animate(y, -index * height, SPRING);
           }
         }}
-        className="absolute inset-x-0 top-0 flex w-full flex-col"
+        className="absolute inset-x-0 top-0 flex w-full flex-col will-change-transform backface-hidden"
       >
         {slides.map((slide, i) => {
           const near = Math.abs(i - index) <= 1;

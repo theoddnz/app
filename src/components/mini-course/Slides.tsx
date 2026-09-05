@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { preconnect, prefetchDNS } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowBigDown,
@@ -90,11 +91,54 @@ export function VideoSlideView({
   active: boolean;
 }) {
   const { short } = slide;
+  // The iframe only mounts once the slide is active, so videos load one at a
+  // time as the learner swipes rather than all up front.
+  const [mounted, setMounted] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  // Warm up the YouTube connection ahead of time so the player pops in fast.
+  useEffect(() => {
+    if (!active) return;
+    prefetchDNS("https://www.youtube-nocookie.com");
+    preconnect("https://www.youtube-nocookie.com");
+    preconnect("https://i.ytimg.com");
+    const id = window.setTimeout(() => setMounted(true), 90);
+    return () => window.clearTimeout(id);
+  }, [active]);
+
+  useEffect(() => {
+    if (!active) setLoaded(false);
+  }, [active]);
 
   return (
     <SlideShell className="bg-black">
+      {/* Blurred backdrop so letterboxed sides never flash pure black. */}
+      {short.thumbnail ? (
+        <div
+          aria-hidden
+          className="absolute inset-0 scale-110 bg-cover bg-center opacity-40 blur-2xl"
+          style={{ backgroundImage: `url(${short.thumbnail})` }}
+        />
+      ) : null}
+
       <div className="relative h-full w-full max-w-[min(100vw,calc(100dvh*9/16))]">
-        {active ? (
+        {/* Poster: shown instantly, fades out once the player is ready. */}
+        {short.thumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={short.thumbnail}
+            alt={short.title}
+            loading="lazy"
+            className={cn(
+              "absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out",
+              loaded ? "opacity-0" : "opacity-100",
+            )}
+          />
+        ) : (
+          <div className="absolute inset-0 h-full w-full bg-neutral-900" />
+        )}
+
+        {active && mounted ? (
           <>
             <iframe
               key={short.id}
@@ -102,26 +146,27 @@ export function VideoSlideView({
               title={short.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              className="h-full w-full"
+              onLoad={() => setLoaded(true)}
+              className={cn(
+                "absolute inset-0 h-full w-full transition-opacity duration-500 ease-out",
+                loaded ? "opacity-100" : "opacity-0",
+              )}
             />
             {/* Transparent layer so vertical swipes reach the deck instead of
                 being captured by the iframe (breaks paging on touch devices). */}
             <div aria-hidden className="absolute inset-0 z-10" />
           </>
-        ) : short.thumbnail ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={short.thumbnail}
-            alt={short.title}
-            loading="lazy"
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="h-full w-full bg-neutral-900" />
-        )}
+        ) : null}
+
+        {/* Spinner while the active player is still loading. */}
+        {active && !loaded ? (
+          <div className="pointer-events-none absolute inset-0 z-20 grid place-items-center">
+            <span className="size-8 animate-spin rounded-full border-2 border-white/25 border-t-white/90" />
+          </div>
+        ) : null}
 
         {/* title + gradient overlay */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/20 to-transparent p-5 pb-24">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-linear-to-t from-black/80 via-black/20 to-transparent p-5 pb-24">
           {short.title ? (
             <p className="line-clamp-2 font-space text-[14px] font-semibold leading-snug text-white/95">
               {short.title}
