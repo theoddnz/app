@@ -8,7 +8,8 @@ import { MarkdownPreview } from "@/components/blog/MarkdownPreview";
 import { getPublicBlogPost, getPublicBlogPosts } from "@/lib/public-blogs";
 import { absoluteUrl, jsonLd, keywordVariants, pageMetadata, siteConfig } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// Cache each post; admin edits call revalidatePath("/blogs/[slug]") for instant refresh.
+export const revalidate = 300;
 
 type Props = {
   params: Promise<{ slug: string }>;

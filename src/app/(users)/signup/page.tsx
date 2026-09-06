@@ -10,6 +10,7 @@ export const metadata: Metadata = pageMetadata({
   noIndex: true,
 });
 
-export default function SignupPage() {
-  return <UserAuthCard mode="signup" />;
+export default async function SignupPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
+  const { next } = await searchParams;
+  return <UserAuthCard mode="signup" next={next} />;
 }

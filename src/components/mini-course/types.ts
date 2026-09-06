@@ -1,5 +1,3 @@
-import type { YouTubeShort } from "@/lib/youtube-shorts";
-
 export type QuizSlide = {
   kind: "quiz";
   id: string;
@@ -25,7 +23,11 @@ export type VideoSlide = {
   kind: "video";
   id: string;
   chapter: number;
-  short: YouTubeShort;
+  title: string;
+  /** Bunny Stream iframe embed URL. */
+  iframeUrl: string;
+  thumbnail: string;
+  notes?: string;
 };
 
 export type IntroSlide = {

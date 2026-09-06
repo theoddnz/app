@@ -114,6 +114,7 @@ export function CoursePlayer({
     <div
       ref={containerRef}
       onWheel={onWheel}
+      data-lenis-prevent
       className="relative h-dvh w-full touch-none overflow-hidden bg-black"
     >
       {/* progress bar */}

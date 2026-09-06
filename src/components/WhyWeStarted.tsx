@@ -30,7 +30,7 @@ export default function WhyWeStarted() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.7, delay: 0.05, ease: EASE }}
-            className="mt-4 font-space text-3xl font-extrabold tracking-tight text-foreground/80 md:text-[42px] md:leading-[1.1]"
+            className="mt-4 font-space text-3xl font-extrabold tracking-tight text-foreground md:text-[42px] md:leading-[1.1]"
           >
             Why we started{" "}
             <span className="text-[#c4622d]">TheOddOnes.</span>

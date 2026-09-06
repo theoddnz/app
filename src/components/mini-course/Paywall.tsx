@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   BadgeCheck,
@@ -19,29 +20,55 @@ const PERKS = [
   { icon: Play, label: "Vertical mini-series - watch, don't read" },
   { icon: Zap, label: "Checkpoints that make the lesson stick" },
   { icon: Bot, label: "Hands-on build projects, not theory dumps" },
-  { icon: Trophy, label: "Progress saved as you go" },
+  { icon: Trophy, label: "Progress saved across your devices" },
 ];
 
 export function Paywall({
-  onUnlock,
+  seriesId,
+  slug,
+  title,
+  subtitle,
+  priceLabel,
   lessonCount,
+  isLoggedIn,
 }: {
-  onUnlock: () => void;
+  seriesId: string;
+  slug: string;
+  title: string;
+  subtitle: string;
+  priceLabel: string;
   lessonCount: number;
+  isLoggedIn: boolean;
 }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleBuy = () => {
+  const handleBuy = async () => {
+    if (!isLoggedIn) {
+      router.push(`/login?next=${encodeURIComponent(`/mini-course/${slug}`)}`);
+      return;
+    }
+
     setLoading(true);
-    // Simulated checkout - unlocks locally, no real payment.
-    window.setTimeout(() => {
-      onUnlock();
-    }, 1100);
+    setError("");
+    try {
+      const res = await fetch("/api/mini-course/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ seriesId }),
+      });
+      const data = (await res.json()) as { checkoutUrl?: string; error?: string };
+      if (!res.ok || !data.checkoutUrl) throw new Error(data.error ?? "Could not start checkout.");
+      window.location.href = data.checkoutUrl;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setLoading(false);
+    }
   };
 
   return (
     <div className="relative min-h-dvh w-full overflow-hidden bg-background">
-      {/* ambient glow */}
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 left-1/2 h-130 w-130 -translate-x-1/2 rounded-full bg-[#c4622d]/20 blur-[120px]"
@@ -61,15 +88,11 @@ export function Paywall({
 
           <div>
             <h1 className="font-heading text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground sm:text-5xl">
-              Learn robotics the way you already{" "}
-              <span className="text-[#c4622d]">scroll.</span>
+              {title}
             </h1>
             <p className="mt-4 font-space text-[15px] leading-relaxed text-muted-foreground">
-              {lessonCount > 0
-                ? `${lessonCount} bite-sized lessons`
-                : "Bite-sized lessons"}{" "}
-              stitched into one vertical feed. No 3-hour videos, no walls of
-              text - watch a clip, answer a quick check, build something real.
+              {subtitle ||
+                `${lessonCount > 0 ? `${lessonCount} bite-sized lessons` : "Bite-sized lessons"} stitched into one vertical feed. Watch a clip, answer a quick check, build something real.`}
             </p>
           </div>
 
@@ -79,28 +102,19 @@ export function Paywall({
                 <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#c4622d]/12 text-[#c4622d]">
                   <perk.icon className="size-4" />
                 </span>
-                <span className="font-space text-[14px] text-foreground/80">
-                  {perk.label}
-                </span>
+                <span className="font-space text-[14px] text-foreground/80">{perk.label}</span>
               </li>
             ))}
           </ul>
 
-          {/* price card */}
           <div className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm">
             <div className="flex items-end justify-between gap-4">
               <div>
                 <div className="flex items-baseline gap-1">
-                  <span className="font-heading text-4xl font-extrabold text-foreground">
-                    ₹149
-                  </span>
-                  <span className="font-space text-sm text-muted-foreground">
-                    / month
-                  </span>
+                  <span className="font-heading text-4xl font-extrabold text-foreground">{priceLabel}</span>
+                  <span className="font-space text-sm text-muted-foreground">/ month</span>
                 </div>
-                <p className="mt-1 font-space text-[12px] text-muted-foreground">
-                  Cancel anytime. Less than a coffee a week.
-                </p>
+                <p className="mt-1 font-space text-[12px] text-muted-foreground">Cancel anytime.</p>
               </div>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/12 px-2.5 py-1 font-space text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
                 <BadgeCheck className="size-3.5" />
@@ -109,29 +123,29 @@ export function Paywall({
             </div>
 
             <div className="mt-5">
-              <Button3D
-                onClick={handleBuy}
-                disabled={loading}
-                className="w-full"
-              >
+              <Button3D onClick={handleBuy} disabled={loading} className="w-full">
                 {loading ? (
                   <>
                     <Loader2 className="size-4 animate-spin" />
-                    Unlocking...
+                    Starting checkout...
                   </>
                 ) : (
                   <>
                     <Lock className="size-4" />
-                    Unlock for ₹149/month
+                    {isLoggedIn ? `Subscribe · ${priceLabel}/mo` : "Sign in to subscribe"}
                   </>
                 )}
               </Button3D>
             </div>
 
-            <p className="mt-3 flex items-center justify-center gap-1.5 font-space text-[11px] text-muted-foreground">
-              <Check className="size-3.5 text-emerald-500" />
-              Demo checkout - unlocks instantly, no card needed
-            </p>
+            {error ? (
+              <p className="mt-3 text-center font-space text-[12px] text-destructive">{error}</p>
+            ) : (
+              <p className="mt-3 flex items-center justify-center gap-1.5 font-space text-[11px] text-muted-foreground">
+                <Check className="size-3.5 text-emerald-500" />
+                Secure checkout via Dodo Payments
+              </p>
+            )}
           </div>
         </motion.div>
       </div>

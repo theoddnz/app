@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 const SUBTITLE = "Build-first learning for ROS 2, robotics, drones, and robot perception.";
 
 const allTags = [
-  { label: "ROS 2", delay: 1.2 },
-  { label: "Build in public", delay: 1.35 },
-  { label: "Community", delay: 1.5 },
+  { label: "ROS 2", delay: 0.8 },
+  { label: "Build in public", delay: 0.9 },
+  { label: "Community", delay: 1.0 },
 ];
 
 function Tag({ label, delay }: { label: string; delay: number }) {
@@ -83,7 +83,7 @@ export default function Hero() {
             className="font-space text-[clamp(3.6rem,10vw,7rem)] font-extrabold tracking-tight text-foreground leading-none dark:text-white"
             initial={{ y: "110%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
             Meet
           </motion.div>
@@ -93,7 +93,7 @@ export default function Hero() {
             className="absolute hidden md:block"
             style={{ top: "-12px", right: "-140px", rotate: "2deg", zIndex: 20 }}
           >
-            <Tag label="Build in public" delay={1.35} />
+            <Tag label="Build in public" delay={0.9} />
           </div>
         </div>
 
@@ -103,14 +103,14 @@ export default function Hero() {
             className="font-space text-[clamp(3.6rem,10vw,7rem)] font-extrabold tracking-tight text-foreground leading-none dark:text-white"
             initial={{ y: "110%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.9, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
           >
             The<span className="text-[#c4622d]">Odd</span>Ones
             <motion.span
               className="text-[#c4622d]"
-              initial={{ scale: 0.3, rotate: -20, opacity: 0 }}
+              initial={{ scale: 0.5, rotate: -12, opacity: 0 }}
               animate={{ scale: 1, rotate: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1.5, type: "spring", bounce: 0.5 }}
+              transition={{ duration: 0.5, delay: 0.72, type: "spring", bounce: 0.4 }}
             >
               .
             </motion.span>
@@ -118,12 +118,12 @@ export default function Hero() {
 
           {/* ROS2 — top-left */}
           <div className="absolute hidden md:block" style={{ top: "-24px", left: "4%", rotate: "-4deg", zIndex: 20 }}>
-            <Tag label="ROS 2" delay={1.2} />
+            <Tag label="ROS 2" delay={0.8} />
           </div>
 
           {/* Community — bottom-right */}
           <div className="absolute hidden md:block" style={{ top: "72px", left: "58%", rotate: "-3deg", zIndex: 20 }}>
-            <Tag label="Community" delay={1.5} />
+            <Tag label="Community" delay={1.0} />
           </div>
         </div>
 
@@ -147,8 +147,8 @@ export default function Hero() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{
-                  duration: 0.5,
-                  delay: 0.85 + i * 0.055,
+                  duration: 0.45,
+                  delay: 0.4 + i * 0.04,
                   ease: [0.16, 1, 0.3, 1],
                 }}
               >
@@ -163,7 +163,7 @@ export default function Hero() {
           className="flex items-center gap-4"
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.35, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.55, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
             <Button3D onClick={() => router.push("/login")}>Start building</Button3D>

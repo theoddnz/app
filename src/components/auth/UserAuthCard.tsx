@@ -110,7 +110,7 @@ function Field({
   );
 }
 
-export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
+export function UserAuthCard({ mode, next }: { mode: "login" | "signup"; next?: string }) {
   const isSignup = mode === "signup";
   const page = copy[mode];
   const [loginState, loginFormAction, loginPending] = useActionState(loginAction, initialState);
@@ -162,6 +162,7 @@ export function UserAuthCard({ mode }: { mode: "login" | "signup" }) {
               </div>
 
               <form action={isSignup ? signupFormAction : loginFormAction} className="mt-5 space-y-3.5">
+                {next ? <input type="hidden" name="next" value={next} /> : null}
                 <SocialAuthButtons />
                 <OrDivider />
 

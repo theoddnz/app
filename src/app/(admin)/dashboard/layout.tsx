@@ -16,6 +16,7 @@ const navItems: DashboardNavItem[] = [
   { href: "/dashboard", label: "Overview", icon: "overview" },
   { href: "/dashboard/paths", label: "Paths", icon: "paths", section: "Content" },
   { href: "/dashboard/lessons", label: "Lessons", icon: "lessons", section: "Content" },
+  { href: "/dashboard/mini-series", label: "Mini-series", icon: "lessons", section: "Content" },
   {
     href: "/dashboard/blogs",
     label: "Blogs",

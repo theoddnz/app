@@ -20,7 +20,7 @@ export default async function YouTubeShorts() {
             From our channel
           </p>
 
-          <h2 className="mt-4 font-space text-3xl font-extrabold tracking-tight text-foreground/80 md:text-[42px] md:leading-[1.1]">
+          <h2 className="mt-4 font-space text-3xl font-extrabold tracking-tight text-foreground md:text-[42px] md:leading-[1.1]">
             Fresh <span className="text-[#c4622d]">Shorts.</span>
           </h2>
 

@@ -90,44 +90,49 @@ export function VideoSlideView({
   slide: VideoSlide;
   active: boolean;
 }) {
-  const { short } = slide;
   // The iframe only mounts once the slide is active, so videos load one at a
   // time as the learner swipes rather than all up front.
   const [mounted, setMounted] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
 
-  // Warm up the YouTube connection ahead of time so the player pops in fast.
   useEffect(() => {
     if (!active) return;
-    prefetchDNS("https://www.youtube-nocookie.com");
-    preconnect("https://www.youtube-nocookie.com");
-    preconnect("https://i.ytimg.com");
+    prefetchDNS("https://iframe.mediadelivery.net");
+    preconnect("https://iframe.mediadelivery.net");
     const id = window.setTimeout(() => setMounted(true), 90);
     return () => window.clearTimeout(id);
   }, [active]);
 
   useEffect(() => {
-    if (!active) setLoaded(false);
+    if (!active) {
+      setLoaded(false);
+      setShowNotes(false);
+    }
   }, [active]);
+
+  const src = slide.iframeUrl
+    ? `${slide.iframeUrl}${slide.iframeUrl.includes("?") ? "&" : "?"}autoplay=true&muted=true&loop=true&preload=true&responsive=true`
+    : "";
 
   return (
     <SlideShell className="bg-black">
       {/* Blurred backdrop so letterboxed sides never flash pure black. */}
-      {short.thumbnail ? (
+      {slide.thumbnail ? (
         <div
           aria-hidden
           className="absolute inset-0 scale-110 bg-cover bg-center opacity-40 blur-2xl"
-          style={{ backgroundImage: `url(${short.thumbnail})` }}
+          style={{ backgroundImage: `url(${slide.thumbnail})` }}
         />
       ) : null}
 
       <div className="relative h-full w-full max-w-[min(100vw,calc(100dvh*9/16))]">
         {/* Poster: shown instantly, fades out once the player is ready. */}
-        {short.thumbnail ? (
+        {slide.thumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={short.thumbnail}
-            alt={short.title}
+            src={slide.thumbnail}
+            alt={slide.title}
             loading="lazy"
             className={cn(
               "absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out",
@@ -138,12 +143,12 @@ export function VideoSlideView({
           <div className="absolute inset-0 h-full w-full bg-neutral-900" />
         )}
 
-        {active && mounted ? (
+        {active && mounted && src ? (
           <>
             <iframe
-              key={short.id}
-              src={`https://www.youtube-nocookie.com/embed/${short.id}?autoplay=1&mute=1&loop=1&playlist=${short.id}&controls=0&modestbranding=1&playsinline=1&rel=0`}
-              title={short.title}
+              key={slide.id}
+              src={src}
+              title={slide.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               onLoad={() => setLoaded(true)}
@@ -159,7 +164,7 @@ export function VideoSlideView({
         ) : null}
 
         {/* Spinner while the active player is still loading. */}
-        {active && !loaded ? (
+        {active && src && !loaded ? (
           <div className="pointer-events-none absolute inset-0 z-20 grid place-items-center">
             <span className="size-8 animate-spin rounded-full border-2 border-white/25 border-t-white/90" />
           </div>
@@ -167,15 +172,41 @@ export function VideoSlideView({
 
         {/* title + gradient overlay */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-linear-to-t from-black/80 via-black/20 to-transparent p-5 pb-24">
-          {short.title ? (
+          {slide.title ? (
             <p className="line-clamp-2 font-space text-[14px] font-semibold leading-snug text-white/95">
-              {short.title}
+              {slide.title}
             </p>
           ) : null}
-          <p className="mt-1 font-space text-[12px] text-white/60">
-            TheOddOnes - muted autoplay
-          </p>
+          {slide.notes ? (
+            <button
+              type="button"
+              onClick={() => setShowNotes((v) => !v)}
+              className="pointer-events-auto mt-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 font-space text-[12px] font-medium text-white/90 backdrop-blur-sm"
+            >
+              {showNotes ? "Hide notes" : "Notes"}
+            </button>
+          ) : null}
         </div>
+
+        {/* notes sheet */}
+        <AnimatePresence>
+          {showNotes && slide.notes ? (
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ duration: 0.3, ease: EASE }}
+              className="absolute inset-x-0 bottom-0 z-30 max-h-[55%] overflow-auto rounded-t-3xl border-t border-white/10 bg-neutral-900/95 p-5 pb-8 backdrop-blur-md"
+            >
+              <p className="mb-2 font-space text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">
+                Notes
+              </p>
+              <p className="whitespace-pre-wrap font-space text-[13px] leading-relaxed text-white/85">
+                {slide.notes}
+              </p>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
     </SlideShell>
   );

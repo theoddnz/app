@@ -18,7 +18,8 @@ function ShortCard({ short, index }: { short: YouTubeShort; index: number }) {
       transition={{ duration: 0.6, delay: Math.min(index * 0.05, 0.3), ease: EASE }}
       className="group w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-1rem)]"
     >
-      <div className="relative aspect-9/16 w-full overflow-hidden rounded-2xl bg-muted ring-1 ring-border/60 shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
+      <div className="rounded-[22px] bg-card p-1.5 shadow-[0_8px_0_rgba(13,38,58,0.06),0_14px_24px_rgba(13,38,58,0.12)] ring-1 ring-black/[0.05] transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_11px_0_rgba(13,38,58,0.08),0_18px_30px_rgba(13,38,58,0.16)] dark:bg-[#181818] dark:shadow-[0_8px_0_rgba(0,0,0,0.24),0_14px_28px_rgba(0,0,0,0.36)] dark:ring-white/[0.08]">
+        <div className="relative aspect-9/16 w-full overflow-hidden rounded-[16px] border border-black/[0.04] bg-muted shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] dark:border-white/[0.08]">
         {index === 0 ? (
           <span className="absolute left-2.5 top-2.5 z-10 rounded-full bg-[#c4622d] px-2.5 py-1 font-space text-[10px] font-bold uppercase tracking-[0.14em] text-white shadow-md">
             New
@@ -65,6 +66,7 @@ function ShortCard({ short, index }: { short: YouTubeShort; index: number }) {
             </span>
           </button>
         )}
+        </div>
       </div>
 
       {short.title ? (

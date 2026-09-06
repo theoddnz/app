@@ -108,6 +108,22 @@ function nextAvailableSlug(baseSlug: string, existing: string[]) {
   return `${baseSlug}-${suffix}`;
 }
 
+// Only allow same-origin relative redirects to avoid open-redirect abuse.
+function safeNext(next: string): string | null {
+  if (!next || !next.startsWith("/") || next.startsWith("//") || next.startsWith("/\\")) {
+    return null;
+  }
+  return next;
+}
+
+// Postgres unique-violation is code 23505; drizzle may nest it under `.cause`.
+function isUniqueViolation(error: unknown): boolean {
+  const e = error as { code?: string; message?: string; cause?: { code?: string; message?: string } };
+  const code = e?.code ?? e?.cause?.code;
+  const text = `${e?.message ?? ""} ${e?.cause?.message ?? ""}`.toLowerCase();
+  return code === "23505" || text.includes("duplicate key") || text.includes("unique constraint");
+}
+
 export async function loginAction(state: ActionState = initialState, formData: FormData) {
   void state;
 
@@ -128,6 +144,11 @@ export async function loginAction(state: ActionState = initialState, formData: F
 
   const role = user.role === "admin" || user.role === "author" ? user.role : "student";
   await createAppSession({ id: user.id, email: user.email, role });
+
+  const next = safeNext(value(formData, "next"));
+  if (next) {
+    redirect(next);
+  }
 
   if (user.role === "admin") {
     redirect("/dashboard");
@@ -168,14 +189,22 @@ export async function signupAction(state: ActionState = initialState, formData: 
 
     await createAppSession({ id: user.id, email: user.email, role: "student" });
   } catch (error) {
-    const message = error instanceof Error && error.message.includes("duplicate")
-      ? "An account with that email already exists."
-      : "Could not create your account.";
-
-    return { ok: false, message };
+    console.error("signupAction failed:", error);
+    if (isUniqueViolation(error)) {
+      return { ok: false, message: "An account with that email already exists." };
+    }
+    const raw = error instanceof Error ? error.message : String(error);
+    return {
+      ok: false,
+      message:
+        process.env.NODE_ENV === "production"
+          ? "Could not create your account."
+          : `Could not create your account: ${raw}`,
+    };
   }
 
-  redirect("/learn");
+  const next = safeNext(value(formData, "next"));
+  redirect(next ?? "/learn");
 }
 
 export async function logoutAction() {

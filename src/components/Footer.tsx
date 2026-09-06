@@ -125,7 +125,7 @@ function SocialButton({ label, href, icon: Icon }: { label: string; href: string
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`TheOddOnes on ${label}`}
-      className="inline-flex size-10 items-center justify-center rounded-md border border-black/[0.08] bg-white/55 text-black/45 transition-colors hover:border-black/20 hover:text-black dark:border-white/[0.10] dark:bg-white/[0.03] dark:text-white/40 dark:hover:border-white/25 dark:hover:text-[#f0ebe5] sm:size-11"
+      className="inline-flex size-10 items-center justify-center rounded-md border border-black/[0.08] bg-white/55 text-black/45 transition-all duration-200 hover:-translate-y-0.5 hover:border-black/20 hover:bg-white hover:text-black hover:shadow-sm dark:border-white/[0.10] dark:bg-white/[0.03] dark:text-white/40 dark:hover:border-white/25 dark:hover:bg-white/[0.06] dark:hover:text-[#f0ebe5] sm:size-11"
     >
       {Icon ? (
         <Icon className="size-[18px]" />
@@ -147,7 +147,7 @@ function FooterColumn({ title, links }: { title: string; links: Array<{ label: s
           <li key={link.label}>
             <Link
               href={link.href}
-              className="font-space text-[14px] font-medium text-black/50 transition-colors hover:text-black dark:text-white/45 dark:hover:text-[#f0ebe5] sm:text-[15px]"
+              className="font-space text-[13px] font-medium tracking-tight text-black/50 transition-colors hover:text-black dark:text-white/45 dark:hover:text-[#f0ebe5] sm:text-[14px]"
             >
               {link.label}
             </Link>
@@ -170,12 +170,12 @@ export default async function Footer() {
             <Link href="/" aria-label="TheOddOnes home" className="inline-flex items-center gap-1">
               <Image src="/assets/theoddones-white-logo.png" alt="" width={40} height={40} className="size-10 object-contain dark:hidden" />
               <Image src="/assets/theoddones-black-logo.png" alt="" width={40} height={40} className="hidden size-10 object-contain dark:block" />
-              <span className="font-space text-sm">
+              <span className="font-space text-[15px] font-semibold tracking-tight">
                 The<span className="text-secondary">Odd</span>Ones
               </span>
             </Link>
 
-            <p className="mt-8 max-w-sm font-space text-[15px] leading-7 text-black/50 dark:text-white/45">
+            <p className="mt-8 max-w-xs font-space text-[13.5px] leading-6 tracking-tight text-black/50 dark:text-white/45">
               A place for people who think differently about learning.
             </p>
 
@@ -189,7 +189,7 @@ export default async function Footer() {
               <ViewCountBadge views={views} />
             </div>
 
-            <p className="mt-16 hidden font-space text-sm text-black/45 dark:text-white/35 lg:mt-20 lg:block">
+            <p className="mt-16 hidden font-space text-[11px] uppercase tracking-[0.12em] text-black/40 dark:text-white/30 lg:mt-20 lg:block">
               Copyright {currentYear} TheOddOnes. All rights reserved.
             </p>
           </div>
@@ -208,7 +208,7 @@ export default async function Footer() {
           </p>
         </div>
 
-        <p className="border-b border-dashed border-black/[0.08] px-6 py-5 font-space text-sm text-black/45 dark:border-white/[0.08] dark:text-white/35 lg:hidden">
+        <p className="border-b border-dashed border-black/[0.08] px-6 py-5 font-space text-[11px] uppercase tracking-[0.12em] text-black/40 dark:border-white/[0.08] dark:text-white/30 lg:hidden">
           Copyright {currentYear} TheOddOnes. All rights reserved.
         </p>
       </div>

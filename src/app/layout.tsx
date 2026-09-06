@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Phudu } from "next/font/google";
+import { Geist_Mono, Phudu } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "sonner";
@@ -7,9 +7,10 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Footer from "@/components/Footer";
 import { FooterGate } from "@/components/FooterGate";
 import Navbar from "@/components/Navbar";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { absoluteUrl, jsonLd, roboticsKeywords, siteConfig } from "@/lib/seo";
 
-const manrope = Manrope({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -131,8 +132,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${manrope.className} ${manrope.variable} ${phudu.variable} bg-background text-foreground antialiased`}>
+      <body className={`${geistMono.className} ${geistMono.variable} ${phudu.variable} bg-background text-foreground antialiased`}>
         <ThemeProvider>
+          <SmoothScroll />
           <Navbar />
           {children}
           <script

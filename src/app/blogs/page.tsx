@@ -3,7 +3,8 @@ import { BlogIndexClient } from "@/components/blog/BlogIndexClient";
 import { getPublicBlogPosts } from "@/lib/public-blogs";
 import { pageMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// Cache the list; admin blog mutations call revalidatePath("/blogs") for instant refresh.
+export const revalidate = 300;
 
 export const metadata: Metadata = pageMetadata({
   title: "Robotics, ROS2 and Software Field Notes",
